@@ -1,8 +1,10 @@
 # Overview
 
-Stride is a Progressive Web App (PWA) habit tracker that replicates the design and functionality of Streaks App. The application allows users to create, manage, and track daily habits with comprehensive progress visualization, streak tracking, and social sharing features. Built as a full-stack web application with modern technologies, it provides offline functionality and cross-platform compatibility through PWA standards.
+Momentum is a Progressive Web App (PWA) habit tracker that replicates the design and functionality of Streaks App. The application allows users to create, manage, and track daily habits with comprehensive progress visualization, streak tracking, and social sharing features. Built as a full-stack web application with modern technologies, it provides offline functionality and cross-platform compatibility through PWA standards.
 
 ## Recent Changes (August 2025)
+- ✅ **App Rebranding**: Changed app name from "Stride" to "Momentum" for better brand identity representing habit building momentum
+- ✅ **Custom Dropdown System**: Replaced problematic Radix dropdowns with custom positioned dropdowns for task cards and profile menus - fixed "flying from right top" positioning issues
 - ✅ **Timer Persistence System**: Critical bug fix - Start/Pause states now persist across page refreshes with database synchronization, daily reset logic, and real-time state updates
 - ✅ **Task Timer State Management**: Complete timer state system with database fields (timerState, timerStartedAt, timerElapsedSeconds, lastActiveDate) and PATCH API endpoint
 - ✅ **Dark Mode System**: Complete dark mode implementation with smooth 300ms transitions, theme context provider, localStorage persistence, system preference detection, and database synchronization
