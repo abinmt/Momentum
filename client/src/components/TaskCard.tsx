@@ -27,22 +27,19 @@ export default function TaskCard({ task }: TaskCardProps) {
     const toggleMutation = useMutation({
         mutationFn: async () => {
             const today = new Date().toISOString().split('T')[0];
-            console.log(`Making API request for task ${task.id} on date ${today}`);
             return await apiRequest("POST", `/api/tasks/${task.id}/entries`, {
                 date: today,
                 completed: true,
             });
         },
-        onSuccess: (data) => {
-            console.log('Toggle mutation successful:', data);
+        onSuccess: () => {
             toast({
                 title: "Great job!",
                 description: `${task.title} completed for today.`,
             });
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
         },
-        onError: (error) => {
-            console.error('Toggle mutation error:', error);
+        onError: () => {
             toast({
                 title: "Error",
                 description: "Failed to update task progress.",
@@ -73,12 +70,8 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        console.log(`Card clicked for task: ${task.title}, ID: ${task.id}, Type: ${task.type}`);
-        // Only trigger completion for non-timed tasks when clicking the card
-        if (task.type !== "timed") {
-            console.log('Triggering toggleMutation for task:', task.id);
-            toggleMutation.mutate();
-        }
+        // Allow all tasks to be completed when clicking the card
+        toggleMutation.mutate();
     };
 
     const handleStartPause = (e: React.MouseEvent) => {
