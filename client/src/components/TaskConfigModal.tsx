@@ -30,7 +30,8 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
         const taskConfig = {
             title,
-            icon: task.icon,
+            icon: task.iconName || "check",
+            color: task.color || "primary",
             type: task.type || "simple",
             goal: goal ? parseInt(goal) : null,
             goalUnit: task.unit,

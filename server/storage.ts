@@ -118,19 +118,23 @@ export class DatabaseStorage implements IStorage {
     }
 
     async getTaskEntries(taskId: string, userId: string, startDate?: string, endDate?: string): Promise<TaskEntry[]> {
-        let query = db
-            .select()
-            .from(taskEntries)
-            .where(and(eq(taskEntries.taskId, taskId), eq(taskEntries.userId, userId)));
+        let conditions = [
+            eq(taskEntries.taskId, taskId),
+            eq(taskEntries.userId, userId)
+        ];
 
         if (startDate) {
-            query = query.where(gte(taskEntries.date, startDate));
+            conditions.push(gte(taskEntries.date, startDate));
         }
         if (endDate) {
-            query = query.where(lte(taskEntries.date, endDate));
+            conditions.push(lte(taskEntries.date, endDate));
         }
 
-        return await query.orderBy(desc(taskEntries.date));
+        return await db
+            .select()
+            .from(taskEntries)
+            .where(and(...conditions))
+            .orderBy(desc(taskEntries.date));
     }
 
     async getTaskEntry(taskId: string, userId: string, date: string): Promise<TaskEntry | undefined> {
@@ -167,19 +171,20 @@ export class DatabaseStorage implements IStorage {
     }
 
     async getJournalEntries(userId: string, startDate?: string, endDate?: string): Promise<JournalEntry[]> {
-        let query = db
-            .select()
-            .from(journalEntries)
-            .where(eq(journalEntries.userId, userId));
+        let conditions = [eq(journalEntries.userId, userId)];
 
         if (startDate) {
-            query = query.where(gte(journalEntries.date, startDate));
+            conditions.push(gte(journalEntries.date, startDate));
         }
         if (endDate) {
-            query = query.where(lte(journalEntries.date, endDate));
+            conditions.push(lte(journalEntries.date, endDate));
         }
 
-        return await query.orderBy(desc(journalEntries.date));
+        return await db
+            .select()
+            .from(journalEntries)
+            .where(and(...conditions))
+            .orderBy(desc(journalEntries.date));
     }
 
     async getJournalEntry(userId: string, date: string): Promise<JournalEntry | undefined> {

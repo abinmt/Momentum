@@ -25,7 +25,9 @@ export default function Statistics() {
     }
 
     return (
-        <div className="min-h-screen bg-white relative max-w-md mx-auto">
+        <div className="min-h-screen bg-white relative">
+            {/* Mobile View */}
+            <div className="block md:hidden max-w-md mx-auto">
             {/* Status Bar */}
             <div className="flex justify-between items-center px-6 py-2 bg-gradient-primary text-white text-sm font-semibold">
                 <span>{new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
@@ -110,7 +112,92 @@ export default function Statistics() {
                 </div>
             </main>
 
-            <BottomNavigation activeTab="statistics" />
+                <BottomNavigation activeTab="statistics" />
+            </div>
+
+            {/* Desktop View */}
+            <div className="hidden md:block container mx-auto px-4 py-8 bg-white min-h-screen">
+                <div className="max-w-6xl mx-auto">
+                    <h1 className="text-3xl font-bold text-dark mb-8">Statistics</h1>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                        {/* Main Stats */}
+                        <div className="md:col-span-2">
+                            <div className="grid grid-cols-3 gap-6 mb-8">
+                                <div className="text-center bg-gray-50 rounded-xl p-6">
+                                    <div className="text-5xl font-bold text-dark mb-2">{stats?.bestStreak || 0}</div>
+                                    <div className="text-sm text-gray-600">BEST STREAK</div>
+                                </div>
+                                <div className="text-center bg-gray-50 rounded-xl p-6">
+                                    <div className="text-5xl font-bold text-dark mb-2">{stats?.completionRate || 0}%</div>
+                                    <div className="text-sm text-gray-600">ALL TIME</div>
+                                </div>
+                                <div className="text-center bg-gray-50 rounded-xl p-6">
+                                    <div className="text-5xl font-bold text-dark mb-2">{stats?.totalCompletions || 0}</div>
+                                    <div className="text-sm text-gray-600">COMPLETIONS</div>
+                                </div>
+                            </div>
+
+                            {/* Progress Chart */}
+                            <div className="bg-gradient-to-r from-orange-100 to-pink-100 rounded-xl p-8 mb-8">
+                                <h3 className="text-lg font-semibold text-dark mb-4">Progress Over Time</h3>
+                                <svg className="w-full h-32" viewBox="0 0 600 120">
+                                    <polyline 
+                                        fill="none" 
+                                        stroke="#FF1B6B" 
+                                        strokeWidth="3" 
+                                        points="0,80 100,65 200,75 300,55 400,70 500,45 600,40" 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                                <div className="flex justify-between text-xs text-gray-600 mt-4">
+                                    <span>30 DAYS AGO</span>
+                                    <span>PROGRESS</span>
+                                    <span>TODAY</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Side Stats */}
+                        <div className="space-y-6">
+                            <div className="bg-gradient-primary rounded-xl p-6 text-white">
+                                <h3 className="text-lg font-semibold mb-4">Quick Stats</h3>
+                                <div className="space-y-4">
+                                    <div className="flex justify-between">
+                                        <span>Active Tasks</span>
+                                        <span className="font-bold">{stats?.totalTasks || 0}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Active Streaks</span>
+                                        <span className="font-bold">{stats?.currentActiveStreaks || 0}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Total Completions</span>
+                                        <span className="font-bold">{stats?.totalCompletions || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Weekly Progress */}
+                            <div className="bg-gray-50 rounded-xl p-6">
+                                <h3 className="text-lg font-semibold text-dark mb-4">This Week</h3>
+                                <div className="flex items-end justify-between space-x-2 h-24">
+                                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+                                        <div key={day} className="flex flex-col items-center">
+                                            <div 
+                                                className="w-8 bg-gradient-primary rounded-t" 
+                                                style={{ height: `${60 + Math.random() * 40}px` }}
+                                            ></div>
+                                            <span className="text-xs text-gray-600 mt-2">{day}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

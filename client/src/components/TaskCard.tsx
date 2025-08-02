@@ -55,8 +55,8 @@ export default function TaskCard({ task }: TaskCardProps) {
         return Math.min(100, (task.currentStreak * 20) % 100);
     };
 
-    const IconComponent = TASK_ICONS[task.icon] || TASK_ICONS.check;
-    const colorClasses = TASK_COLORS[task.color] || TASK_COLORS.primary;
+    const IconComponent = TASK_ICONS[task.icon as keyof typeof TASK_ICONS] || TASK_ICONS.check;
+    const colorClasses = TASK_COLORS[task.color as keyof typeof TASK_COLORS] || TASK_COLORS.primary;
 
     return (
         <div 
