@@ -2,6 +2,12 @@
 
 Stride is a Progressive Web App (PWA) habit tracker that replicates the design and functionality of Streaks App. The application allows users to create, manage, and track daily habits with comprehensive progress visualization, streak tracking, and social sharing features. Built as a full-stack web application with modern technologies, it provides offline functionality and cross-platform compatibility through PWA standards.
 
+## Recent Changes (August 2025)
+- ✅ **User Profile System**: Complete user profile functionality with dropdown menus, avatar display, and navigation
+- ✅ **Persistent Settings**: Full settings management with database persistence for notifications, sound, vibration, dark mode, and reminder preferences
+- ✅ **Responsive Design**: Enhanced mobile and desktop layouts for all settings and profile components
+- ✅ **Database Integration**: User preferences stored in PostgreSQL with real-time updates and proper authentication
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -40,11 +46,12 @@ Preferred communication style: Simple, everyday language.
 - **User Management**: User profile storage with automatic account creation
 
 ## Data Models
-- **Users**: Profile information, settings, and authentication data
+- **Users**: Profile information, settings, and authentication data with persistent preferences (notifications, sound, vibration, dark mode, reminder time)
 - **Tasks**: Habit definitions with customizable scheduling, goals, and appearance
 - **Task Entries**: Daily progress tracking with completion status and optional metrics
 - **Journal Entries**: Daily reflection and notes functionality
 - **Shared Tasks**: Social features for habit sharing and accountability
+- **Sessions**: Secure session management with PostgreSQL storage
 
 ## Component Architecture
 - **Design System**: Consistent component library with variants and theming
