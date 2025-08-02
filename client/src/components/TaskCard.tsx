@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, Trash2 } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { TASK_ICONS, TASK_COLORS } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
 import type { Task } from "@shared/schema";
 
 interface TaskCardProps {
@@ -13,6 +14,7 @@ interface TaskCardProps {
 
 export default function TaskCard({ task }: TaskCardProps) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
     const { toast } = useToast();
     const queryClient = useQueryClient();
 
@@ -40,12 +42,38 @@ export default function TaskCard({ task }: TaskCardProps) {
         },
     });
 
-    const handleCardClick = () => {
+    const deleteMutation = useMutation({
+        mutationFn: async () => {
+            return await apiRequest("DELETE", `/api/tasks/${task.id}`);
+        },
+        onSuccess: () => {
+            toast({
+                title: "Task deleted",
+                description: `${task.title} has been removed.`,
+            });
+            queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+        },
+        onError: () => {
+            toast({
+                title: "Error",
+                description: "Failed to delete task.",
+                variant: "destructive",
+            });
+        },
+    });
+
+    const handleCardClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (task.type === "timed") {
             setIsTimerRunning(!isTimerRunning);
         } else {
             toggleMutation.mutate();
         }
+    };
+
+    const handleDeleteClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        deleteMutation.mutate();
     };
 
     const getProgressPercentage = () => {
@@ -62,6 +90,8 @@ export default function TaskCard({ task }: TaskCardProps) {
         <div 
             className={`task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden`}
             onClick={handleCardClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             <div className="relative w-20 h-20 mb-4">
                 <ProgressRing
@@ -77,6 +107,12 @@ export default function TaskCard({ task }: TaskCardProps) {
                         {task.currentStreak}
                     </div>
                 )}
+                {/* Goal display on bottom left */}
+                {task.goal && (
+                    <div className="absolute -bottom-2 -left-2 bg-black bg-opacity-50 text-white text-xs rounded-full px-2 py-1 font-semibold">
+                        {task.goal}
+                    </div>
+                )}
             </div>
             
             <div className="text-center">
@@ -88,6 +124,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </div>
             </div>
 
+            {/* Timer controls for timed tasks */}
             {task.type === "timed" && (
                 <div className="absolute bottom-2 right-2">
                     <div className="bg-purple-600 rounded-full p-2">
@@ -97,6 +134,33 @@ export default function TaskCard({ task }: TaskCardProps) {
                             <Play className="w-4 h-4 text-white" />
                         )}
                     </div>
+                </div>
+            )}
+
+            {/* Global start/pause controls for all non-timed tasks */}
+            {(!task.type || task.type === "simple" || task.type === "negative" || task.type === "health") && (
+                <div className="absolute bottom-2 right-2">
+                    <div className="bg-purple-600 rounded-full p-2">
+                        {isTimerRunning ? (
+                            <Pause className="w-4 h-4 text-white" />
+                        ) : (
+                            <Play className="w-4 h-4 text-white" />
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Delete button on hover */}
+            {isHovered && (
+                <div className="absolute top-2 right-2">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 w-8 h-8"
+                        onClick={handleDeleteClick}
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </Button>
                 </div>
             )}
         </div>
