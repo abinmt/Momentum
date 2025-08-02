@@ -148,28 +148,32 @@ export default function TaskCard({
             onClick={handleCardClick}
             draggable={true}
             onDragStart={(e) => {
-                console.log('Drag start:', task.id);
                 e.dataTransfer.setData("text/plain", task.id);
                 e.dataTransfer.effectAllowed = "move";
+                // Improve drag image visibility
+                if (e.currentTarget instanceof HTMLElement) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    e.dataTransfer.setDragImage(e.currentTarget, rect.width / 2, rect.height / 2);
+                }
                 onDragStart?.(task.id);
             }}
             onDragEnd={() => {
-                console.log('Drag end');
                 onDragEnd?.();
             }}
             onDragOver={(e) => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = "move";
-                onDragOver?.(e);
+            }}
+            onDragEnter={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
             }}
             onDrop={(e) => {
-                console.log('Drop event triggered on task:', task.id);
                 e.preventDefault();
                 e.stopPropagation();
                 const draggedTaskId = e.dataTransfer.getData("text/plain");
-                console.log('Dragged task ID:', draggedTaskId, 'Target task ID:', task.id);
                 if (draggedTaskId && draggedTaskId !== task.id) {
-                    onDrop?.(task.id); // Pass the target task ID
+                    onDrop?.(task.id);
                 }
             }}
         >

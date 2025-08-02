@@ -34,22 +34,19 @@ export default function Home() {
 
     const reorderTasksMutation = useMutation({
         mutationFn: async ({ draggedTaskId, targetTaskId }: { draggedTaskId: string; targetTaskId: string }) => {
-            console.log('Making reorder API request:', { draggedTaskId, targetTaskId });
             return await apiRequest("PUT", "/api/tasks/reorder", {
                 draggedTaskId,
                 targetTaskId,
             });
         },
-        onSuccess: (data) => {
-            console.log('Reorder success:', data);
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
             toast({
                 title: "Tasks reordered",
                 description: "Your habit order has been updated.",
             });
         },
-        onError: (error) => {
-            console.error('Reorder error:', error);
+        onError: () => {
             toast({
                 title: "Error",
                 description: "Failed to reorder tasks.",
@@ -59,7 +56,6 @@ export default function Home() {
     });
 
     const handleDragStart = (taskId: string) => {
-        console.log('Home handleDragStart called:', taskId);
         setDraggedTaskId(taskId);
     };
 
@@ -68,15 +64,11 @@ export default function Home() {
     };
 
     const handleDrop = (targetTaskId: string) => {
-        console.log('Home handleDrop called:', { draggedTaskId, targetTaskId });
         if (draggedTaskId && draggedTaskId !== targetTaskId) {
-            console.log('Triggering reorder mutation from Home');
             reorderTasksMutation.mutate({
                 draggedTaskId,
                 targetTaskId,
             });
-        } else {
-            console.log('Drop conditions not met:', { draggedTaskId, targetTaskId, same: draggedTaskId === targetTaskId });
         }
         setDraggedTaskId(null);
     };
