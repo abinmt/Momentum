@@ -33,6 +33,12 @@ export const users = pgTable("users", {
     firstName: varchar("first_name"),
     lastName: varchar("last_name"),
     profileImageUrl: varchar("profile_image_url"),
+    // Settings
+    notificationsEnabled: boolean("notifications_enabled").default(true),
+    soundEnabled: boolean("sound_enabled").default(true),
+    vibrationEnabled: boolean("vibration_enabled").default(true),
+    darkModeEnabled: boolean("dark_mode_enabled").default(true),
+    reminderTime: integer("reminder_time").default(19), // 7 PM
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });

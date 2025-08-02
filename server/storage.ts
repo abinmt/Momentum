@@ -22,6 +22,7 @@ export interface IStorage {
     // User operations
     getUser(id: string): Promise<User | undefined>;
     upsertUser(user: UpsertUser): Promise<User>;
+    updateUserSettings(id: string, settings: Partial<Pick<User, 'notificationsEnabled' | 'soundEnabled' | 'vibrationEnabled' | 'darkModeEnabled' | 'reminderTime'>>): Promise<User | undefined>;
     
     // Task operations
     getTasks(userId: string): Promise<Task[]>;
@@ -71,6 +72,18 @@ export class DatabaseStorage implements IStorage {
                     updatedAt: new Date(),
                 },
             })
+            .returning();
+        return user;
+    }
+
+    async updateUserSettings(id: string, settings: Partial<Pick<User, 'notificationsEnabled' | 'soundEnabled' | 'vibrationEnabled' | 'darkModeEnabled' | 'reminderTime'>>): Promise<User | undefined> {
+        const [user] = await db
+            .update(users)
+            .set({
+                ...settings,
+                updatedAt: new Date(),
+            })
+            .where(eq(users.id, id))
             .returning();
         return user;
     }

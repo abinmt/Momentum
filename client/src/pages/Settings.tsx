@@ -7,15 +7,60 @@ import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Link } from "wouter";
 import BottomNavigation from "@/components/BottomNavigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Settings() {
     const { user } = useAuth();
     const isMobile = useIsMobile();
+    const queryClient = useQueryClient();
+    const { toast } = useToast();
+    
     const [notifications, setNotifications] = useState(true);
     const [darkMode, setDarkMode] = useState(true);
     const [soundEnabled, setSoundEnabled] = useState(true);
     const [vibrationEnabled, setVibrationEnabled] = useState(true);
     const [reminderTime, setReminderTime] = useState([19]); // 7 PM default
+
+    // Initialize settings from user data
+    useEffect(() => {
+        if (user) {
+            setNotifications(user.notificationsEnabled ?? true);
+            setDarkMode(user.darkModeEnabled ?? true);
+            setSoundEnabled(user.soundEnabled ?? true);
+            setVibrationEnabled(user.vibrationEnabled ?? true);
+            setReminderTime([user.reminderTime ?? 19]);
+        }
+    }, [user]);
+
+    const updateSettingsMutation = useMutation({
+        mutationFn: async (settings: any) => {
+            return await apiRequest('/api/user/settings', {
+                method: 'PATCH',
+                body: JSON.stringify(settings),
+                headers: { 'Content-Type': 'application/json' },
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+            toast({
+                title: "Settings updated",
+                description: "Your preferences have been saved.",
+            });
+        },
+        onError: () => {
+            toast({
+                title: "Error",
+                description: "Failed to update settings. Please try again.",
+                variant: "destructive",
+            });
+        },
+    });
+
+    const updateSetting = (key: string, value: any) => {
+        updateSettingsMutation.mutate({ [key]: value });
+    };
 
     return (
         <div className="min-h-screen bg-gradient-primary">
@@ -62,17 +107,35 @@ export default function Settings() {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <span className="text-white">Push Notifications</span>
-                                    <Switch checked={notifications} onCheckedChange={setNotifications} />
+                                    <Switch 
+                                        checked={notifications} 
+                                        onCheckedChange={(checked) => {
+                                            setNotifications(checked);
+                                            updateSetting('notificationsEnabled', checked);
+                                        }} 
+                                    />
                                 </div>
                                 
                                 <div className="flex items-center justify-between">
                                     <span className="text-white">Sound</span>
-                                    <Switch checked={soundEnabled} onCheckedChange={setSoundEnabled} />
+                                    <Switch 
+                                        checked={soundEnabled} 
+                                        onCheckedChange={(checked) => {
+                                            setSoundEnabled(checked);
+                                            updateSetting('soundEnabled', checked);
+                                        }} 
+                                    />
                                 </div>
                                 
                                 <div className="flex items-center justify-between">
                                     <span className="text-white">Vibration</span>
-                                    <Switch checked={vibrationEnabled} onCheckedChange={setVibrationEnabled} />
+                                    <Switch 
+                                        checked={vibrationEnabled} 
+                                        onCheckedChange={(checked) => {
+                                            setVibrationEnabled(checked);
+                                            updateSetting('vibrationEnabled', checked);
+                                        }} 
+                                    />
                                 </div>
                                 
                                 <div className="space-y-2">
@@ -81,7 +144,10 @@ export default function Settings() {
                                         <span className="text-white text-sm">6 AM</span>
                                         <Slider
                                             value={reminderTime}
-                                            onValueChange={setReminderTime}
+                                            onValueChange={(value) => {
+                                                setReminderTime(value);
+                                                updateSetting('reminderTime', value[0]);
+                                            }}
                                             max={23}
                                             min={6}
                                             step={1}
@@ -105,7 +171,13 @@ export default function Settings() {
                             
                             <div className="flex items-center justify-between">
                                 <span className="text-white">Dark Mode</span>
-                                <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+                                <Switch 
+                                    checked={darkMode} 
+                                    onCheckedChange={(checked) => {
+                                        setDarkMode(checked);
+                                        updateSetting('darkModeEnabled', checked);
+                                    }} 
+                                />
                             </div>
                         </div>
 
@@ -199,17 +271,35 @@ export default function Settings() {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <span className="text-white">Push Notifications</span>
-                                    <Switch checked={notifications} onCheckedChange={setNotifications} />
+                                    <Switch 
+                                        checked={notifications} 
+                                        onCheckedChange={(checked) => {
+                                            setNotifications(checked);
+                                            updateSetting('notificationsEnabled', checked);
+                                        }} 
+                                    />
                                 </div>
                                 
                                 <div className="flex items-center justify-between">
                                     <span className="text-white">Sound</span>
-                                    <Switch checked={soundEnabled} onCheckedChange={setSoundEnabled} />
+                                    <Switch 
+                                        checked={soundEnabled} 
+                                        onCheckedChange={(checked) => {
+                                            setSoundEnabled(checked);
+                                            updateSetting('soundEnabled', checked);
+                                        }} 
+                                    />
                                 </div>
                                 
                                 <div className="flex items-center justify-between">
                                     <span className="text-white">Vibration</span>
-                                    <Switch checked={vibrationEnabled} onCheckedChange={setVibrationEnabled} />
+                                    <Switch 
+                                        checked={vibrationEnabled} 
+                                        onCheckedChange={(checked) => {
+                                            setVibrationEnabled(checked);
+                                            updateSetting('vibrationEnabled', checked);
+                                        }} 
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -223,7 +313,13 @@ export default function Settings() {
                             
                             <div className="flex items-center justify-between">
                                 <span className="text-white">Dark Mode</span>
-                                <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+                                <Switch 
+                                    checked={darkMode} 
+                                    onCheckedChange={(checked) => {
+                                        setDarkMode(checked);
+                                        updateSetting('darkModeEnabled', checked);
+                                    }} 
+                                />
                             </div>
                         </div>
 

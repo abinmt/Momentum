@@ -21,6 +21,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
     });
 
+    // User settings routes
+    app.patch('/api/user/settings', isAuthenticated, async (req: any, res) => {
+        try {
+            const userId = req.user.claims.sub;
+            const settings = req.body;
+            
+            const updatedUser = await storage.updateUserSettings(userId, settings);
+            if (!updatedUser) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            res.json(updatedUser);
+        } catch (error) {
+            console.error("Error updating user settings:", error);
+            res.status(500).json({ message: "Failed to update settings" });
+        }
+    });
+
     // Task routes
     app.get('/api/tasks', isAuthenticated, async (req: any, res) => {
         try {
