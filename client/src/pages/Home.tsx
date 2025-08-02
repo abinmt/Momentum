@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Settings, Star, Plus, User, ChevronDown } from "lucide-react";
 import TaskCard from "@/components/TaskCard";
 import BottomNavigation from "@/components/BottomNavigation";
 import AddTaskModal from "@/components/AddTaskModal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import {
   DropdownMenu,
@@ -18,11 +20,58 @@ import type { Task } from "@shared/schema";
 
 export default function Home() {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
+    const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
     const { user } = useAuth();
+    const { toast } = useToast();
+    const queryClient = useQueryClient();
 
     const { data: tasks, isLoading } = useQuery<Task[]>({
         queryKey: ["/api/tasks"],
     });
+
+    // Sort tasks by display order
+    const sortedTasks = tasks?.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+    const reorderTasksMutation = useMutation({
+        mutationFn: async ({ draggedTaskId, targetTaskId }: { draggedTaskId: string; targetTaskId: string }) => {
+            return await apiRequest("PUT", "/api/tasks/reorder", {
+                draggedTaskId,
+                targetTaskId,
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+            toast({
+                title: "Tasks reordered",
+                description: "Your habit order has been updated.",
+            });
+        },
+        onError: () => {
+            toast({
+                title: "Error",
+                description: "Failed to reorder tasks.",
+                variant: "destructive",
+            });
+        },
+    });
+
+    const handleDragStart = (taskId: string) => {
+        setDraggedTaskId(taskId);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedTaskId(null);
+    };
+
+    const handleDrop = (targetTaskId: string) => {
+        if (draggedTaskId && draggedTaskId !== targetTaskId) {
+            reorderTasksMutation.mutate({
+                draggedTaskId,
+                targetTaskId,
+            });
+        }
+        setDraggedTaskId(null);
+    };
 
     if (isLoading) {
         return (
@@ -51,8 +100,15 @@ export default function Home() {
             {/* Main Content */}
             <main className="p-6 pb-24">
                 <div className="grid grid-cols-2 gap-4">
-                    {tasks?.map((task) => (
-                        <TaskCard key={task.id} task={task} />
+                    {sortedTasks?.map((task) => (
+                        <TaskCard 
+                            key={task.id} 
+                            task={task} 
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                            onDrop={handleDrop}
+                            isDragging={draggedTaskId === task.id}
+                        />
                     ))}
                     
                     {/* Add Task Card */}

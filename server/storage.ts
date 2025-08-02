@@ -30,6 +30,7 @@ export interface IStorage {
     createTask(task: InsertTask & { userId: string }): Promise<Task>;
     updateTask(id: string, userId: string, updates: UpdateTask): Promise<Task | undefined>;
     deleteTask(id: string, userId: string): Promise<boolean>;
+    reorderTasks(userId: string, draggedTaskId: string, targetTaskId: string): Promise<void>;
     
     // Task entry operations
     getTaskEntries(taskId: string, userId: string, startDate?: string, endDate?: string): Promise<TaskEntry[]>;
@@ -93,7 +94,7 @@ export class DatabaseStorage implements IStorage {
             .select()
             .from(tasks)
             .where(and(eq(tasks.userId, userId), eq(tasks.isActive, true)))
-            .orderBy(asc(tasks.createdAt));
+            .orderBy(asc(tasks.displayOrder), asc(tasks.createdAt));
     }
 
     async getTask(id: string, userId: string): Promise<Task | undefined> {
@@ -273,6 +274,37 @@ export class DatabaseStorage implements IStorage {
             .values({ taskId, sharedBy, sharedWith })
             .returning();
         return sharedTask;
+    }
+
+    async reorderTasks(userId: string, draggedTaskId: string, targetTaskId: string): Promise<void> {
+        // Get all user tasks sorted by display order
+        const userTasks = await db
+            .select()
+            .from(tasks)
+            .where(and(eq(tasks.userId, userId), eq(tasks.isActive, true)))
+            .orderBy(asc(tasks.displayOrder), asc(tasks.createdAt));
+
+        // Find current positions
+        const draggedIndex = userTasks.findIndex(task => task.id === draggedTaskId);
+        const targetIndex = userTasks.findIndex(task => task.id === targetTaskId);
+
+        if (draggedIndex === -1 || targetIndex === -1) {
+            throw new Error("Task not found");
+        }
+
+        // Remove the dragged task and insert it at the target position
+        const draggedTask = userTasks[draggedIndex];
+        userTasks.splice(draggedIndex, 1);
+        userTasks.splice(targetIndex, 0, draggedTask);
+
+        // Update display order for all tasks
+        const updatePromises = userTasks.map((task, index) =>
+            db.update(tasks)
+                .set({ displayOrder: index, updatedAt: new Date() })
+                .where(eq(tasks.id, task.id))
+        );
+
+        await Promise.all(updatePromises);
     }
 
     async getSharedTasks(userId: string): Promise<SharedTask[]> {

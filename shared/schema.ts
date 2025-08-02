@@ -63,6 +63,7 @@ export const tasks = pgTable("tasks", {
     currentStreak: integer("current_streak").notNull().default(0),
     bestStreak: integer("best_streak").notNull().default(0),
     totalCompletions: integer("total_completions").notNull().default(0),
+    displayOrder: integer("display_order").notNull().default(0),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });

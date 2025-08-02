@@ -50,6 +50,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
     });
 
+    // Reorder tasks
+    app.put('/api/tasks/reorder', isAuthenticated, async (req: any, res) => {
+        try {
+            const userId = req.user.claims.sub;
+            const { draggedTaskId, targetTaskId } = req.body;
+            
+            if (!draggedTaskId || !targetTaskId) {
+                return res.status(400).json({ message: "Both draggedTaskId and targetTaskId are required" });
+            }
+
+            await storage.reorderTasks(userId, draggedTaskId, targetTaskId);
+            res.json({ message: "Tasks reordered successfully" });
+        } catch (error) {
+            console.error("Error reordering tasks:", error);
+            res.status(500).json({ message: "Failed to reorder tasks" });
+        }
+    });
+
     app.get('/api/tasks/:id', isAuthenticated, async (req: any, res) => {
         try {
             const userId = req.user.claims.sub;

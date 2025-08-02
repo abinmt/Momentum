@@ -17,9 +17,21 @@ import type { Task } from "@shared/schema";
 
 interface TaskCardProps {
     task: Task;
+    onDragStart?: (taskId: string) => void;
+    onDragEnd?: () => void;
+    onDragOver?: (e: React.DragEvent) => void;
+    onDrop?: (taskId: string) => void;
+    isDragging?: boolean;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ 
+    task, 
+    onDragStart,
+    onDragEnd,
+    onDragOver,
+    onDrop,
+    isDragging = false
+}: TaskCardProps) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const [taskState, setTaskState] = useState<'not-started' | 'started' | 'paused' | 'completed'>('not-started');
     const { toast } = useToast();
@@ -128,12 +140,33 @@ export default function TaskCard({ task }: TaskCardProps) {
     
     // Apply grey overlay for paused/not started tasks
     const isInactive = taskState === 'not-started' || taskState === 'paused';
-    const cardClasses = `task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''}`;
+    const cardClasses = `task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''} ${isDragging ? 'opacity-50 scale-105 rotate-2 z-50' : ''}`;
 
     return (
         <div 
             className={cardClasses}
             onClick={handleCardClick}
+            draggable={true}
+            onDragStart={(e) => {
+                e.dataTransfer.setData("text/plain", task.id);
+                e.dataTransfer.effectAllowed = "move";
+                onDragStart?.(task.id);
+            }}
+            onDragEnd={() => {
+                onDragEnd?.();
+            }}
+            onDragOver={(e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+                onDragOver?.(e);
+            }}
+            onDrop={(e) => {
+                e.preventDefault();
+                const draggedTaskId = e.dataTransfer.getData("text/plain");
+                if (draggedTaskId !== task.id) {
+                    onDrop?.(draggedTaskId);
+                }
+            }}
         >
             <div className="relative w-20 h-20 mb-4">
                 <ProgressRing
