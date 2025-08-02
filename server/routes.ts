@@ -53,14 +53,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Reorder tasks
     app.put('/api/tasks/reorder', isAuthenticated, async (req: any, res) => {
         try {
+            console.log('Received reorder request:', req.body);
             const userId = req.user.claims.sub;
             const { draggedTaskId, targetTaskId } = req.body;
             
+            console.log('Reorder data:', { userId, draggedTaskId, targetTaskId });
+            
             if (!draggedTaskId || !targetTaskId) {
+                console.log('Missing required fields');
                 return res.status(400).json({ message: "Both draggedTaskId and targetTaskId are required" });
             }
 
+            console.log('Calling storage.reorderTasks...');
             await storage.reorderTasks(userId, draggedTaskId, targetTaskId);
+            console.log('Reorder completed successfully');
             res.json({ message: "Tasks reordered successfully" });
         } catch (error) {
             console.error("Error reordering tasks:", error);

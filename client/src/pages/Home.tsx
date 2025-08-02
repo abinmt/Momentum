@@ -34,19 +34,22 @@ export default function Home() {
 
     const reorderTasksMutation = useMutation({
         mutationFn: async ({ draggedTaskId, targetTaskId }: { draggedTaskId: string; targetTaskId: string }) => {
+            console.log('Making reorder API request:', { draggedTaskId, targetTaskId });
             return await apiRequest("PUT", "/api/tasks/reorder", {
                 draggedTaskId,
                 targetTaskId,
             });
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
+            console.log('Reorder success:', data);
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
             toast({
                 title: "Tasks reordered",
                 description: "Your habit order has been updated.",
             });
         },
-        onError: () => {
+        onError: (error) => {
+            console.error('Reorder error:', error);
             toast({
                 title: "Error",
                 description: "Failed to reorder tasks.",
@@ -64,7 +67,9 @@ export default function Home() {
     };
 
     const handleDrop = (targetTaskId: string) => {
+        console.log('Drop event:', { draggedTaskId, targetTaskId });
         if (draggedTaskId && draggedTaskId !== targetTaskId) {
+            console.log('Triggering reorder mutation');
             reorderTasksMutation.mutate({
                 draggedTaskId,
                 targetTaskId,
