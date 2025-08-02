@@ -13,29 +13,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Task } from "@shared/schema";
 
 interface TaskCardProps {
     task: Task;
-    onDragStart?: (taskId: string) => void;
-    onDragEnd?: () => void;
-    onDragOver?: (e: React.DragEvent) => void;
-    onDrop?: (taskId: string) => void;
-    isDragging?: boolean;
 }
 
-export default function TaskCard({ 
-    task, 
-    onDragStart,
-    onDragEnd,
-    onDragOver,
-    onDrop,
-    isDragging = false
-}: TaskCardProps) {
+export default function TaskCard({ task }: TaskCardProps) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const [taskState, setTaskState] = useState<'not-started' | 'started' | 'paused' | 'completed'>('not-started');
     const { toast } = useToast();
     const queryClient = useQueryClient();
+
+    // Initialize sortable functionality
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: task.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
 
     const toggleMutation = useMutation({
         mutationFn: async () => {
@@ -144,38 +149,12 @@ export default function TaskCard({
 
     return (
         <div 
+            ref={setNodeRef}
+            style={style}
             className={cardClasses}
             onClick={handleCardClick}
-            draggable={true}
-            onDragStart={(e) => {
-                e.dataTransfer.setData("text/plain", task.id);
-                e.dataTransfer.effectAllowed = "move";
-                // Improve drag image visibility
-                if (e.currentTarget instanceof HTMLElement) {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    e.dataTransfer.setDragImage(e.currentTarget, rect.width / 2, rect.height / 2);
-                }
-                onDragStart?.(task.id);
-            }}
-            onDragEnd={() => {
-                onDragEnd?.();
-            }}
-            onDragOver={(e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "move";
-            }}
-            onDragEnter={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            }}
-            onDrop={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const draggedTaskId = e.dataTransfer.getData("text/plain");
-                if (draggedTaskId && draggedTaskId !== task.id) {
-                    onDrop?.(task.id);
-                }
-            }}
+            {...attributes}
+            {...listeners}
         >
             <div className="relative w-20 h-20 mb-4">
                 <ProgressRing

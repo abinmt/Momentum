@@ -16,11 +16,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
 import type { Task } from "@shared/schema";
 
 export default function Home() {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
-    const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
     const { user } = useAuth();
     const { toast } = useToast();
     const queryClient = useQueryClient();
@@ -31,6 +45,18 @@ export default function Home() {
 
     // Sort tasks by display order
     const sortedTasks = tasks?.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+    // Configure sensors for dnd-kit (works on both desktop and mobile)
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8, // Small threshold to distinguish from clicks
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
 
     const reorderTasksMutation = useMutation({
         mutationFn: async ({ draggedTaskId, targetTaskId }: { draggedTaskId: string; targetTaskId: string }) => {
@@ -55,22 +81,23 @@ export default function Home() {
         },
     });
 
-    const handleDragStart = (taskId: string) => {
-        setDraggedTaskId(taskId);
-    };
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
 
-    const handleDragEnd = () => {
-        setDraggedTaskId(null);
-    };
+        if (active.id !== over?.id && sortedTasks) {
+            const oldIndex = sortedTasks.findIndex((task) => task.id === active.id);
+            const newIndex = sortedTasks.findIndex((task) => task.id === over?.id);
 
-    const handleDrop = (targetTaskId: string) => {
-        if (draggedTaskId && draggedTaskId !== targetTaskId) {
-            reorderTasksMutation.mutate({
-                draggedTaskId,
-                targetTaskId,
-            });
+            if (oldIndex !== -1 && newIndex !== -1) {
+                const draggedTaskId = active.id as string;
+                const targetTaskId = over?.id as string;
+                
+                reorderTasksMutation.mutate({
+                    draggedTaskId,
+                    targetTaskId,
+                });
+            }
         }
-        setDraggedTaskId(null);
     };
 
     if (isLoading) {
@@ -99,31 +126,39 @@ export default function Home() {
 
             {/* Main Content */}
             <main className="p-6 pb-24">
-                <div className="grid grid-cols-2 gap-4">
-                    {sortedTasks?.map((task) => (
-                        <TaskCard 
-                            key={task.id} 
-                            task={task} 
-                            onDragStart={handleDragStart}
-                            onDragEnd={handleDragEnd}
-                            onDrop={handleDrop}
-                            isDragging={draggedTaskId === task.id}
-                        />
-                    ))}
-                    
-                    {/* Add Task Card */}
-                    <div 
-                        className="task-card bg-white bg-opacity-20 backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:bg-opacity-30 transition-all duration-300"
-                        onClick={() => setIsAddTaskModalOpen(true)}
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                >
+                    <SortableContext
+                        items={sortedTasks?.map(task => task.id) || []}
+                        strategy={rectSortingStrategy}
                     >
-                        <div className="relative w-20 h-20 mb-4 flex items-center justify-center">
-                            <Plus className="w-12 h-12 text-white" />
+                        <div className="grid grid-cols-2 gap-4">
+                            {sortedTasks?.map((task) => (
+                                <TaskCard 
+                                    key={task.id} 
+                                    task={task}
+                                />
+                            ))}
+                            
+                            {/* Add Task Card */}
+                            <div 
+                                className="task-card bg-white bg-opacity-20 backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:bg-opacity-30 transition-all duration-300"
+                                onClick={() => setIsAddTaskModalOpen(true)}
+                            >
+                                <div className="relative w-20 h-20 mb-4 flex items-center justify-center">
+                                    <Plus className="w-12 h-12 text-white" />
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-xs font-semibold mb-1">ADD A TASK</div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-xs font-semibold mb-1">ADD A TASK</div>
-                        </div>
-                    </div>
-                </div>
+                    </SortableContext>
+                </DndContext>
+            </main>
 
                 {/* Header with User Profile */}
                 <div className="flex justify-between items-center mb-6">
@@ -203,6 +238,100 @@ export default function Home() {
                                 <Plus className="w-4 h-4 mr-2" />
                                 Add Task
                             </Button>
+                            
+                            {/* Desktop User Profile Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button 
+                                        variant="ghost" 
+                                        className="text-white hover:bg-white hover:bg-opacity-10 p-2 rounded-xl"
+                                    >
+                                        <div className="flex items-center space-x-3">
+                                            <Avatar className="h-8 w-8">
+                                                <AvatarImage src={user?.profileImageUrl || undefined} />
+                                                <AvatarFallback className="bg-white bg-opacity-20 text-white text-sm">
+                                                    {user?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <span className="text-sm font-medium">
+                                                {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
+                                            </span>
+                                            <ChevronDown className="w-4 h-4" />
+                                        </div>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56 bg-gray-900 border-gray-700 text-white" align="end">
+                                    <div className="px-3 py-2 border-b border-gray-700">
+                                        <div className="text-sm font-medium">
+                                            {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
+                                        </div>
+                                        <div className="text-xs opacity-70">{user?.email}</div>
+                                    </div>
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/profile" className="cursor-pointer">
+                                            <User className="w-4 h-4 mr-2" />
+                                            Profile
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/settings" className="cursor-pointer">
+                                            <Settings className="w-4 h-4 mr-2" />
+                                            Settings
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem 
+                                        className="cursor-pointer"
+                                        onClick={() => window.location.href = '/api/logout'}
+                                    >
+                                        <span className="w-4 h-4 mr-2">🚪</span>
+                                        Sign Out
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    </div>
+                    
+                    {/* Desktop Task Grid with DndContext */}
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={sortedTasks?.map(task => task.id) || []}
+                            strategy={rectSortingStrategy}
+                        >
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                {sortedTasks?.map((task) => (
+                                    <TaskCard 
+                                        key={task.id} 
+                                        task={task}
+                                    />
+                                ))}
+                                
+                                {/* Add Task Card for Desktop */}
+                                <div 
+                                    className="bg-gradient-to-br from-orange-400/80 to-orange-500/80 backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center justify-center text-white cursor-pointer hover:scale-105 transition-all duration-300 min-h-[200px] border border-white/20"
+                                    onClick={() => setIsAddTaskModalOpen(true)}
+                                >
+                                    <Plus className="w-12 h-12 mb-2" />
+                                    <span className="text-sm font-semibold">ADD A TASK</span>
+                                </div>
+                            </div>
+                        </SortableContext>
+                    </DndContext>
+                </div>
+            </div>
+            
+            <AddTaskModal 
+                isOpen={isAddTaskModalOpen}
+                onClose={() => setIsAddTaskModalOpen(false)}
+            />
+
+            <BottomNavigation activeTab="tasks" />
+        </div>
+    );
+}
                             
                             {/* User Profile Dropdown */}
                             <DropdownMenu>
