@@ -19,6 +19,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
     const [schedule, setSchedule] = useState("daily");
     const [isDayLongTask, setIsDayLongTask] = useState(false);
     const [showScheduleDialog, setShowScheduleDialog] = useState(false);
+    const [showMoreOptions, setShowMoreOptions] = useState(false);
     const [selectedDays, setSelectedDays] = useState<string[]>(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
     
     const daysOfWeek = [
@@ -105,7 +106,8 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                         <Button 
                             variant="ghost" 
                             size="icon"
-                            className="absolute -top-1 -right-1 bg-gray-600 rounded-full p-1 w-6 h-6 md:w-8 md:h-8"
+                            className="absolute -top-1 -right-1 bg-gray-600 rounded-full p-1 w-6 h-6 md:w-8 md:h-8 hover:bg-gray-500"
+                            onClick={() => setShowMoreOptions(true)}
                         >
                             <MoreHorizontal className="w-4 h-4 md:w-5 md:h-5 text-white" />
                         </Button>
@@ -246,6 +248,107 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     <Button
                         className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
                         onClick={() => setShowScheduleDialog(false)}
+                    >
+                        Done
+                    </Button>
+                </DialogContent>
+            </Dialog>
+            
+            {/* More Options Dialog */}
+            <Dialog open={showMoreOptions} onOpenChange={setShowMoreOptions}>
+                <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-center">Task Options</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        {/* Task Type Options */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm opacity-80 font-semibold">TASK TYPE</h4>
+                            
+                            <div className="space-y-2">
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4"
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                            <span className="text-xs font-bold">T</span>
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold">Timed Task</div>
+                                            <div className="text-xs opacity-70">Track time spent on activity</div>
+                                        </div>
+                                    </div>
+                                </Button>
+                                
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4"
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                            <span className="text-xs font-bold">-</span>
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold">Negative Task</div>
+                                            <div className="text-xs opacity-70">Break bad habits</div>
+                                        </div>
+                                    </div>
+                                </Button>
+                                
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4"
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                            <span className="text-xs font-bold">♥</span>
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold">Health Task</div>
+                                            <div className="text-xs opacity-70">Integrate with health data</div>
+                                        </div>
+                                    </div>
+                                </Button>
+                            </div>
+                        </div>
+                        
+                        {/* Advanced Settings */}
+                        <div className="border-t border-white border-opacity-20 pt-4">
+                            <h4 className="text-sm opacity-80 font-semibold mb-3">ADVANCED</h4>
+                            
+                            <div className="space-y-2">
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                >
+                                    <span>Reminders</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                </Button>
+                                
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                >
+                                    <span>Icon & Color</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                </Button>
+                                
+                                <Button
+                                    variant="ghost"
+                                    className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                >
+                                    <span>Privacy</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <Button
+                        className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
+                        onClick={() => setShowMoreOptions(false)}
                     >
                         Done
                     </Button>
