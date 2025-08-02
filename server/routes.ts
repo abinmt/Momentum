@@ -226,6 +226,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
     });
 
+    // Data export endpoint
+    app.get('/api/export/data', isAuthenticated, async (req: any, res) => {
+        try {
+            const userId = req.user.claims.sub;
+            
+            // Get all user data
+            const user = await storage.getUser(userId);
+            const tasks = await storage.getTasks(userId);
+            const stats = await storage.getUserStatistics(userId);
+            
+            // Get recent journal entries (last 30 days)
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const journalEntries = await storage.getJournalEntries(userId, thirtyDaysAgo.toISOString().split('T')[0]);
+            
+            // Create export data
+            const exportData = {
+                user: {
+                    email: user?.email,
+                    firstName: user?.firstName,
+                    lastName: user?.lastName,
+                    settings: {
+                        notificationsEnabled: user?.notificationsEnabled,
+                        soundEnabled: user?.soundEnabled,
+                        vibrationEnabled: user?.vibrationEnabled,
+                        darkModeEnabled: user?.darkModeEnabled,
+                        reminderTime: user?.reminderTime,
+                    }
+                },
+                tasks: tasks.map(task => ({
+                    title: task.title,
+                    description: task.description,
+                    icon: task.icon,
+                    color: task.color,
+                    type: task.type,
+                    currentStreak: task.currentStreak,
+                    bestStreak: task.bestStreak,
+                    totalCompletions: task.totalCompletions,
+                    createdAt: task.createdAt,
+                })),
+                statistics: stats,
+                journalEntries: journalEntries.map(entry => ({
+                    date: entry.date,
+                    content: entry.content,
+                    mood: entry.mood,
+                })),
+                exportDate: new Date().toISOString(),
+                appVersion: '1.0.0'
+            };
+
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Content-Disposition', `attachment; filename="stride-data-${new Date().toISOString().split('T')[0]}.json"`);
+            res.json(exportData);
+        } catch (error) {
+            console.error("Error exporting data:", error);
+            res.status(500).json({ message: "Failed to export data" });
+        }
+    });
+
     const httpServer = createServer(app);
     return httpServer;
 }
