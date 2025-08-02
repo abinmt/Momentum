@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Play, Pause, Trash2 } from "lucide-react";
+import { Play, Pause, Trash2, MoreVertical } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { TASK_ICONS, TASK_COLORS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { Task } from "@shared/schema";
 
 interface TaskCardProps {
@@ -14,7 +21,6 @@ interface TaskCardProps {
 
 export default function TaskCard({ task }: TaskCardProps) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
     const { toast } = useToast();
     const queryClient = useQueryClient();
 
@@ -64,10 +70,27 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (task.type === "timed") {
-            setIsTimerRunning(!isTimerRunning);
-        } else {
+        // Only trigger completion for non-timed tasks when clicking the card
+        if (task.type !== "timed") {
             toggleMutation.mutate();
+        }
+    };
+
+    const handleStartPause = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsTimerRunning(!isTimerRunning);
+        if (task.type === "timed") {
+            // For timed tasks, this would start/stop the timer
+            toast({
+                title: isTimerRunning ? "Timer Paused" : "Timer Started",
+                description: `${task.title} timer ${isTimerRunning ? "paused" : "started"}.`,
+            });
+        } else {
+            // For other tasks, this could mark as in-progress
+            toast({
+                title: isTimerRunning ? "Task Paused" : "Task Started",
+                description: `${task.title} ${isTimerRunning ? "paused" : "started"}.`,
+            });
         }
     };
 
@@ -90,8 +113,6 @@ export default function TaskCard({ task }: TaskCardProps) {
         <div 
             className={`task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden`}
             onClick={handleCardClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
         >
             <div className="relative w-20 h-20 mb-4">
                 <ProgressRing
@@ -124,45 +145,47 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </div>
             </div>
 
-            {/* Timer controls for timed tasks */}
-            {task.type === "timed" && (
-                <div className="absolute bottom-2 right-2">
-                    <div className="bg-purple-600 rounded-full p-2">
-                        {isTimerRunning ? (
-                            <Pause className="w-4 h-4 text-white" />
-                        ) : (
-                            <Play className="w-4 h-4 text-white" />
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Global start/pause controls for all non-timed tasks */}
-            {(!task.type || task.type === "simple" || task.type === "negative" || task.type === "health") && (
-                <div className="absolute bottom-2 right-2">
-                    <div className="bg-purple-600 rounded-full p-2">
-                        {isTimerRunning ? (
-                            <Pause className="w-4 h-4 text-white" />
-                        ) : (
-                            <Play className="w-4 h-4 text-white" />
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Delete button on hover */}
-            {isHovered && (
-                <div className="absolute top-2 right-2">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 w-8 h-8"
-                        onClick={handleDeleteClick}
-                    >
-                        <Trash2 className="w-4 h-4" />
-                    </Button>
-                </div>
-            )}
+            {/* Hamburger Menu */}
+            <div className="absolute top-2 right-2">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-2 w-8 h-8"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <MoreVertical className="w-4 h-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-white text-black min-w-[150px]" align="end">
+                        <DropdownMenuItem 
+                            onClick={handleStartPause}
+                            className="flex items-center gap-2 cursor-pointer"
+                        >
+                            {isTimerRunning ? (
+                                <>
+                                    <Pause className="w-4 h-4" />
+                                    Pause Task
+                                </>
+                            ) : (
+                                <>
+                                    <Play className="w-4 h-4" />
+                                    Start Task
+                                </>
+                            )}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                            onClick={handleDeleteClick}
+                            className="flex items-center gap-2 cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                            Delete Task
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </div>
     );
 }
