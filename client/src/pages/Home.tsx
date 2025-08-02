@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Settings, Star, Plus, User, ChevronDown } from "lucide-react";
 import TaskCard from "@/components/TaskCard";
@@ -9,12 +9,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ThemeToggle from "@/components/ThemeToggle";
 import {
@@ -35,9 +29,33 @@ import type { Task } from "@shared/schema";
 
 export default function Home() {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
+    const [showMobileProfileDropdown, setShowMobileProfileDropdown] = useState(false);
+    const [showDesktopProfileDropdown, setShowDesktopProfileDropdown] = useState(false);
+    const mobileDropdownRef = useRef<HTMLDivElement>(null);
+    const desktopDropdownRef = useRef<HTMLDivElement>(null);
     const { user } = useAuth();
     const { toast } = useToast();
     const queryClient = useQueryClient();
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (mobileDropdownRef.current && !mobileDropdownRef.current.contains(event.target as Node)) {
+                setShowMobileProfileDropdown(false);
+            }
+            if (desktopDropdownRef.current && !desktopDropdownRef.current.contains(event.target as Node)) {
+                setShowDesktopProfileDropdown(false);
+            }
+        };
+
+        if (showMobileProfileDropdown || showDesktopProfileDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showMobileProfileDropdown, showDesktopProfileDropdown]);
 
     const { data: tasks, isLoading } = useQuery<Task[]>({
         queryKey: ["/api/tasks"],
@@ -129,45 +147,57 @@ export default function Home() {
                     <h2 className="text-2xl font-bold text-white">Your Habits</h2>
                     
                     {/* Mobile User Profile */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="text-white p-2">
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage src={user?.profileImageUrl || undefined} />
-                                    <AvatarFallback className="bg-white bg-opacity-20 text-white text-sm">
-                                        {user?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white theme-transition" align="end">
-                            <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
-                                <div className="text-sm font-medium">
-                                    {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
+                    <div className="relative" ref={mobileDropdownRef}>
+                        <Button 
+                            variant="ghost" 
+                            className="text-white p-2"
+                            onClick={() => setShowMobileProfileDropdown(!showMobileProfileDropdown)}
+                        >
+                            <Avatar className="h-8 w-8">
+                                <AvatarImage src={user?.profileImageUrl || undefined} />
+                                <AvatarFallback className="bg-white bg-opacity-20 text-white text-sm">
+                                    {user?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
+                                </AvatarFallback>
+                            </Avatar>
+                        </Button>
+                        
+                        {showMobileProfileDropdown && (
+                            <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg py-1 z-50 animate-in slide-in-from-top-2 duration-200">
+                                <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+                                    <div className="text-sm font-medium">
+                                        {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
+                                    </div>
+                                    <div className="text-xs opacity-70">{user?.email}</div>
                                 </div>
-                                <div className="text-xs opacity-70">{user?.email}</div>
-                            </div>
-                            <DropdownMenuItem asChild>
-                                <Link href="/profile" className="cursor-pointer">
-                                    <User className="w-4 h-4 mr-2" />
+                                <Link 
+                                    href="/profile" 
+                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    onClick={() => setShowMobileProfileDropdown(false)}
+                                >
+                                    <User className="w-4 h-4" />
                                     Profile
                                 </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Link href="/settings" className="cursor-pointer">
-                                    <Settings className="w-4 h-4 mr-2" />
+                                <Link 
+                                    href="/settings" 
+                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    onClick={() => setShowMobileProfileDropdown(false)}
+                                >
+                                    <Settings className="w-4 h-4" />
                                     Settings
                                 </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                                className="cursor-pointer"
-                                onClick={() => window.location.href = '/api/logout'}
-                            >
-                                <span className="w-4 h-4 mr-2">🚪</span>
-                                Sign Out
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                <button
+                                    onClick={() => {
+                                        window.location.href = '/api/logout';
+                                        setShowMobileProfileDropdown(false);
+                                    }}
+                                    className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                    <span className="w-4 h-4">🚪</span>
+                                    Sign Out
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Main Content */}
@@ -235,51 +265,60 @@ export default function Home() {
                             </Button>
                             
                             {/* Desktop User Profile Dropdown */}
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button 
-                                        variant="ghost" 
-                                        className="text-white hover:bg-white hover:bg-opacity-10 p-2 rounded-xl"
-                                    >
-                                        <div className="flex items-center space-x-3">
-                                            <Avatar className="h-8 w-8">
-                                                <AvatarImage src={user?.profileImageUrl || undefined} />
-                                                <AvatarFallback className="bg-white bg-opacity-20 text-white text-sm">
-                                                    {user?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div className="text-left hidden lg:block">
-                                                <div className="text-sm font-medium">
-                                                    {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
-                                                </div>
-                                                <div className="text-xs opacity-70">{user?.email}</div>
+                            <div className="relative" ref={desktopDropdownRef}>
+                                <Button 
+                                    variant="ghost" 
+                                    className="text-white hover:bg-white hover:bg-opacity-10 p-2 rounded-xl"
+                                    onClick={() => setShowDesktopProfileDropdown(!showDesktopProfileDropdown)}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarImage src={user?.profileImageUrl || undefined} />
+                                            <AvatarFallback className="bg-white bg-opacity-20 text-white text-sm">
+                                                {user?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="text-left hidden lg:block">
+                                            <div className="text-sm font-medium">
+                                                {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
                                             </div>
-                                            <ChevronDown className="w-4 h-4 ml-2" />
+                                            <div className="text-xs opacity-70">{user?.email}</div>
                                         </div>
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white theme-transition">
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/profile" className="cursor-pointer">
-                                            <User className="w-4 h-4 mr-2" />
+                                        <ChevronDown className="w-4 h-4 ml-2" />
+                                    </div>
+                                </Button>
+                                
+                                {showDesktopProfileDropdown && (
+                                    <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg py-1 z-50 animate-in slide-in-from-top-2 duration-200">
+                                        <Link 
+                                            href="/profile" 
+                                            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                            onClick={() => setShowDesktopProfileDropdown(false)}
+                                        >
+                                            <User className="w-4 h-4" />
                                             Profile
                                         </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/settings" className="cursor-pointer">
-                                            <Settings className="w-4 h-4 mr-2" />
+                                        <Link 
+                                            href="/settings" 
+                                            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                            onClick={() => setShowDesktopProfileDropdown(false)}
+                                        >
+                                            <Settings className="w-4 h-4" />
                                             Settings
                                         </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem 
-                                        className="cursor-pointer"
-                                        onClick={() => window.location.href = '/api/logout'}
-                                    >
-                                        <span className="w-4 h-4 mr-2">🚪</span>
-                                        Sign Out
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                        <button
+                                            onClick={() => {
+                                                window.location.href = '/api/logout';
+                                                setShowDesktopProfileDropdown(false);
+                                            }}
+                                            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                        >
+                                            <span className="w-4 h-4">🚪</span>
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 

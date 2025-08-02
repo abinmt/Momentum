@@ -270,7 +270,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                handleStartPause();
+                                handleStartPause(e);
                                 setShowDropdown(false);
                             }}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
@@ -301,7 +301,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteClick();
+                                handleDeleteClick(e);
                                 setShowDropdown(false);
                             }}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
