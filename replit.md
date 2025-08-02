@@ -8,7 +8,8 @@ Stride is a Progressive Web App (PWA) habit tracker that replicates the design a
 - ✅ **Profile Navigation**: Fixed all profile page links (App Settings, Notifications, Share App, Export Data)
 - ✅ **Task Configuration**: Fixed Day-Long Task toggle and Task Days scheduling with comprehensive options
 - ✅ **More Options Menu**: Added functional task options dialog with task type selection and advanced settings
-- ✅ **Enhanced Task Cards**: Added goal display in thumbnails, task state management system, hamburger context menu system, and drag-and-drop reordering (works in mobile view, desktop compatibility improved)
+- ✅ **Enhanced Task Cards**: Added goal display in thumbnails, task state management system, hamburger context menu system, and cross-platform drag-and-drop reordering
+- ✅ **Cross-Platform Drag & Drop**: Implemented @dnd-kit library for seamless drag and drop functionality on both mobile touch devices and desktop mouse interactions
 - ✅ **Task Management**: Complete CRUD operations with visual feedback and real-time updates
 - ✅ **Responsive Design**: Enhanced mobile and desktop layouts for all settings and profile components
 - ✅ **Database Integration**: User preferences and task configurations stored in PostgreSQL with real-time updates
@@ -61,7 +62,8 @@ Preferred communication style: Simple, everyday language.
 ## Component Architecture
 - **Design System**: Consistent component library with variants and theming
 - **Responsive Design**: Mobile-first approach with desktop adaptations
-- **Accessibility**: WCAG compliant components with proper ARIA attributes
+- **Drag & Drop System**: @dnd-kit library implementation with PointerSensor and KeyboardSensor for cross-platform compatibility
+- **Accessibility**: WCAG compliant components with proper ARIA attributes and keyboard navigation support
 - **Performance**: Optimized renders with React.memo and proper key usage
 
 ## PWA Features
@@ -100,6 +102,7 @@ Preferred communication style: Simple, everyday language.
 - **React Hook Form**: Form handling with validation
 - **Zod**: Runtime type validation and schema definition
 - **Date-fns**: Date manipulation and formatting utilities
+- **@dnd-kit**: Modern drag and drop library for sortable interactions with accessibility support
 
 ## Monitoring and Error Handling
 - **Replit Development Tools**: Development-time error overlays and debugging
