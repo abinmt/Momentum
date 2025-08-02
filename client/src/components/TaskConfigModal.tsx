@@ -20,7 +20,17 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
     const [isDayLongTask, setIsDayLongTask] = useState(false);
     const [showScheduleDialog, setShowScheduleDialog] = useState(false);
     const [showMoreOptions, setShowMoreOptions] = useState(false);
+    const [showTaskTypeDialog, setShowTaskTypeDialog] = useState(false);
+    const [showRemindersDialog, setShowRemindersDialog] = useState(false);
+    const [showIconColorDialog, setShowIconColorDialog] = useState(false);
+    const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
     const [selectedDays, setSelectedDays] = useState<string[]>(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
+    const [taskType, setTaskType] = useState("simple");
+    const [selectedColor, setSelectedColor] = useState("primary");
+    const [selectedIcon, setSelectedIcon] = useState("check");
+    const [reminderEnabled, setReminderEnabled] = useState(false);
+    const [reminderTime, setReminderTime] = useState("09:00");
+    const [isPrivate, setIsPrivate] = useState(false);
     
     const daysOfWeek = [
         { key: "mon", label: "Monday", short: "M" },
@@ -39,6 +49,12 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
             setSchedule("daily");
             setIsDayLongTask(false);
             setSelectedDays(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
+            setTaskType(task.type || "simple");
+            setSelectedColor(task.color || "primary");
+            setSelectedIcon(task.iconName || "check");
+            setReminderEnabled(false);
+            setReminderTime("09:00");
+            setIsPrivate(false);
         }
     }, [task]);
 
@@ -70,14 +86,17 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
         const taskConfig = {
             title,
-            icon: task.iconName || "check",
-            color: task.color || "primary",
-            type: task.type || "simple",
+            icon: selectedIcon,
+            color: selectedColor,
+            type: taskType,
             goal: goal ? parseInt(goal) : null,
             goalUnit: task.unit,
             schedule,
             isDayLongTask,
-            selectedDays: selectedDays.join(','), // Convert array to comma-separated string
+            selectedDays: selectedDays.join(','),
+            reminderEnabled,
+            reminderTime,
+            isPrivate,
         };
 
         onSave(taskConfig);
@@ -269,7 +288,8 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                             <div className="space-y-2">
                                 <Button
                                     variant="ghost"
-                                    className="w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4"
+                                    className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setTaskType('timed')}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -279,12 +299,14 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                             <div className="font-semibold">Timed Task</div>
                                             <div className="text-xs opacity-70">Track time spent on activity</div>
                                         </div>
+                                        {taskType === 'timed' && <Check className="w-4 h-4 ml-auto" />}
                                     </div>
                                 </Button>
                                 
                                 <Button
                                     variant="ghost"
-                                    className="w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4"
+                                    className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setTaskType('negative')}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
@@ -294,12 +316,14 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                             <div className="font-semibold">Negative Task</div>
                                             <div className="text-xs opacity-70">Break bad habits</div>
                                         </div>
+                                        {taskType === 'negative' && <Check className="w-4 h-4 ml-auto" />}
                                     </div>
                                 </Button>
                                 
                                 <Button
                                     variant="ghost"
-                                    className="w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4"
+                                    className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setTaskType('health')}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
@@ -309,6 +333,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                             <div className="font-semibold">Health Task</div>
                                             <div className="text-xs opacity-70">Integrate with health data</div>
                                         </div>
+                                        {taskType === 'health' && <Check className="w-4 h-4 ml-auto" />}
                                     </div>
                                 </Button>
                             </div>
@@ -322,6 +347,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                 <Button
                                     variant="ghost"
                                     className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                    onClick={() => setShowRemindersDialog(true)}
                                 >
                                     <span>Reminders</span>
                                     <ChevronRight className="w-4 h-4" />
@@ -330,6 +356,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                 <Button
                                     variant="ghost"
                                     className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                    onClick={() => setShowIconColorDialog(true)}
                                 >
                                     <span>Icon & Color</span>
                                     <ChevronRight className="w-4 h-4" />
@@ -338,6 +365,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                 <Button
                                     variant="ghost"
                                     className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                    onClick={() => setShowPrivacyDialog(true)}
                                 >
                                     <span>Privacy</span>
                                     <ChevronRight className="w-4 h-4" />
@@ -349,6 +377,156 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     <Button
                         className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
                         onClick={() => setShowMoreOptions(false)}
+                    >
+                        Done
+                    </Button>
+                </DialogContent>
+            </Dialog>
+            
+            {/* Reminders Dialog */}
+            <Dialog open={showRemindersDialog} onOpenChange={setShowRemindersDialog}>
+                <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-center">Reminders</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between py-2">
+                            <span>Enable Reminders</span>
+                            <Switch
+                                checked={reminderEnabled}
+                                onCheckedChange={setReminderEnabled}
+                                className="data-[state=checked]:bg-green-500"
+                            />
+                        </div>
+                        
+                        {reminderEnabled && (
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="text-sm opacity-80">Reminder Time</label>
+                                    <Input
+                                        type="time"
+                                        value={reminderTime}
+                                        onChange={(e) => setReminderTime(e.target.value)}
+                                        className="bg-white bg-opacity-20 border-none text-white mt-2"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    
+                    <Button
+                        className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
+                        onClick={() => setShowRemindersDialog(false)}
+                    >
+                        Done
+                    </Button>
+                </DialogContent>
+            </Dialog>
+            
+            {/* Icon & Color Dialog */}
+            <Dialog open={showIconColorDialog} onOpenChange={setShowIconColorDialog}>
+                <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-center">Icon & Color</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6">
+                        {/* Color Selection */}
+                        <div>
+                            <h4 className="text-sm opacity-80 font-semibold mb-3">COLORS</h4>
+                            <div className="grid grid-cols-6 gap-3">
+                                {[
+                                    { name: 'primary', color: 'bg-orange-500' },
+                                    { name: 'blue', color: 'bg-blue-500' },
+                                    { name: 'green', color: 'bg-green-500' },
+                                    { name: 'red', color: 'bg-red-500' },
+                                    { name: 'purple', color: 'bg-purple-500' },
+                                    { name: 'yellow', color: 'bg-yellow-500' },
+                                    { name: 'pink', color: 'bg-pink-500' },
+                                    { name: 'indigo', color: 'bg-indigo-500' },
+                                    { name: 'teal', color: 'bg-teal-500' },
+                                    { name: 'gray', color: 'bg-gray-500' },
+                                    { name: 'cyan', color: 'bg-cyan-500' },
+                                    { name: 'emerald', color: 'bg-emerald-500' }
+                                ].map((colorOption) => (
+                                    <Button
+                                        key={colorOption.name}
+                                        variant="ghost"
+                                        size="sm"
+                                        className={`w-10 h-10 rounded-full p-0 ${colorOption.color} ${
+                                            selectedColor === colorOption.name ? 'ring-2 ring-white ring-offset-2 ring-offset-transparent' : ''
+                                        }`}
+                                        onClick={() => setSelectedColor(colorOption.name)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        
+                        {/* Icon Selection */}
+                        <div>
+                            <h4 className="text-sm opacity-80 font-semibold mb-3">ICONS</h4>
+                            <div className="grid grid-cols-6 gap-2">
+                                {[
+                                    'check', 'heart', 'star', 'target', 'zap', 'book',
+                                    'dumbbell', 'apple', 'moon', 'sun', 'coffee', 'music'
+                                ].map((iconName) => (
+                                    <Button
+                                        key={iconName}
+                                        variant="ghost"
+                                        size="sm"
+                                        className={`w-10 h-10 rounded-lg p-0 ${
+                                            selectedIcon === iconName ? 'bg-white bg-opacity-20' : 'hover:bg-white hover:bg-opacity-10'
+                                        }`}
+                                        onClick={() => setSelectedIcon(iconName)}
+                                    >
+                                        <span className="text-lg">{iconName === 'check' ? '✓' : iconName === 'heart' ? '♥' : iconName === 'star' ? '★' : iconName === 'target' ? '●' : iconName === 'zap' ? '⚡' : iconName === 'book' ? '📚' : iconName === 'dumbbell' ? '🏋️' : iconName === 'apple' ? '🍎' : iconName === 'moon' ? '🌙' : iconName === 'sun' ? '☀️' : iconName === 'coffee' ? '☕' : '🎵'}</span>
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <Button
+                        className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
+                        onClick={() => setShowIconColorDialog(false)}
+                    >
+                        Done
+                    </Button>
+                </DialogContent>
+            </Dialog>
+            
+            {/* Privacy Dialog */}
+            <Dialog open={showPrivacyDialog} onOpenChange={setShowPrivacyDialog}>
+                <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-center">Privacy</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between py-2">
+                            <div>
+                                <div className="font-semibold">Private Task</div>
+                                <div className="text-xs opacity-70">Hide from shared statistics</div>
+                            </div>
+                            <Switch
+                                checked={isPrivate}
+                                onCheckedChange={setIsPrivate}
+                                className="data-[state=checked]:bg-green-500"
+                            />
+                        </div>
+                        
+                        <div className="border-t border-white border-opacity-20 pt-4">
+                            <p className="text-sm opacity-80">
+                                Private tasks won't appear in shared dashboards or social features. 
+                                Only you can see your progress.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <Button
+                        className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
+                        onClick={() => setShowPrivacyDialog(false)}
                     >
                         Done
                     </Button>
