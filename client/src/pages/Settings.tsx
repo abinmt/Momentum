@@ -27,20 +27,29 @@ export default function Settings() {
     // Sync theme context with user preferences
     const isDarkMode = theme === 'dark';
 
-    // Initialize settings from user data
+    // Initialize settings from user data (only once when user loads)
     useEffect(() => {
         if (user) {
             setNotifications(user.notificationsEnabled ?? true);
-            // Sync theme with user preference on first load
-            const userDarkMode = user.darkModeEnabled ?? false;
-            if (userDarkMode !== isDarkMode) {
-                setTheme(userDarkMode ? 'dark' : 'light');
-            }
             setSoundEnabled(user.soundEnabled ?? true);
             setVibrationEnabled(user.vibrationEnabled ?? true);
             setReminderTime([user.reminderTime ?? 19]);
         }
-    }, [user, isDarkMode, setTheme]);
+    }, [user]);
+
+    // Sync theme with user preference only once on initial load
+    useEffect(() => {
+        if (user && user.darkModeEnabled !== undefined) {
+            const userDarkMode = user.darkModeEnabled;
+            // Only sync if theme context is different from user preference
+            const currentTheme = localStorage.getItem('stride-theme');
+            const expectedTheme = userDarkMode ? 'dark' : 'light';
+            
+            if (currentTheme !== expectedTheme) {
+                setTheme(expectedTheme);
+            }
+        }
+    }, [user?.id]); // Only run when user ID changes (first load)
 
     const updateSettingsMutation = useMutation({
         mutationFn: async (settings: any) => {
@@ -86,7 +95,7 @@ export default function Settings() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-primary">
+        <div className="min-h-screen bg-gradient-primary theme-transition">
             {/* Mobile View */}
             <div className={`${isMobile ? 'block' : 'hidden'} max-w-md mx-auto`}>
                 {/* Header */}
