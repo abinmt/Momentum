@@ -9,6 +9,7 @@ import Home from "@/pages/Home";
 import Statistics from "@/pages/Statistics";
 import Journal from "@/pages/Journal";
 import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -24,6 +25,7 @@ function Router() {
                     <Route path="/statistics" component={Statistics} />
                     <Route path="/journal" component={Journal} />
                     <Route path="/profile" component={Profile} />
+                    <Route path="/settings" component={Settings} />
                 </>
             )}
             <Route component={NotFound} />
