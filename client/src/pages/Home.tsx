@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Settings, Star, Plus } from "lucide-react";
+import { Loader2, Settings, Star, Plus, User, ChevronDown } from "lucide-react";
 import TaskCard from "@/components/TaskCard";
 import BottomNavigation from "@/components/BottomNavigation";
 import AddTaskModal from "@/components/AddTaskModal";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "wouter";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Task } from "@shared/schema";
 
 export default function Home() {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
+    const { user } = useAuth();
 
     const { data: tasks, isLoading } = useQuery<Task[]>({
         queryKey: ["/api/tasks"],
@@ -59,20 +69,60 @@ export default function Home() {
                     </div>
                 </div>
 
-                {/* Settings and Star Icons */}
-                <div className="flex justify-between items-center mt-8">
-                    <Button variant="ghost" size="icon" className="text-white opacity-60 hover:opacity-100">
-                        <Settings className="w-6 h-6" />
-                    </Button>
+                {/* Header with User Profile */}
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-white">Your Habits</h2>
+                    
+                    {/* Mobile User Profile */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="text-white p-2">
+                                <Avatar className="h-8 w-8">
+                                    <AvatarImage src={user?.profileImageUrl || undefined} />
+                                    <AvatarFallback className="bg-white bg-opacity-20 text-white text-sm">
+                                        {user?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56 bg-gray-900 border-gray-700 text-white" align="end">
+                            <div className="px-3 py-2 border-b border-gray-700">
+                                <div className="text-sm font-medium">
+                                    {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
+                                </div>
+                                <div className="text-xs opacity-70">{user?.email}</div>
+                            </div>
+                            <DropdownMenuItem asChild>
+                                <Link href="/profile" className="cursor-pointer">
+                                    <User className="w-4 h-4 mr-2" />
+                                    Profile
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href="/settings" className="cursor-pointer">
+                                    <Settings className="w-4 h-4 mr-2" />
+                                    Settings
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                                className="cursor-pointer"
+                                onClick={() => window.location.href = '/api/logout'}
+                            >
+                                <span className="w-4 h-4 mr-2">🚪</span>
+                                Sign Out
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+
+                {/* Page Indicators */}
+                <div className="flex justify-center items-center mt-8">
                     <div className="flex space-x-2">
                         <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
                         <div className="w-2 h-2 bg-white rounded-full"></div>
                         <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
                         <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
                     </div>
-                    <Button variant="ghost" size="icon" className="text-white opacity-60 hover:opacity-100">
-                        <Star className="w-6 h-6" />
-                    </Button>
                 </div>
             </main>
 
@@ -89,7 +139,7 @@ export default function Home() {
                 <div className="max-w-6xl mx-auto">
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-3xl font-bold text-white">Your Habits</h1>
-                        <div className="flex space-x-4">
+                        <div className="flex items-center space-x-4">
                             <Button 
                                 className="bg-white bg-opacity-20 text-white hover:bg-opacity-30"
                                 onClick={() => setIsAddTaskModalOpen(true)}
@@ -97,13 +147,53 @@ export default function Home() {
                                 <Plus className="w-4 h-4 mr-2" />
                                 Add Task
                             </Button>
-                            <Button 
-                                variant="outline" 
-                                className="text-white border-white border-opacity-20 hover:bg-white hover:bg-opacity-10"
-                                onClick={() => window.location.href = '/api/logout'}
-                            >
-                                Sign Out
-                            </Button>
+                            
+                            {/* User Profile Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button 
+                                        variant="ghost" 
+                                        className="text-white hover:bg-white hover:bg-opacity-10 p-2 rounded-xl"
+                                    >
+                                        <div className="flex items-center space-x-3">
+                                            <Avatar className="h-8 w-8">
+                                                <AvatarImage src={user?.profileImageUrl || undefined} />
+                                                <AvatarFallback className="bg-white bg-opacity-20 text-white text-sm">
+                                                    {user?.firstName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="text-left hidden lg:block">
+                                                <div className="text-sm font-medium">
+                                                    {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
+                                                </div>
+                                                <div className="text-xs opacity-70">{user?.email}</div>
+                                            </div>
+                                            <ChevronDown className="w-4 h-4 ml-2" />
+                                        </div>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56 bg-gray-900 border-gray-700 text-white">
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/profile" className="cursor-pointer">
+                                            <User className="w-4 h-4 mr-2" />
+                                            Profile
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                        <Link href="/settings" className="cursor-pointer">
+                                            <Settings className="w-4 h-4 mr-2" />
+                                            Settings
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem 
+                                        className="cursor-pointer"
+                                        onClick={() => window.location.href = '/api/logout'}
+                                    >
+                                        <span className="w-4 h-4 mr-2">🚪</span>
+                                        Sign Out
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
 
