@@ -132,6 +132,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
     });
 
+    // Timer state routes
+    app.patch('/api/tasks/:id/timer', isAuthenticated, async (req: any, res) => {
+        try {
+            const userId = req.user.claims.sub;
+            const { id } = req.params;
+            const { timerState, timerStartedAt, timerElapsedSeconds } = req.body;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const task = await storage.updateTask(id, userId, {
+                timerState,
+                timerStartedAt: timerStartedAt ? new Date(timerStartedAt) : null,
+                timerElapsedSeconds,
+                lastActiveDate: today,
+            });
+            
+            if (!task) {
+                return res.status(404).json({ message: "Task not found" });
+            }
+            res.json(task);
+        } catch (error) {
+            console.error("Error updating timer state:", error);
+            res.status(500).json({ message: "Failed to update timer state" });
+        }
+    });
+
     // Task entry routes
     app.get('/api/tasks/:taskId/entries', isAuthenticated, async (req: any, res) => {
         try {

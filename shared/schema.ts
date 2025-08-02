@@ -64,6 +64,11 @@ export const tasks = pgTable("tasks", {
     bestStreak: integer("best_streak").notNull().default(0),
     totalCompletions: integer("total_completions").notNull().default(0),
     displayOrder: integer("display_order").notNull().default(0),
+    // Timer state persistence
+    timerState: varchar("timer_state").default("not-started"), // not-started, in-progress, paused, completed
+    timerStartedAt: timestamp("timer_started_at"),
+    timerElapsedSeconds: integer("timer_elapsed_seconds").default(0),
+    lastActiveDate: date("last_active_date"), // to reset daily timers
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -22,10 +22,43 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-    const [isTimerRunning, setIsTimerRunning] = useState(false);
-    const [taskState, setTaskState] = useState<'not-started' | 'started' | 'paused' | 'completed'>('not-started');
     const { toast } = useToast();
     const queryClient = useQueryClient();
+    
+    // Initialize timer state from task data
+    const today = new Date().toISOString().split('T')[0];
+    const isNewDay = task.lastActiveDate !== today;
+    
+    // Reset timer state if it's a new day
+    const initialTimerState = isNewDay ? 'not-started' : (task.timerState || 'not-started');
+    const initialElapsedSeconds = isNewDay ? 0 : (task.timerElapsedSeconds || 0);
+    
+    const [taskState, setTaskState] = useState<'not-started' | 'in-progress' | 'paused' | 'completed'>(
+        initialTimerState as any
+    );
+    const [elapsedSeconds, setElapsedSeconds] = useState(initialElapsedSeconds);
+    const [isTimerRunning, setIsTimerRunning] = useState(initialTimerState === 'in-progress');
+
+    // Timer update mutation
+    const updateTimerMutation = useMutation({
+        mutationFn: async (timerData: {
+            timerState: string;
+            timerStartedAt?: Date | null;
+            timerElapsedSeconds: number;
+        }) => {
+            return await apiRequest("PATCH", `/api/tasks/${task.id}/timer`, timerData);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+        },
+        onError: () => {
+            toast({
+                title: "Error",
+                description: "Failed to save timer state.",
+                variant: "destructive",
+            });
+        },
+    });
 
     // Initialize sortable functionality
     const {
@@ -88,10 +121,18 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // Only allow completion if task is started
-        if (taskState === 'started') {
+        // Only allow completion if task is in progress
+        if (taskState === 'in-progress') {
             toggleMutation.mutate();
             setTaskState('completed');
+            setIsTimerRunning(false);
+            
+            // Update database to mark as completed
+            updateTimerMutation.mutate({
+                timerState: 'completed',
+                timerStartedAt: null,
+                timerElapsedSeconds: elapsedSeconds,
+            });
         } else if (taskState === 'not-started' || taskState === 'paused') {
             toast({
                 title: "Task not started",
@@ -104,28 +145,37 @@ export default function TaskCard({ task }: TaskCardProps) {
     const handleStartPause = (e: React.MouseEvent) => {
         e.stopPropagation();
         
-        if (taskState === 'not-started') {
-            setTaskState('started');
+        let newState: 'not-started' | 'in-progress' | 'paused' | 'completed';
+        let newTimerStarted: Date | null = null;
+        
+        if (taskState === 'not-started' || taskState === 'paused') {
+            newState = 'in-progress';
+            newTimerStarted = new Date();
             setIsTimerRunning(true);
             toast({
                 title: "Task Started",
                 description: `${task.title} is now active. Click the card to complete it.`,
             });
-        } else if (taskState === 'started') {
-            setTaskState('paused');
+        } else if (taskState === 'in-progress') {
+            newState = 'paused';
+            newTimerStarted = null;
             setIsTimerRunning(false);
             toast({
                 title: "Task Paused",
                 description: `${task.title} has been paused.`,
             });
-        } else if (taskState === 'paused') {
-            setTaskState('started');
-            setIsTimerRunning(true);
-            toast({
-                title: "Task Resumed",
-                description: `${task.title} is now active again.`,
-            });
+        } else {
+            return; // No action for completed tasks
         }
+        
+        setTaskState(newState);
+        
+        // Update database with timer state
+        updateTimerMutation.mutate({
+            timerState: newState,
+            timerStartedAt: newTimerStarted,
+            timerElapsedSeconds: elapsedSeconds,
+        });
     };
 
     const handleDeleteClick = (e: React.MouseEvent) => {
@@ -184,7 +234,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </div>
                 <div className="text-xs opacity-80">
                     {taskState === 'completed' && task.currentStreak > 0 ? `${task.currentStreak} day streak` : 
-                     taskState === 'started' ? "In progress" :
+                     taskState === 'in-progress' ? "In progress" :
                      taskState === 'paused' ? "Paused" : "Not started"}
                 </div>
             </div>
@@ -212,15 +262,20 @@ export default function TaskCard({ task }: TaskCardProps) {
                                     <Play className="w-4 h-4" />
                                     Start Task
                                 </>
-                            ) : taskState === 'started' ? (
+                            ) : taskState === 'in-progress' ? (
                                 <>
                                     <Pause className="w-4 h-4" />
                                     Pause Task
                                 </>
-                            ) : (
+                            ) : taskState === 'paused' ? (
                                 <>
                                     <Play className="w-4 h-4" />
                                     Resume Task
+                                </>
+                            ) : (
+                                <>
+                                    <Play className="w-4 h-4" />
+                                    Start Task
                                 </>
                             )}
                         </DropdownMenuItem>
