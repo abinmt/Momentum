@@ -106,7 +106,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl">
+            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl [&>button]:hidden">
                 <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                     <Button variant="ghost" size="icon" onClick={onClose}>
                         <ChevronLeft className="w-6 h-6 text-white" />
@@ -120,7 +120,20 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     <div className="relative w-20 h-20 md:w-32 md:h-32 mx-auto mb-4">
                         <ProgressRing progress={0} size={80} strokeWidth={6} />
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <task.icon className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                            <span className="text-2xl md:text-4xl text-white">
+                                {selectedIcon === 'check' ? '✓' : 
+                                selectedIcon === 'heart' ? '♥' : 
+                                selectedIcon === 'star' ? '★' : 
+                                selectedIcon === 'target' ? '●' : 
+                                selectedIcon === 'zap' ? '⚡' : 
+                                selectedIcon === 'book' ? '📚' : 
+                                selectedIcon === 'dumbbell' ? '🏋️' : 
+                                selectedIcon === 'apple' ? '🍎' : 
+                                selectedIcon === 'moon' ? '🌙' : 
+                                selectedIcon === 'sun' ? '☀️' : 
+                                selectedIcon === 'coffee' ? '☕' : 
+                                selectedIcon === 'music' ? '🎵' : '✓'}
+                            </span>
                         </div>
                         <Button 
                             variant="ghost" 
