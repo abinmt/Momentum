@@ -148,11 +148,13 @@ export default function TaskCard({
             onClick={handleCardClick}
             draggable={true}
             onDragStart={(e) => {
+                console.log('Drag start:', task.id);
                 e.dataTransfer.setData("text/plain", task.id);
                 e.dataTransfer.effectAllowed = "move";
                 onDragStart?.(task.id);
             }}
             onDragEnd={() => {
+                console.log('Drag end');
                 onDragEnd?.();
             }}
             onDragOver={(e) => {
@@ -161,10 +163,13 @@ export default function TaskCard({
                 onDragOver?.(e);
             }}
             onDrop={(e) => {
+                console.log('Drop event triggered on task:', task.id);
                 e.preventDefault();
+                e.stopPropagation();
                 const draggedTaskId = e.dataTransfer.getData("text/plain");
-                if (draggedTaskId !== task.id) {
-                    onDrop?.(draggedTaskId);
+                console.log('Dragged task ID:', draggedTaskId, 'Target task ID:', task.id);
+                if (draggedTaskId && draggedTaskId !== task.id) {
+                    onDrop?.(task.id); // Pass the target task ID
                 }
             }}
         >
