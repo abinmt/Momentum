@@ -8,7 +8,7 @@ Stride is a Progressive Web App (PWA) habit tracker that replicates the design a
 - ✅ **Profile Navigation**: Fixed all profile page links (App Settings, Notifications, Share App, Export Data)
 - ✅ **Task Configuration**: Fixed Day-Long Task toggle and Task Days scheduling with comprehensive options
 - ✅ **More Options Menu**: Added functional task options dialog with task type selection and advanced settings
-- ✅ **Enhanced Task Cards**: Added goal display in thumbnails, task state management system, and hamburger context menu system
+- ✅ **Enhanced Task Cards**: Added goal display in thumbnails, task state management system, hamburger context menu system, and drag-and-drop reordering
 - ✅ **Task Management**: Complete CRUD operations with visual feedback and real-time updates
 - ✅ **Responsive Design**: Enhanced mobile and desktop layouts for all settings and profile components
 - ✅ **Database Integration**: User preferences and task configurations stored in PostgreSQL with real-time updates

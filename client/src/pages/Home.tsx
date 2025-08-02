@@ -59,6 +59,7 @@ export default function Home() {
     });
 
     const handleDragStart = (taskId: string) => {
+        console.log('Home handleDragStart called:', taskId);
         setDraggedTaskId(taskId);
     };
 
@@ -67,13 +68,15 @@ export default function Home() {
     };
 
     const handleDrop = (targetTaskId: string) => {
-        console.log('Drop event:', { draggedTaskId, targetTaskId });
+        console.log('Home handleDrop called:', { draggedTaskId, targetTaskId });
         if (draggedTaskId && draggedTaskId !== targetTaskId) {
-            console.log('Triggering reorder mutation');
+            console.log('Triggering reorder mutation from Home');
             reorderTasksMutation.mutate({
                 draggedTaskId,
                 targetTaskId,
             });
+        } else {
+            console.log('Drop conditions not met:', { draggedTaskId, targetTaskId, same: draggedTaskId === targetTaskId });
         }
         setDraggedTaskId(null);
     };
