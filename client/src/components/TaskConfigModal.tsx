@@ -45,7 +45,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto bottom-0 top-auto translate-y-0 rounded-t-3xl rounded-b-none">
+            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl">
                 <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                     <Button variant="ghost" size="icon" onClick={onClose}>
                         <ChevronLeft className="w-6 h-6 text-white" />
@@ -55,22 +55,22 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                 </DialogHeader>
 
                 {/* Task Icon and Title */}
-                <div className="text-center mb-6">
-                    <div className="relative w-20 h-20 mx-auto mb-4">
+                <div className="text-center mb-6 md:mb-8">
+                    <div className="relative w-20 h-20 md:w-32 md:h-32 mx-auto mb-4">
                         <ProgressRing progress={0} size={80} strokeWidth={6} />
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <task.icon className="w-8 h-8 text-white" />
+                            <task.icon className="w-8 h-8 md:w-12 md:h-12 text-white" />
                         </div>
                         <Button 
                             variant="ghost" 
                             size="icon"
-                            className="absolute -top-1 -right-1 bg-gray-600 rounded-full p-1 w-6 h-6"
+                            className="absolute -top-1 -right-1 bg-gray-600 rounded-full p-1 w-6 h-6 md:w-8 md:h-8"
                         >
-                            <MoreHorizontal className="w-4 h-4 text-white" />
+                            <MoreHorizontal className="w-4 h-4 md:w-5 md:h-5 text-white" />
                         </Button>
                     </div>
-                    <h3 className="text-lg font-bold mb-2">{title.toUpperCase()}</h3>
-                    <p className="text-sm opacity-80">
+                    <h3 className="text-lg md:text-2xl font-bold mb-2">{title.toUpperCase()}</h3>
+                    <p className="text-sm md:text-base opacity-80">
                         ♥ This task uses data from the Health app. Please grant Stride permission if prompted.
                     </p>
                 </div>

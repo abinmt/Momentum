@@ -9,6 +9,7 @@ import {
     integer,
     boolean,
     date,
+    unique,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -70,7 +71,10 @@ export const taskEntries = pgTable("task_entries", {
     notes: text("notes"),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+    // Unique constraint for taskId, userId, and date combination
+    uniqueEntry: unique().on(table.taskId, table.userId, table.date),
+}));
 
 // Journal entries table
 export const journalEntries = pgTable("journal_entries", {
