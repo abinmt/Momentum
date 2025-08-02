@@ -36,11 +36,20 @@ export default function Settings() {
 
     const updateSettingsMutation = useMutation({
         mutationFn: async (settings: any) => {
-            return await apiRequest('/api/user/settings', {
+            const response = await fetch('/api/user/settings', {
                 method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(settings),
-                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // Important for cookies/session
             });
+            
+            if (!response.ok) {
+                throw new Error(`${response.status}: ${response.statusText}`);
+            }
+            
+            return response.json();
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
