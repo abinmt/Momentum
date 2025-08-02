@@ -54,8 +54,10 @@ export const tasks = pgTable("tasks", {
     type: varchar("type").notNull().default("simple"), // simple, timed, health, negative
     goal: integer("goal"), // e.g., 5000 steps, 30 minutes
     goalUnit: varchar("goal_unit"), // steps, minutes, calories, etc.
+    isDayLongTask: boolean("is_day_long_task").default(false), // New field for day-long tasks
     schedule: varchar("schedule").notNull().default("daily"), // daily, weekdays, custom
     customDays: jsonb("custom_days"), // [1,2,3,4,5] for mon-fri
+    selectedDays: varchar("selected_days").default("mon,tue,wed,thu,fri,sat,sun"), // New field for task days
     timesPerWeek: integer("times_per_week"), // for flexible scheduling
     isActive: boolean("is_active").notNull().default(true),
     currentStreak: integer("current_streak").notNull().default(0),
@@ -164,6 +166,9 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
     totalCompletions: true,
     createdAt: true,
     updatedAt: true,
+}).extend({
+    isDayLongTask: z.boolean().optional(),
+    selectedDays: z.string().optional(),
 });
 
 export const insertTaskEntrySchema = createInsertSchema(taskEntries).omit({

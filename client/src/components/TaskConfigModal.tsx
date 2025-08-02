@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import ProgressRing from "./ProgressRing";
 
 interface TaskConfigModalProps {
@@ -16,14 +17,52 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
     const [title, setTitle] = useState("");
     const [goal, setGoal] = useState("");
     const [schedule, setSchedule] = useState("daily");
+    const [isDayLongTask, setIsDayLongTask] = useState(false);
+    const [showScheduleDialog, setShowScheduleDialog] = useState(false);
+    const [selectedDays, setSelectedDays] = useState<string[]>(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
+    
+    const daysOfWeek = [
+        { key: "mon", label: "Monday", short: "M" },
+        { key: "tue", label: "Tuesday", short: "T" },
+        { key: "wed", label: "Wednesday", short: "W" },
+        { key: "thu", label: "Thursday", short: "T" },
+        { key: "fri", label: "Friday", short: "F" },
+        { key: "sat", label: "Saturday", short: "S" },
+        { key: "sun", label: "Sunday", short: "S" },
+    ];
 
     useEffect(() => {
         if (task) {
             setTitle(task.name);
             setGoal(task.defaultGoal || "");
             setSchedule("daily");
+            setIsDayLongTask(false);
+            setSelectedDays(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
         }
     }, [task]);
+
+    const toggleDay = (dayKey: string) => {
+        setSelectedDays(prev => 
+            prev.includes(dayKey) 
+                ? prev.filter(day => day !== dayKey)
+                : [...prev, dayKey]
+        );
+    };
+
+    const getScheduleDisplayText = () => {
+        if (selectedDays.length === 7) return "Every Day";
+        if (selectedDays.length === 5 && !selectedDays.includes("sat") && !selectedDays.includes("sun")) {
+            return "Weekdays";
+        }
+        if (selectedDays.length === 2 && selectedDays.includes("sat") && selectedDays.includes("sun")) {
+            return "Weekends";
+        }
+        if (selectedDays.length === 0) return "Never";
+        if (selectedDays.length <= 3) {
+            return selectedDays.map(day => daysOfWeek.find(d => d.key === day)?.short).join(", ");
+        }
+        return `${selectedDays.length} days`;
+    };
 
     const handleSave = () => {
         if (!task) return;
@@ -36,6 +75,8 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
             goal: goal ? parseInt(goal) : null,
             goalUnit: task.unit,
             schedule,
+            isDayLongTask,
+            selectedDays: selectedDays.join(','), // Convert array to comma-separated string
         };
 
         onSave(taskConfig);
@@ -93,7 +134,11 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                             <Calendar className="w-5 h-5 text-white" />
                             <span className="text-white">Day-Long Task</span>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-white opacity-60" />
+                        <Switch
+                            checked={isDayLongTask}
+                            onCheckedChange={setIsDayLongTask}
+                            className="data-[state=checked]:bg-green-500"
+                        />
                     </div>
 
                     <div className="flex items-center justify-between py-4 border-b border-white border-opacity-20">
@@ -114,13 +159,16 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between py-4">
+                    <div 
+                        className="flex items-center justify-between py-4 cursor-pointer hover:bg-white hover:bg-opacity-10 rounded-lg px-2 -mx-2 transition-colors"
+                        onClick={() => setShowScheduleDialog(true)}
+                    >
                         <div className="flex items-center space-x-3">
                             <Calendar className="w-5 h-5 text-white" />
                             <span className="text-white">Task Days</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <span className="text-white opacity-80">Every Day</span>
+                            <span className="text-white opacity-80">{getScheduleDisplayText()}</span>
                             <ChevronRight className="w-5 h-5 text-white opacity-60" />
                         </div>
                     </div>
@@ -133,6 +181,76 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     SAVE TASK
                 </Button>
             </DialogContent>
+            
+            {/* Schedule Dialog */}
+            <Dialog open={showScheduleDialog} onOpenChange={setShowScheduleDialog}>
+                <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-center">Task Days</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        {/* Quick Options */}
+                        <div className="space-y-2">
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                onClick={() => setSelectedDays(["mon", "tue", "wed", "thu", "fri", "sat", "sun"])}
+                            >
+                                <span>Every Day</span>
+                                {selectedDays.length === 7 && <Check className="w-4 h-4" />}
+                            </Button>
+                            
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                onClick={() => setSelectedDays(["mon", "tue", "wed", "thu", "fri"])}
+                            >
+                                <span>Weekdays</span>
+                                {selectedDays.length === 5 && !selectedDays.includes("sat") && !selectedDays.includes("sun") && <Check className="w-4 h-4" />}
+                            </Button>
+                            
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                onClick={() => setSelectedDays(["sat", "sun"])}
+                            >
+                                <span>Weekends</span>
+                                {selectedDays.length === 2 && selectedDays.includes("sat") && selectedDays.includes("sun") && <Check className="w-4 h-4" />}
+                            </Button>
+                        </div>
+                        
+                        {/* Custom Day Selection */}
+                        <div className="border-t border-white border-opacity-20 pt-4">
+                            <h4 className="text-sm opacity-80 mb-3">Custom</h4>
+                            <div className="grid grid-cols-7 gap-2">
+                                {daysOfWeek.map((day) => (
+                                    <Button
+                                        key={day.key}
+                                        variant="ghost"
+                                        size="sm"
+                                        className={`w-10 h-10 rounded-full p-0 ${
+                                            selectedDays.includes(day.key)
+                                                ? "bg-green-500 text-white hover:bg-green-600"
+                                                : "bg-white bg-opacity-20 text-white hover:bg-opacity-30"
+                                        }`}
+                                        onClick={() => toggleDay(day.key)}
+                                    >
+                                        {day.short}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <Button
+                        className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
+                        onClick={() => setShowScheduleDialog(false)}
+                    >
+                        Done
+                    </Button>
+                </DialogContent>
+            </Dialog>
         </Dialog>
     );
 }
