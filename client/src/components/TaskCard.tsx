@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Play, Pause, Trash2, MoreVertical } from "lucide-react";
 import ProgressRing from "./ProgressRing";
@@ -6,13 +6,6 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { TASK_ICONS, TASK_COLORS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Task } from "@shared/schema";
@@ -38,6 +31,8 @@ export default function TaskCard({ task }: TaskCardProps) {
     );
     const [elapsedSeconds, setElapsedSeconds] = useState(initialElapsedSeconds);
     const [isTimerRunning, setIsTimerRunning] = useState(initialTimerState === 'in-progress');
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Timer update mutation
     const updateTimerMutation = useMutation({
@@ -59,6 +54,23 @@ export default function TaskCard({ task }: TaskCardProps) {
             });
         },
     });
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+        };
+
+        if (showDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showDropdown]);
 
     // Initialize sortable functionality
     const {
@@ -240,27 +252,28 @@ export default function TaskCard({ task }: TaskCardProps) {
             </div>
 
             {/* Hamburger Menu */}
-            <div className="absolute top-2 right-2 z-10">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-2 w-8 h-8"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <MoreVertical className="w-4 h-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent 
-                        className="bg-white dark:bg-gray-800 text-black dark:text-white min-w-[150px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg"
-                        align="end"
-                        sideOffset={5}
-                        alignOffset={-5}
-                    >
-                        <DropdownMenuItem 
-                            onClick={handleStartPause}
-                            className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            <div className="absolute top-2 right-2 z-10" ref={dropdownRef}>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-2 w-8 h-8"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDropdown(!showDropdown);
+                    }}
+                >
+                    <MoreVertical className="w-4 h-4" />
+                </Button>
+                
+                {showDropdown && (
+                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[150px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg py-1 z-50 animate-in slide-in-from-top-2 duration-200">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleStartPause();
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             {taskState === 'not-started' ? (
                                 <>
@@ -283,17 +296,21 @@ export default function TaskCard({ task }: TaskCardProps) {
                                     Start Task
                                 </>
                             )}
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                            onClick={handleDeleteClick}
-                            className="flex items-center gap-2 cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        </button>
+                        <hr className="my-1 border-gray-200 dark:border-gray-700" />
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClick();
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                             <Trash2 className="w-4 h-4" />
                             Delete Task
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
