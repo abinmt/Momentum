@@ -240,7 +240,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             </div>
 
             {/* Hamburger Menu */}
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2 z-10">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button
@@ -252,10 +252,15 @@ export default function TaskCard({ task }: TaskCardProps) {
                             <MoreVertical className="w-4 h-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-white text-black min-w-[150px]" align="end">
+                    <DropdownMenuContent 
+                        className="bg-white dark:bg-gray-800 text-black dark:text-white min-w-[150px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg"
+                        align="end"
+                        sideOffset={5}
+                        alignOffset={-5}
+                    >
                         <DropdownMenuItem 
                             onClick={handleStartPause}
-                            className="flex items-center gap-2 cursor-pointer"
+                            className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             {taskState === 'not-started' ? (
                                 <>
@@ -282,7 +287,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem 
                             onClick={handleDeleteClick}
-                            className="flex items-center gap-2 cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="flex items-center gap-2 cursor-pointer text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                             <Trash2 className="w-4 h-4" />
                             Delete Task
