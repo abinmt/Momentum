@@ -21,6 +21,7 @@ interface TaskCardProps {
 
 export default function TaskCard({ task }: TaskCardProps) {
     const [isTimerRunning, setIsTimerRunning] = useState(false);
+    const [taskState, setTaskState] = useState<'not-started' | 'started' | 'paused' | 'completed'>('not-started');
     const { toast } = useToast();
     const queryClient = useQueryClient();
 
@@ -70,24 +71,42 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // Allow all tasks to be completed when clicking the card
-        toggleMutation.mutate();
+        // Only allow completion if task is started
+        if (taskState === 'started') {
+            toggleMutation.mutate();
+            setTaskState('completed');
+        } else if (taskState === 'not-started' || taskState === 'paused') {
+            toast({
+                title: "Task not started",
+                description: "Please start the task first using the menu.",
+                variant: "destructive",
+            });
+        }
     };
 
     const handleStartPause = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setIsTimerRunning(!isTimerRunning);
-        if (task.type === "timed") {
-            // For timed tasks, this would start/stop the timer
+        
+        if (taskState === 'not-started') {
+            setTaskState('started');
+            setIsTimerRunning(true);
             toast({
-                title: isTimerRunning ? "Timer Paused" : "Timer Started",
-                description: `${task.title} timer ${isTimerRunning ? "paused" : "started"}.`,
+                title: "Task Started",
+                description: `${task.title} is now active. Click the card to complete it.`,
             });
-        } else {
-            // For other tasks, this could mark as in-progress
+        } else if (taskState === 'started') {
+            setTaskState('paused');
+            setIsTimerRunning(false);
             toast({
-                title: isTimerRunning ? "Task Paused" : "Task Started",
-                description: `${task.title} ${isTimerRunning ? "paused" : "started"}.`,
+                title: "Task Paused",
+                description: `${task.title} has been paused.`,
+            });
+        } else if (taskState === 'paused') {
+            setTaskState('started');
+            setIsTimerRunning(true);
+            toast({
+                title: "Task Resumed",
+                description: `${task.title} is now active again.`,
             });
         }
     };
@@ -106,10 +125,14 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const IconComponent = TASK_ICONS[task.icon as keyof typeof TASK_ICONS] || TASK_ICONS.check;
     const colorClasses = TASK_COLORS[task.color as keyof typeof TASK_COLORS] || TASK_COLORS.primary;
+    
+    // Apply grey overlay for paused/not started tasks
+    const isInactive = taskState === 'not-started' || taskState === 'paused';
+    const cardClasses = `task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''}`;
 
     return (
         <div 
-            className={`task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden`}
+            className={cardClasses}
             onClick={handleCardClick}
         >
             <div className="relative w-20 h-20 mb-4">
@@ -139,7 +162,9 @@ export default function TaskCard({ task }: TaskCardProps) {
                     {task.title.toUpperCase()}
                 </div>
                 <div className="text-xs opacity-80">
-                    {task.currentStreak > 0 ? `${task.currentStreak} day streak` : "Not started"}
+                    {taskState === 'completed' && task.currentStreak > 0 ? `${task.currentStreak} day streak` : 
+                     taskState === 'started' ? "In progress" :
+                     taskState === 'paused' ? "Paused" : "Not started"}
                 </div>
             </div>
 
@@ -161,7 +186,12 @@ export default function TaskCard({ task }: TaskCardProps) {
                             onClick={handleStartPause}
                             className="flex items-center gap-2 cursor-pointer"
                         >
-                            {isTimerRunning ? (
+                            {taskState === 'not-started' ? (
+                                <>
+                                    <Play className="w-4 h-4" />
+                                    Start Task
+                                </>
+                            ) : taskState === 'started' ? (
                                 <>
                                     <Pause className="w-4 h-4" />
                                     Pause Task
@@ -169,7 +199,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                             ) : (
                                 <>
                                     <Play className="w-4 h-4" />
-                                    Start Task
+                                    Resume Task
                                 </>
                             )}
                         </DropdownMenuItem>
