@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
   DndContext,
   closestCenter,
@@ -108,7 +109,7 @@ export default function Home() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-primary relative">
+        <div className="min-h-screen bg-gradient-primary relative theme-transition">
             {/* Mobile View */}
             <div className="block md:hidden max-w-md mx-auto">
                 {/* Status Bar */}
@@ -139,8 +140,8 @@ export default function Home() {
                                 </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 bg-gray-900 border-gray-700 text-white" align="end">
-                            <div className="px-3 py-2 border-b border-gray-700">
+                        <DropdownMenuContent className="w-56 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white theme-transition" align="end">
+                            <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
                                 <div className="text-sm font-medium">
                                     {user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user?.email?.split('@')[0]}
                                 </div>
@@ -224,6 +225,7 @@ export default function Home() {
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-3xl font-bold text-white">Your Habits</h1>
                         <div className="flex items-center space-x-4">
+                            <ThemeToggle />
                             <Button 
                                 className="bg-white bg-opacity-20 text-white hover:bg-opacity-30"
                                 onClick={() => setIsAddTaskModalOpen(true)}
@@ -256,7 +258,7 @@ export default function Home() {
                                         </div>
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56 bg-gray-900 border-gray-700 text-white">
+                                <DropdownMenuContent className="w-56 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white theme-transition">
                                     <DropdownMenuItem asChild>
                                         <Link href="/profile" className="cursor-pointer">
                                             <User className="w-4 h-4 mr-2" />

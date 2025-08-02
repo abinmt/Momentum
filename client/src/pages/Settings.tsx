@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Link } from "wouter";
 import BottomNavigation from "@/components/BottomNavigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -16,23 +17,30 @@ export default function Settings() {
     const isMobile = useIsMobile();
     const queryClient = useQueryClient();
     const { toast } = useToast();
+    const { theme, setTheme } = useTheme();
     
     const [notifications, setNotifications] = useState(true);
-    const [darkMode, setDarkMode] = useState(true);
     const [soundEnabled, setSoundEnabled] = useState(true);
     const [vibrationEnabled, setVibrationEnabled] = useState(true);
     const [reminderTime, setReminderTime] = useState([19]); // 7 PM default
+
+    // Sync theme context with user preferences
+    const isDarkMode = theme === 'dark';
 
     // Initialize settings from user data
     useEffect(() => {
         if (user) {
             setNotifications(user.notificationsEnabled ?? true);
-            setDarkMode(user.darkModeEnabled ?? true);
+            // Sync theme with user preference on first load
+            const userDarkMode = user.darkModeEnabled ?? false;
+            if (userDarkMode !== isDarkMode) {
+                setTheme(userDarkMode ? 'dark' : 'light');
+            }
             setSoundEnabled(user.soundEnabled ?? true);
             setVibrationEnabled(user.vibrationEnabled ?? true);
             setReminderTime([user.reminderTime ?? 19]);
         }
-    }, [user]);
+    }, [user, isDarkMode, setTheme]);
 
     const updateSettingsMutation = useMutation({
         mutationFn: async (settings: any) => {
@@ -69,6 +77,12 @@ export default function Settings() {
 
     const updateSetting = (key: string, value: any) => {
         updateSettingsMutation.mutate({ [key]: value });
+    };
+
+    const handleThemeToggle = (checked: boolean) => {
+        const newTheme = checked ? 'dark' : 'light';
+        setTheme(newTheme);
+        updateSetting('darkModeEnabled', checked);
     };
 
     return (
@@ -174,18 +188,15 @@ export default function Settings() {
                         {/* Appearance */}
                         <div className="bg-white bg-opacity-10 rounded-2xl p-4">
                             <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                                {darkMode ? <Moon className="w-5 h-5 mr-2" /> : <Sun className="w-5 h-5 mr-2" />}
+                                {isDarkMode ? <Moon className="w-5 h-5 mr-2" /> : <Sun className="w-5 h-5 mr-2" />}
                                 Appearance
                             </h3>
                             
                             <div className="flex items-center justify-between">
                                 <span className="text-white">Dark Mode</span>
                                 <Switch 
-                                    checked={darkMode} 
-                                    onCheckedChange={(checked) => {
-                                        setDarkMode(checked);
-                                        updateSetting('darkModeEnabled', checked);
-                                    }} 
+                                    checked={isDarkMode} 
+                                    onCheckedChange={handleThemeToggle} 
                                 />
                             </div>
                         </div>
@@ -316,18 +327,15 @@ export default function Settings() {
                         {/* Appearance */}
                         <div className="bg-white bg-opacity-10 rounded-2xl p-6">
                             <h3 className="text-xl font-semibold text-white mb-6 flex items-center">
-                                {darkMode ? <Moon className="w-6 h-6 mr-2" /> : <Sun className="w-6 h-6 mr-2" />}
+                                {isDarkMode ? <Moon className="w-6 h-6 mr-2" /> : <Sun className="w-6 h-6 mr-2" />}
                                 Appearance
                             </h3>
                             
                             <div className="flex items-center justify-between">
                                 <span className="text-white">Dark Mode</span>
                                 <Switch 
-                                    checked={darkMode} 
-                                    onCheckedChange={(checked) => {
-                                        setDarkMode(checked);
-                                        updateSetting('darkModeEnabled', checked);
-                                    }} 
+                                    checked={isDarkMode} 
+                                    onCheckedChange={handleThemeToggle} 
                                 />
                             </div>
                         </div>

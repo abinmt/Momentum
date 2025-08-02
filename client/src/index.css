@@ -59,21 +59,33 @@
   --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(210, 40%, 98%);
   --ring: hsl(217, 32%, 17%);
+
+  /* Dark mode gradients */
+  --gradient-primary-start: hsl(20, 72%, 45%);
+  --gradient-primary-middle: hsl(35, 85%, 42%);
+  --gradient-primary-end: hsl(340, 82%, 39%);
 }
 
 @layer base {
   * {
     @apply border-border;
+    transition: var(--theme-transition, none);
+  }
+
+  html {
+    transition: var(--theme-transition, none);
   }
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
 @layer utilities {
   .bg-gradient-primary {
     background: linear-gradient(135deg, var(--gradient-primary-start) 0%, var(--gradient-primary-middle) 50%, var(--gradient-primary-end) 100%);
+    transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .bg-gradient-purple {
@@ -117,12 +129,20 @@
   }
 
   .task-card {
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(10px);
   }
 
   .task-card:hover {
     transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Enhanced theme transitions */
+  .theme-transition {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .progress-ring {

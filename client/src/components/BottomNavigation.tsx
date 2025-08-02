@@ -17,7 +17,7 @@ export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
     ];
 
     return (
-        <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white dark:bg-dark-card border-t border-gray-200 dark:border-gray-700 backdrop-blur-lg bg-opacity-95">
+        <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 backdrop-blur-lg bg-opacity-95 dark:bg-opacity-95 theme-transition">
             <div className="flex justify-around py-2">
                 {tabs.map((tab) => {
                     const Icon = tab.icon;
@@ -27,8 +27,8 @@ export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
                         <Button
                             key={tab.id}
                             variant="ghost"
-                            className={`flex flex-col items-center py-2 px-4 ${
-                                isActive ? "text-primary" : "text-gray-400"
+                            className={`flex flex-col items-center py-2 px-4 theme-transition ${
+                                isActive ? "text-primary" : "text-gray-400 dark:text-gray-500"
                             } hover:text-primary`}
                             onClick={() => setLocation(tab.path)}
                         >
