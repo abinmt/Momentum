@@ -54,7 +54,7 @@ export default function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
     return (
         <>
             <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className="bg-dark text-white border-gray-700 max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl">
+                <DialogContent className="bg-dark text-white border-gray-700 max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl [&>button]:hidden">
                     <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                         <Button variant="ghost" size="icon" onClick={onClose}>
                             <X className="w-6 h-6 text-white" />
