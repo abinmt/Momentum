@@ -339,7 +339,7 @@ export default function Home() {
                                     </div>
                                 ))}
                                 
-                                {/* Add Task Card */}
+                                {/* Add Habit Card */}
                                 <div 
                                     className="task-card bg-white bg-opacity-20 backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:bg-opacity-30 transition-all duration-300 transform scale-110"
                                     onClick={() => setIsAddTaskModalOpen(true)}
@@ -348,7 +348,7 @@ export default function Home() {
                                         <Plus className="w-12 h-12 text-white" />
                                     </div>
                                     <div className="text-center">
-                                        <div className="text-xs font-semibold mb-1">ADD A TASK</div>
+                                        <div className="text-xs font-semibold mb-1">ADD A HABIT</div>
                                     </div>
                                 </div>
                             </div>
