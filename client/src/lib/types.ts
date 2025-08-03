@@ -1,4 +1,4 @@
-export interface TaskProgress {
+export interface HabitProgress {
     taskId: string;
     date: string;
     completed: boolean;
@@ -9,8 +9,8 @@ export interface TaskProgress {
 
 export interface DailyStats {
     date: string;
-    completedTasks: number;
-    totalTasks: number;
+    completedHabits: number;
+    totalHabits: number;
     completionRate: number;
 }
 
@@ -22,7 +22,7 @@ export interface WeeklyStats {
 }
 
 export interface UserStatistics {
-    totalTasks: number;
+    totalHabits: number;
     totalCompletions: number;
     bestStreak: number;
     currentActiveStreaks: number;
@@ -31,7 +31,7 @@ export interface UserStatistics {
     monthlyProgress: { month: string; completions: number }[];
 }
 
-export interface TaskWithProgress {
+export interface HabitWithProgress {
     id: string;
     title: string;
     description?: string;
@@ -44,8 +44,8 @@ export interface TaskWithProgress {
     currentStreak: number;
     bestStreak: number;
     totalCompletions: number;
-    todayProgress?: TaskProgress;
-    weekProgress?: TaskProgress[];
+    todayProgress?: HabitProgress;
+    weekProgress?: HabitProgress[];
 }
 
 export interface JournalEntryWithMood {
@@ -56,16 +56,16 @@ export interface JournalEntryWithMood {
     attachments?: string[];
 }
 
-export interface SharedTaskInfo {
+export interface SharedHabitInfo {
     id: string;
-    taskId: string;
+    habitId: string;
     sharedBy: {
         id: string;
         firstName?: string;
         lastName?: string;
         profileImageUrl?: string;
     };
-    task: {
+    habit: {
         title: string;
         icon: string;
         color: string;

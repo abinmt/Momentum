@@ -4,7 +4,7 @@ import BottomNavigation from "@/components/BottomNavigation";
 import { Button } from "@/components/ui/button";
 
 interface Statistics {
-    totalTasks: number;
+    totalHabits: number;
     totalCompletions: number;
     bestStreak: number;
     currentActiveStreaks: number;
@@ -102,7 +102,7 @@ export default function Statistics() {
                 {/* Additional Stats */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50 rounded-xl p-4 text-center">
-                        <div className="text-2xl font-bold text-dark mb-1">{stats?.totalTasks || 0}</div>
+                        <div className="text-2xl font-bold text-dark mb-1">{stats?.totalHabits || 0}</div>
                         <div className="text-sm text-gray-600">ACTIVE HABITS</div>
                     </div>
                     <div className="bg-gray-50 rounded-xl p-4 text-center">
@@ -165,8 +165,8 @@ export default function Statistics() {
                                 <h3 className="text-lg font-semibold mb-4">Quick Stats</h3>
                                 <div className="space-y-4">
                                     <div className="flex justify-between">
-                                        <span>Active Tasks</span>
-                                        <span className="font-bold">{stats?.totalTasks || 0}</span>
+                                        <span>Active Habits</span>
+                                        <span className="font-bold">{stats?.totalHabits || 0}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span>Active Streaks</span>
