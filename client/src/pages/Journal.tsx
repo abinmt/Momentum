@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useTheme } from "@/contexts/ThemeContext";
 import type { JournalEntry } from "@shared/schema";
 
 export default function Journal() {
@@ -13,6 +14,7 @@ export default function Journal() {
     const [content, setContent] = useState("");
     const { toast } = useToast();
     const queryClient = useQueryClient();
+    const { theme } = useTheme();
 
     const dateString = currentDate.toISOString().split('T')[0];
 
@@ -79,18 +81,32 @@ export default function Journal() {
         });
     };
 
+    const isDark = theme === 'dark';
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-900 to-purple-700 text-white relative">
+        <div className={`min-h-screen relative transition-colors duration-300 ${
+            isDark 
+                ? "bg-gradient-to-br from-purple-900 to-purple-700 text-white" 
+                : "bg-gradient-to-br from-purple-100 to-purple-50 text-gray-900"
+        }`}>
             {/* Mobile View */}
             <div className="block md:hidden max-w-md mx-auto">
             {/* Status Bar */}
-            <div className="flex justify-between items-center px-6 py-2 bg-gradient-to-br from-purple-900 to-purple-700 text-white text-sm font-semibold">
+            <div className={`flex justify-between items-center px-6 py-2 text-sm font-semibold ${
+                isDark 
+                    ? "bg-gradient-to-br from-purple-900 to-purple-700 text-white" 
+                    : "bg-gradient-to-br from-purple-200 to-purple-100 text-purple-900"
+            }`}>
                 <span>{new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
                 <div className="flex items-center space-x-1">
                     <span className="text-xs">●●●●</span>
                     <span className="text-xs">5G</span>
-                    <div className="w-6 h-3 border border-white rounded-sm">
-                        <div className="w-4 h-1.5 bg-white rounded-sm mt-0.5 ml-0.5"></div>
+                    <div className={`w-6 h-3 border rounded-sm ${
+                        isDark ? "border-white" : "border-purple-900"
+                    }`}>
+                        <div className={`w-4 h-1.5 rounded-sm mt-0.5 ml-0.5 ${
+                            isDark ? "bg-white" : "bg-purple-900"
+                        }`}></div>
                     </div>
                 </div>
             </div>
@@ -102,7 +118,11 @@ export default function Journal() {
                         variant="ghost" 
                         size="icon" 
                         onClick={previousDay}
-                        className="text-white hover:bg-white hover:bg-opacity-20"
+                        className={`transition-colors duration-300 ${
+                            isDark 
+                                ? "text-white hover:bg-white hover:bg-opacity-20" 
+                                : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                        }`}
                     >
                         <ChevronLeft className="w-6 h-6" />
                     </Button>
@@ -121,23 +141,39 @@ export default function Journal() {
                             variant="ghost" 
                             size="icon" 
                             onClick={nextDay}
-                            className="text-white hover:bg-white hover:bg-opacity-20"
+                            className={`transition-colors duration-300 ${
+                                isDark 
+                                    ? "text-white hover:bg-white hover:bg-opacity-20" 
+                                    : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                            }`}
                         >
                             <ChevronRight className="w-6 h-6" />
                         </Button>
                         <Button 
                             variant="ghost" 
                             size="icon"
-                            className="text-white hover:bg-white hover:bg-opacity-20"
+                            className={`transition-colors duration-300 ${
+                                isDark 
+                                    ? "text-white hover:bg-white hover:bg-opacity-20" 
+                                    : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                            }`}
                         >
                             <HelpCircle className="w-6 h-6" />
                         </Button>
                     </div>
                 </div>
 
-                <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 mb-6">
+                <div className={`backdrop-blur-sm rounded-xl p-6 mb-6 transition-colors duration-300 ${
+                    isDark 
+                        ? "bg-white bg-opacity-10 border border-white border-opacity-20" 
+                        : "bg-white bg-opacity-50 border border-purple-200"
+                }`}>
                     <Textarea 
-                        className="w-full bg-transparent text-white placeholder-white placeholder-opacity-60 resize-none outline-none text-lg leading-relaxed border-none focus:ring-0 min-h-[200px]" 
+                        className={`w-full bg-transparent resize-none outline-none text-lg leading-relaxed border-none focus:ring-0 min-h-[200px] transition-colors duration-300 ${
+                            isDark 
+                                ? "text-white placeholder-white placeholder-opacity-60" 
+                                : "text-gray-900 placeholder-gray-600"
+                        }`}
                         placeholder="How was your day? Write about your progress..."
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
@@ -145,7 +181,7 @@ export default function Journal() {
                 </div>
 
                 <Button 
-                    className="w-full bg-gradient-primary text-white border-none hover:opacity-90 py-6 text-lg font-semibold"
+                    className="w-full bg-gradient-primary text-white border-none hover:opacity-90 py-6 text-lg font-semibold transition-all duration-300"
                     onClick={handleSave}
                     disabled={saveMutation.isPending || !content.trim()}
                 >
@@ -160,13 +196,19 @@ export default function Journal() {
             <div className="hidden md:block container mx-auto px-4 py-8">
                 <div className="max-w-4xl mx-auto">
                     <div className="flex items-center justify-between mb-8">
-                        <h1 className="text-3xl font-bold text-white">Journal</h1>
+                        <h1 className={`text-3xl font-bold transition-colors duration-300 ${
+                            isDark ? "text-white" : "text-gray-900"
+                        }`}>Journal</h1>
                         <div className="flex items-center space-x-4">
                             <Button 
                                 variant="ghost" 
                                 size="icon" 
                                 onClick={previousDay}
-                                className="text-white hover:bg-white hover:bg-opacity-20"
+                                className={`transition-colors duration-300 ${
+                                    isDark 
+                                        ? "text-white hover:bg-white hover:bg-opacity-20" 
+                                        : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                                }`}
                             >
                                 <ChevronLeft className="w-6 h-6" />
                             </Button>
@@ -179,7 +221,11 @@ export default function Journal() {
                                 variant="ghost" 
                                 size="icon" 
                                 onClick={nextDay}
-                                className="text-white hover:bg-white hover:bg-opacity-20"
+                                className={`transition-colors duration-300 ${
+                                    isDark 
+                                        ? "text-white hover:bg-white hover:bg-opacity-20" 
+                                        : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                                }`}
                             >
                                 <ChevronRight className="w-6 h-6" />
                             </Button>
@@ -188,9 +234,17 @@ export default function Journal() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2">
-                            <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-8 mb-6">
+                            <div className={`backdrop-blur-sm rounded-xl p-8 mb-6 transition-colors duration-300 ${
+                                isDark 
+                                    ? "bg-white bg-opacity-10 border border-white border-opacity-20" 
+                                    : "bg-white bg-opacity-50 border border-purple-200"
+                            }`}>
                                 <Textarea 
-                                    className="w-full bg-transparent text-white placeholder-white placeholder-opacity-60 resize-none outline-none text-lg leading-relaxed border-none focus:ring-0 min-h-[400px]" 
+                                    className={`w-full bg-transparent resize-none outline-none text-lg leading-relaxed border-none focus:ring-0 min-h-[400px] transition-colors duration-300 ${
+                                        isDark 
+                                            ? "text-white placeholder-white placeholder-opacity-60" 
+                                            : "text-gray-900 placeholder-gray-600"
+                                    }`}
                                     placeholder="How was your day? Write about your progress..."
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
@@ -198,7 +252,7 @@ export default function Journal() {
                             </div>
 
                             <Button 
-                                className="w-full bg-gradient-primary text-white border-none hover:opacity-90 py-6 text-lg font-semibold"
+                                className="w-full bg-gradient-primary text-white border-none hover:opacity-90 py-6 text-lg font-semibold transition-all duration-300"
                                 onClick={handleSave}
                                 disabled={saveMutation.isPending || !content.trim()}
                             >
@@ -207,9 +261,15 @@ export default function Journal() {
                         </div>
 
                         <div className="lg:col-span-1">
-                            <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6">
+                            <div className={`backdrop-blur-sm rounded-xl p-6 transition-colors duration-300 ${
+                                isDark 
+                                    ? "bg-white bg-opacity-10 border border-white border-opacity-20" 
+                                    : "bg-white bg-opacity-50 border border-purple-200"
+                            }`}>
                                 <h3 className="text-lg font-semibold mb-4">Writing Tips</h3>
-                                <ul className="text-sm space-y-2 opacity-80">
+                                <ul className={`text-sm space-y-2 transition-colors duration-300 ${
+                                    isDark ? "opacity-80" : "opacity-70"
+                                }`}>
                                     <li>• Reflect on your habits progress</li>
                                     <li>• Note any challenges you faced</li>
                                     <li>• Celebrate your wins, big or small</li>
