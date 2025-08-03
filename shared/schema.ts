@@ -99,7 +99,10 @@ export const journalEntries = pgTable("journal_entries", {
     mood: integer("mood"), // 1-5 scale
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
-});
+}, (table) => ({
+    // Unique constraint for userId and date combination
+    uniqueEntry: unique().on(table.userId, table.date),
+}));
 
 // Shared tasks table for social features
 export const sharedTasks = pgTable("shared_tasks", {

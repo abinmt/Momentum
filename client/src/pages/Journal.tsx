@@ -86,26 +86,26 @@ export default function Journal() {
     return (
         <div className={`min-h-screen relative transition-colors duration-300 ${
             isDark 
-                ? "bg-gradient-to-br from-purple-900 to-purple-700 text-white" 
-                : "bg-gradient-to-br from-purple-100 to-purple-50 text-gray-900"
+                ? "bg-gray-900 text-white" 
+                : "bg-white text-gray-900"
         }`}>
             {/* Mobile View */}
             <div className="block md:hidden max-w-md mx-auto">
             {/* Status Bar */}
             <div className={`flex justify-between items-center px-6 py-2 text-sm font-semibold ${
                 isDark 
-                    ? "bg-gradient-to-br from-purple-900 to-purple-700 text-white" 
-                    : "bg-gradient-to-br from-purple-200 to-purple-100 text-purple-900"
+                    ? "bg-gray-800 text-white" 
+                    : "bg-gray-100 text-gray-900"
             }`}>
                 <span>{new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
                 <div className="flex items-center space-x-1">
                     <span className="text-xs">●●●●</span>
                     <span className="text-xs">5G</span>
                     <div className={`w-6 h-3 border rounded-sm ${
-                        isDark ? "border-white" : "border-purple-900"
+                        isDark ? "border-white" : "border-gray-900"
                     }`}>
                         <div className={`w-4 h-1.5 rounded-sm mt-0.5 ml-0.5 ${
-                            isDark ? "bg-white" : "bg-purple-900"
+                            isDark ? "bg-white" : "bg-gray-900"
                         }`}></div>
                     </div>
                 </div>
@@ -120,8 +120,8 @@ export default function Journal() {
                         onClick={previousDay}
                         className={`transition-colors duration-300 ${
                             isDark 
-                                ? "text-white hover:bg-white hover:bg-opacity-20" 
-                                : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                                ? "text-white hover:bg-gray-700" 
+                                : "text-gray-700 hover:bg-gray-200"
                         }`}
                     >
                         <ChevronLeft className="w-6 h-6" />
@@ -143,8 +143,8 @@ export default function Journal() {
                             onClick={nextDay}
                             className={`transition-colors duration-300 ${
                                 isDark 
-                                    ? "text-white hover:bg-white hover:bg-opacity-20" 
-                                    : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                                    ? "text-white hover:bg-gray-700" 
+                                    : "text-gray-700 hover:bg-gray-200"
                             }`}
                         >
                             <ChevronRight className="w-6 h-6" />
@@ -154,8 +154,8 @@ export default function Journal() {
                             size="icon"
                             className={`transition-colors duration-300 ${
                                 isDark 
-                                    ? "text-white hover:bg-white hover:bg-opacity-20" 
-                                    : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                                    ? "text-white hover:bg-gray-700" 
+                                    : "text-gray-700 hover:bg-gray-200"
                             }`}
                         >
                             <HelpCircle className="w-6 h-6" />
@@ -163,10 +163,10 @@ export default function Journal() {
                     </div>
                 </div>
 
-                <div className={`backdrop-blur-sm rounded-xl p-6 mb-6 transition-colors duration-300 ${
+                <div className={`rounded-xl p-6 mb-6 transition-colors duration-300 ${
                     isDark 
-                        ? "bg-white bg-opacity-10 border border-white border-opacity-20" 
-                        : "bg-white bg-opacity-50 border border-purple-200"
+                        ? "bg-gray-800 border border-gray-700" 
+                        : "bg-gray-50 border border-gray-200"
                 }`}>
                     <Textarea 
                         className={`w-full bg-transparent resize-none outline-none text-lg leading-relaxed border-none focus:ring-0 min-h-[200px] transition-colors duration-300 ${
@@ -206,8 +206,8 @@ export default function Journal() {
                                 onClick={previousDay}
                                 className={`transition-colors duration-300 ${
                                     isDark 
-                                        ? "text-white hover:bg-white hover:bg-opacity-20" 
-                                        : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                                        ? "text-white hover:bg-gray-700" 
+                                        : "text-gray-700 hover:bg-gray-200"
                                 }`}
                             >
                                 <ChevronLeft className="w-6 h-6" />
@@ -223,8 +223,8 @@ export default function Journal() {
                                 onClick={nextDay}
                                 className={`transition-colors duration-300 ${
                                     isDark 
-                                        ? "text-white hover:bg-white hover:bg-opacity-20" 
-                                        : "text-purple-700 hover:bg-purple-200 hover:bg-opacity-50"
+                                        ? "text-white hover:bg-gray-700" 
+                                        : "text-gray-700 hover:bg-gray-200"
                                 }`}
                             >
                                 <ChevronRight className="w-6 h-6" />
@@ -234,10 +234,10 @@ export default function Journal() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2">
-                            <div className={`backdrop-blur-sm rounded-xl p-8 mb-6 transition-colors duration-300 ${
+                            <div className={`rounded-xl p-8 mb-6 transition-colors duration-300 ${
                                 isDark 
-                                    ? "bg-white bg-opacity-10 border border-white border-opacity-20" 
-                                    : "bg-white bg-opacity-50 border border-purple-200"
+                                    ? "bg-gray-800 border border-gray-700" 
+                                    : "bg-gray-50 border border-gray-200"
                             }`}>
                                 <Textarea 
                                     className={`w-full bg-transparent resize-none outline-none text-lg leading-relaxed border-none focus:ring-0 min-h-[400px] transition-colors duration-300 ${
@@ -261,10 +261,10 @@ export default function Journal() {
                         </div>
 
                         <div className="lg:col-span-1">
-                            <div className={`backdrop-blur-sm rounded-xl p-6 transition-colors duration-300 ${
+                            <div className={`rounded-xl p-6 transition-colors duration-300 ${
                                 isDark 
-                                    ? "bg-white bg-opacity-10 border border-white border-opacity-20" 
-                                    : "bg-white bg-opacity-50 border border-purple-200"
+                                    ? "bg-gray-800 border border-gray-700" 
+                                    : "bg-gray-50 border border-gray-200"
                             }`}>
                                 <h3 className="text-lg font-semibold mb-4">Writing Tips</h3>
                                 <ul className={`text-sm space-y-2 transition-colors duration-300 ${
