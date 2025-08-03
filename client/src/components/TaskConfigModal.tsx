@@ -111,11 +111,11 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     <Button variant="ghost" size="icon" onClick={onClose}>
                         <ChevronLeft className="w-6 h-6 text-white" />
                     </Button>
-                    <DialogTitle className="text-xl font-bold">Confirm Task</DialogTitle>
+                    <DialogTitle className="text-xl font-bold">Confirm Habit</DialogTitle>
                     <div></div>
                 </DialogHeader>
 
-                {/* Task Icon and Title */}
+                {/* Habit Icon and Title */}
                 <div className="text-center mb-6 md:mb-8">
                     <div className="relative w-20 h-20 md:w-32 md:h-32 mx-auto mb-4">
                         <ProgressRing progress={0} size={80} strokeWidth={6} />
@@ -146,11 +146,11 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     </div>
                     <h3 className="text-lg md:text-2xl font-bold mb-2">{title.toUpperCase()}</h3>
                     <p className="text-sm md:text-base opacity-80">
-                        ♥ This task uses data from the Health app. Please grant Stride permission if prompted.
+                        ♥ This habit uses data from the Health app. Please grant Momentum permission if prompted.
                     </p>
                 </div>
 
-                {/* Task Configuration */}
+                {/* Habit Configuration */}
                 <div className="space-y-4 mb-8">
                     <div className="bg-white bg-opacity-20 rounded-xl p-4">
                         <div className="text-sm opacity-80 mb-1">TITLE:</div>
@@ -158,7 +158,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             className="bg-transparent border-none text-white font-semibold p-0 focus:ring-0"
-                            placeholder="Task title"
+                            placeholder="Habit title"
                         />
                         <div className="text-xs opacity-60 mt-1">{title.length} / 50</div>
                     </div>
@@ -166,7 +166,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     <div className="flex items-center justify-between py-4 border-b border-white border-opacity-20">
                         <div className="flex items-center space-x-3">
                             <Calendar className="w-5 h-5 text-white" />
-                            <span className="text-white">Day-Long Task</span>
+                            <span className="text-white">Day-Long Habit</span>
                         </div>
                         <Switch
                             checked={isDayLongTask}
@@ -199,7 +199,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     >
                         <div className="flex items-center space-x-3">
                             <Calendar className="w-5 h-5 text-white" />
-                            <span className="text-white">Task Days</span>
+                            <span className="text-white">Habit Days</span>
                         </div>
                         <div className="flex items-center space-x-2">
                             <span className="text-white opacity-80">{getScheduleDisplayText()}</span>
@@ -212,7 +212,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-6 text-lg font-semibold"
                     onClick={handleSave}
                 >
-                    SAVE TASK
+                    SAVE HABIT
                 </Button>
             </DialogContent>
             
@@ -220,7 +220,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
             <Dialog open={showScheduleDialog} onOpenChange={setShowScheduleDialog}>
                 <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-bold text-center">Task Days</DialogTitle>
+                        <DialogTitle className="text-xl font-bold text-center">Habit Days</DialogTitle>
                     </DialogHeader>
                     
                     <div className="space-y-4">
