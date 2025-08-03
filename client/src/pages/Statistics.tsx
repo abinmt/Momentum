@@ -103,7 +103,7 @@ export default function Statistics() {
                 <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50 rounded-xl p-4 text-center">
                         <div className="text-2xl font-bold text-dark mb-1">{stats?.totalTasks || 0}</div>
-                        <div className="text-sm text-gray-600">ACTIVE TASKS</div>
+                        <div className="text-sm text-gray-600">ACTIVE HABITS</div>
                     </div>
                     <div className="bg-gray-50 rounded-xl p-4 text-center">
                         <div className="text-2xl font-bold text-dark mb-1">{stats?.currentActiveStreaks || 0}</div>

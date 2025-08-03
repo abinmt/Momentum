@@ -26,8 +26,8 @@ export default function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
         },
         onSuccess: () => {
             toast({
-                title: "Task Created",
-                description: "Your new task has been created successfully.",
+                title: "Habit Created",
+                description: "Your new habit has been created successfully.",
             });
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
             onClose();
@@ -36,7 +36,7 @@ export default function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
         onError: () => {
             toast({
                 title: "Error",
-                description: "Failed to create task.",
+                description: "Failed to create habit.",
                 variant: "destructive",
             });
         },
@@ -59,13 +59,13 @@ export default function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                         <Button variant="ghost" size="icon" onClick={onClose}>
                             <X className="w-6 h-6 text-white" />
                         </Button>
-                        <DialogTitle className="text-xl font-bold">Add Task</DialogTitle>
+                        <DialogTitle className="text-xl font-bold">Add Habit</DialogTitle>
                         <Button variant="ghost" size="icon">
                             <Search className="w-6 h-6 text-white" />
                         </Button>
                     </DialogHeader>
 
-                    {/* Task Type Icons */}
+                    {/* Habit Type Icons */}
                     <div className="flex justify-center space-x-4 mb-6">
                         <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-600 rounded-full flex items-center justify-center">
                             <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -93,12 +93,12 @@ export default function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
                     </div>
 
                     <div className="text-sm text-gray-400 mb-4">
-                        Health tasks are linked to the Health app and are automatically marked as complete when new data is recorded.
+                        Health habits are linked to the Health app and are automatically marked as complete when new data is recorded.
                     </div>
 
-                    <div className="text-sm text-white font-semibold mb-4">CREATE A HEALTH TASK:</div>
+                    <div className="text-sm text-white font-semibold mb-4">CREATE A HEALTH HABIT:</div>
 
-                    {/* Health Tasks List */}
+                    {/* Health Habits List */}
                     <ScrollArea className="max-h-96 md:max-h-[500px]">
                         <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
                             {HEALTH_TASKS.map((task) => (

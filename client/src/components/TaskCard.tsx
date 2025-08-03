@@ -278,22 +278,22 @@ export default function TaskCard({ task }: TaskCardProps) {
                             {taskState === 'not-started' ? (
                                 <>
                                     <Play className="w-4 h-4" />
-                                    Start Task
+                                    Start Habit
                                 </>
                             ) : taskState === 'in-progress' ? (
                                 <>
                                     <Pause className="w-4 h-4" />
-                                    Pause Task
+                                    Pause Habit
                                 </>
                             ) : taskState === 'paused' ? (
                                 <>
                                     <Play className="w-4 h-4" />
-                                    Resume Task
+                                    Resume Habit
                                 </>
                             ) : (
                                 <>
                                     <Play className="w-4 h-4" />
-                                    Start Task
+                                    Start Habit
                                 </>
                             )}
                         </button>
@@ -307,7 +307,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                             <Trash2 className="w-4 h-4" />
-                            Delete Task
+                            Delete Habit
                         </button>
                     </div>
                 )}

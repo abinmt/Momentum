@@ -10,7 +10,7 @@ export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
     const [, setLocation] = useLocation();
 
     const tabs = [
-        { id: "tasks", icon: Grid3X3, label: "Tasks", path: "/" },
+        { id: "tasks", icon: Grid3X3, label: "Habits", path: "/" },
         { id: "statistics", icon: BarChart3, label: "Stats", path: "/statistics" },
         { id: "journal", icon: BookOpen, label: "Journal", path: "/journal" },
         { id: "profile", icon: User, label: "Profile", path: "/profile" },
