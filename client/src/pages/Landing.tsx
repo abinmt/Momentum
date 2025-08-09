@@ -9,9 +9,7 @@ export default function Landing() {
                     <CardContent className="p-8 text-center">
                         <div className="mb-8">
                             <div className="w-20 h-20 bg-gradient-primary rounded-full mx-auto mb-4 flex items-center justify-center">
-                                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                                </svg>
+                                <span className="text-white text-2xl font-bold">M</span>
                             </div>
                             <h1 className="text-3xl font-bold text-gray-900 mb-2">Momentum</h1>
                             <p className="text-gray-600">Build lasting habits, track your progress</p>
@@ -24,7 +22,7 @@ export default function Landing() {
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                                     </svg>
                                 </div>
-                                <span className="text-gray-700">Track daily habits and streaks</span>
+                                <span className="text-gray-700">Track daily habits</span>
                             </div>
                             <div className="flex items-center space-x-3">
                                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
