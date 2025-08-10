@@ -9,7 +9,9 @@ export default function Landing() {
                     <CardContent className="p-8 text-center">
                         <div className="mb-8">
                             <div className="w-20 h-20 bg-gradient-primary rounded-full mx-auto mb-4 flex items-center justify-center">
-                                <span className="text-white text-2xl font-bold">M</span>
+                                <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7 16V8L12 12L17 8V16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </div>
                             <h1 className="text-3xl font-bold text-gray-900 mb-2">Momentum</h1>
                             <p className="text-gray-600">Build lasting habits, track your progress</p>
