@@ -4,7 +4,7 @@
 
 ## Project Summary
 
-Momentum is a Progressive Web App (PWA) habit tracker that replicates the design and functionality of Streaks App. The application allows users to create, manage, and track daily habits with comprehensive progress visualization, streak tracking, and social sharing features. Built as a full-stack web application with modern technologies, it provides offline functionality and cross-platform compatibility through PWA standards.
+Momentum is a Progressive Web App (PWA) habit tracker. The application allows users to create, manage, and track daily habits with comprehensive progress visualization, streak tracking, and social sharing features. Built as a full-stack web application with modern technologies, it provides offline functionality and cross-platform compatibility through PWA standards.
 
 The application features real-time habit tracking with timer persistence, drag-and-drop reordering, comprehensive statistics, journal functionality, and a complete dark/light theme system. Users can create custom habits with flexible scheduling, track progress with visual indicators, and maintain accountability through streak tracking and progress visualization.
 
