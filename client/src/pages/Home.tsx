@@ -196,7 +196,7 @@ export default function Home() {
                             items={sortedTasks?.map(task => task.id) || []}
                             strategy={rectSortingStrategy}
                         >
-                            <div className="grid grid-cols-1 gap-6">
+                            <div className="grid grid-cols-1 gap-8">
                                 {sortedTasks?.map((task) => (
                                     <TaskCard 
                                         key={task.id} 
