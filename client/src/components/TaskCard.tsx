@@ -247,10 +247,19 @@ export default function TaskCard({ task }: TaskCardProps) {
             ref={setNodeRef}
             style={style}
             className={cardClasses}
-            onClick={handleCardClick}
             {...attributes}
-            {...listeners}
         >
+            {/* Clickable area for habit completion */}
+            <div 
+                className="absolute inset-0 z-0"
+                onClick={handleCardClick}
+            />
+            
+            {/* Draggable handle area */}
+            <div 
+                className="absolute inset-0 z-0"
+                {...listeners}
+            />
             <div className="relative w-36 h-36 md:w-20 md:h-20 mb-6 md:mb-4">
                 <div className="block md:hidden">
                     <ProgressRing
