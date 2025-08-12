@@ -100,9 +100,9 @@ export default function Profile() {
                     </Card>
 
                     {/* Profile Options */}
-                    <div className="space-y-4">
+                    <div>
                         <Link href="/settings">
-                            <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all">
+                            <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all mb-4">
                                 <CardContent className="p-4">
                                     <div className="flex items-center justify-between text-white">
                                         <div className="flex items-center space-x-3">
@@ -118,7 +118,7 @@ export default function Profile() {
                         </Link>
 
                         <Link href="/settings">
-                            <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all">
+                            <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all mb-4">
                                 <CardContent className="p-4">
                                     <div className="flex items-center justify-between text-white">
                                         <div className="flex items-center space-x-3">
@@ -134,7 +134,7 @@ export default function Profile() {
                         </Link>
 
                         <Card 
-                            className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all"
+                            className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all mb-4"
                             onClick={handleShareApp}
                         >
                             <CardContent className="p-4">
