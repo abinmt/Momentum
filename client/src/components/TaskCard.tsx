@@ -294,14 +294,14 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </Button>
                 
                 {showDropdown && (
-                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[140px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg py-0.5 z-50 animate-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[130px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-top-2 duration-200">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleStartPause(e);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             {taskState === 'not-started' ? (
                                 <>
@@ -331,7 +331,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                                 setShowViewModal(true);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             <Eye className="w-4 h-4" />
                             View Habit
@@ -342,7 +342,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                                 setShowEditModal(true);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             <Edit className="w-4 h-4" />
                             Edit Habit
@@ -354,7 +354,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                                 handleDeleteClick(e);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                         >
                             <Trash2 className="w-4 h-4" />
                             Delete Habit
