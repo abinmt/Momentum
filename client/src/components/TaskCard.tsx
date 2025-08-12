@@ -294,7 +294,13 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </Button>
                 
                 {showDropdown && (
-                    <div className="absolute bottom-full right-0 mb-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[130px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-bottom-2 duration-200">
+                    <div className="fixed bg-white dark:bg-gray-800 text-black dark:text-white min-w-[130px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-top-2 duration-200" 
+                         style={{
+                             top: dropdownRef.current ? `${dropdownRef.current.getBoundingClientRect().bottom + 4}px` : 'auto',
+                             right: dropdownRef.current ? `${window.innerWidth - dropdownRef.current.getBoundingClientRect().right}px` : 'auto',
+                             maxHeight: dropdownRef.current ? `${window.innerHeight - dropdownRef.current.getBoundingClientRect().bottom - 20}px` : 'auto',
+                             overflowY: 'auto'
+                         }}>
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
