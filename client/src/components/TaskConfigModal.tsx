@@ -123,7 +123,11 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
         return `${selectedDays.length} days`;
     };
 
-    const handleSave = () => {
+    const handleSave = (e?: React.MouseEvent) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         if (!title.trim()) return; // Only require a title to save
 
         const taskConfig = {
@@ -148,7 +152,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl max-h-[90vh] flex flex-col overflow-hidden">
+            <DialogContent 
+                className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl max-h-[90vh] flex flex-col overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <DialogHeader className="flex flex-row items-center justify-center space-y-0 pb-4">
                     <DialogTitle className="text-xl font-bold">
                         {readOnly ? "View Habit" : (task ? "Edit Habit" : "Add Habit")}
@@ -335,10 +342,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     <div className="flex-shrink-0 pt-3">
                         <Button 
                             className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-3 text-base font-semibold"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleSave();
-                            }}
+                            onClick={handleSave}
                         >
                             {task ? "UPDATE HABIT" : "SAVE HABIT"}
                         </Button>
