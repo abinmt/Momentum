@@ -131,8 +131,18 @@ export default function Home() {
                 <div className="flex justify-between items-center mb-6 px-6 pt-6">
                     <h2 className="text-2xl font-bold text-white">Your Habits</h2>
                     
-                    {/* Mobile User Profile */}
-                    <div className="relative" ref={mobileDropdownRef}>
+                    <div className="flex items-center space-x-3">
+                        {/* Add Habit Button */}
+                        <Button 
+                            className="bg-white bg-opacity-20 text-white hover:bg-opacity-30 px-4 py-2 text-sm"
+                            onClick={() => setIsAddTaskModalOpen(true)}
+                        >
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Habit
+                        </Button>
+                        
+                        {/* Mobile User Profile */}
+                        <div className="relative" ref={mobileDropdownRef}>
                         <Button 
                             variant="ghost" 
                             className="text-white p-2"
@@ -182,6 +192,7 @@ export default function Home() {
                                 </button>
                             </div>
                         )}
+                        </div>
                     </div>
                 </div>
 
@@ -203,19 +214,6 @@ export default function Home() {
                                         task={task}
                                     />
                                 ))}
-                                
-                                {/* Add Habit Card */}
-                                <div 
-                                    className="task-card bg-white bg-opacity-20 backdrop-blur-sm rounded-3xl p-8 flex flex-col items-center text-white cursor-pointer hover:bg-opacity-30 transition-all duration-300"
-                                    onClick={() => setIsAddTaskModalOpen(true)}
-                                >
-                                    <div className="relative w-36 h-36 mb-6 flex items-center justify-center">
-                                        <Plus className="w-16 h-16 text-white" />
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="text-base font-semibold mb-2">ADD HABIT</div>
-                                    </div>
-                                </div>
                             </div>
                         </SortableContext>
                     </DndContext>
