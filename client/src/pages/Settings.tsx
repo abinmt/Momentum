@@ -100,7 +100,7 @@ export default function Settings() {
             <div className={`${isMobile ? 'block' : 'hidden'} max-w-md mx-auto`}>
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 pb-4">
-                    <Link href="/">
+                    <Link href="/profile">
                         <Button variant="ghost" size="icon" className="text-white">
                             <ChevronLeft className="w-6 h-6" />
                         </Button>
@@ -258,10 +258,10 @@ export default function Settings() {
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
                     <div className="flex items-center mb-8">
-                        <Link href="/">
+                        <Link href="/profile">
                             <Button variant="ghost" className="text-white hover:bg-white hover:bg-opacity-10 mr-4">
                                 <ChevronLeft className="w-5 h-5 mr-2" />
-                                Back to Habits
+                                Back to Profile
                             </Button>
                         </Link>
                         <h1 className="text-3xl font-bold text-white">Settings</h1>
