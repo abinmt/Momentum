@@ -263,11 +263,11 @@ export default function TaskCard({ task }: TaskCardProps) {
             </div>
 
             {/* Action Icons Vertically Aligned */}
-            <div className="absolute top-2 right-2 z-10 flex flex-col space-y-1">
+            <div className="absolute top-1.5 right-1.5 z-10 flex flex-col space-y-0.5">
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-1.5 w-7 h-7"
+                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
                     onClick={(e) => {
                         e.stopPropagation();
                         handleStartPause(e);
@@ -277,49 +277,49 @@ export default function TaskCard({ task }: TaskCardProps) {
                            taskState === 'paused' ? 'Resume Habit' : 'Start Habit'}
                 >
                     {taskState === 'not-started' || taskState === 'paused' || taskState === 'completed' ? (
-                        <Play className="w-3 h-3" />
+                        <Play className="w-2.5 h-2.5" />
                     ) : (
-                        <Pause className="w-3 h-3" />
+                        <Pause className="w-2.5 h-2.5" />
                     )}
                 </Button>
                 
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-1.5 w-7 h-7"
+                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
                     onClick={(e) => {
                         e.stopPropagation();
                         setShowViewModal(true);
                     }}
                     title="View Habit"
                 >
-                    <Eye className="w-3 h-3" />
+                    <Eye className="w-2.5 h-2.5" />
                 </Button>
                 
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-1.5 w-7 h-7"
+                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
                     onClick={(e) => {
                         e.stopPropagation();
                         setShowEditModal(true);
                     }}
                     title="Edit Habit"
                 >
-                    <Edit className="w-3 h-3" />
+                    <Edit className="w-2.5 h-2.5" />
                 </Button>
                 
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-red-400 hover:text-red-300 rounded-full p-1.5 w-7 h-7"
+                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-red-400 hover:text-red-300 rounded-full p-0.5 w-5 h-5"
                     onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteClick(e);
                     }}
                     title="Delete Habit"
                 >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-2.5 h-2.5" />
                 </Button>
             </div>
 
