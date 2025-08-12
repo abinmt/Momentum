@@ -27,10 +27,7 @@ export default function Journal() {
             return await apiRequest("POST", "/api/journal", data);
         },
         onSuccess: () => {
-            toast({
-                title: "Journal Saved",
-                description: "Your journal entry has been saved successfully.",
-            });
+            // Auto-save - no notification needed
             queryClient.invalidateQueries({ queryKey: ["/api/journal"] });
         },
         onError: () => {

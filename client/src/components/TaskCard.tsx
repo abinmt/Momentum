@@ -96,10 +96,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             });
         },
         onSuccess: () => {
-            toast({
-                title: "Great job!",
-                description: `${task.title} completed for today.`,
-            });
+            // Visual feedback through UI animation is sufficient
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
         },
         onError: () => {
@@ -169,11 +166,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             newState = 'paused';
             newTimerStarted = null;
             setIsTimerRunning(false);
-            // Optional: subtle notification for pause
-            toast({
-                title: "Paused",
-                description: `${task.title} paused. Tap to resume.`,
-            });
+            // Visual state change provides sufficient feedback
         } else {
             return; // No action for completed tasks
         }

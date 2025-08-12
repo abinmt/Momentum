@@ -85,10 +85,7 @@ export default function Home() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
-            toast({
-                title: "Habits reordered",
-                description: "Your habit order has been updated.",
-            });
+            // Visual drag feedback provides sufficient confirmation
         },
         onError: () => {
             toast({

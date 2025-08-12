@@ -70,10 +70,7 @@ export default function Settings() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
-            toast({
-                title: "Settings updated",
-                description: "Your preferences have been saved.",
-            });
+            // Settings auto-save - no notification needed
         },
         onError: () => {
             toast({

@@ -22,10 +22,7 @@ export default function Profile() {
         } else {
             // Fallback for browsers that don't support Web Share API
             navigator.clipboard.writeText(window.location.origin).then(() => {
-                toast({
-                    title: "Link copied!",
-                    description: "App link copied to clipboard. Share it with friends!",
-                });
+                // Link copied silently - user action was intentional
             });
         }
     };
@@ -50,10 +47,7 @@ export default function Profile() {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             
-            toast({
-                title: "Data exported",
-                description: "Your habit data has been downloaded successfully.",
-            });
+            // File download provides immediate feedback - no notification needed
         } catch (error) {
             toast({
                 title: "Export failed",

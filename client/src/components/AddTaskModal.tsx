@@ -25,10 +25,7 @@ export default function AddTaskModal({ isOpen, onClose }: AddTaskModalProps) {
             return await apiRequest("POST", "/api/tasks", taskData);
         },
         onSuccess: () => {
-            toast({
-                title: "Habit Created",
-                description: "Your new habit has been created successfully.",
-            });
+            // Visual feedback through UI state change is sufficient
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
             onClose();
             setIsConfigModalOpen(false);
