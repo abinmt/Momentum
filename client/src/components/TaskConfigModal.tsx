@@ -82,15 +82,15 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
     };
 
     const handleSave = () => {
-        if (!task) return;
+        if (!title.trim()) return; // Only require a title to save
 
         const taskConfig = {
-            title,
+            title: title.trim(),
             icon: selectedIcon,
             color: selectedColor,
             type: taskType,
             goal: goal ? parseInt(goal) : null,
-            goalUnit: task.unit,
+            goalUnit: task?.unit || "times",
             schedule,
             isDayLongTask,
             selectedDays: selectedDays.join(','),
@@ -102,7 +102,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
         onSave(taskConfig);
     };
 
-    if (!task) return null;
+    // Always render the modal - it can handle both null and existing tasks
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
