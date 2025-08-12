@@ -106,7 +106,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl [&>button[aria-label='Close']]:hidden">
+            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl [&>button[aria-label='Close']]:hidden max-h-[90vh] flex flex-col overflow-hidden">
                 <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
                     <div></div>
                     <DialogTitle className="text-xl font-bold">Create Habit</DialogTitle>
@@ -140,8 +140,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     <h3 className="text-lg md:text-2xl font-bold mb-2">{title.toUpperCase() || "NEW HABIT"}</h3>
                 </div>
 
-                {/* Habit Configuration */}
-                <div className="space-y-4 mb-8">
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto px-2">
+                    {/* Habit Configuration */}
+                    <div className="space-y-4 mb-8">
                     <div className="bg-white bg-opacity-20 rounded-xl p-4">
                         <div className="text-sm opacity-80 mb-1">TITLE:</div>
                         <Input
@@ -311,14 +313,18 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                             />
                         </div>
                     </div>
+                    </div>
                 </div>
 
-                <Button 
-                    className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-6 text-lg font-semibold"
-                    onClick={handleSave}
-                >
-                    SAVE HABIT
-                </Button>
+                {/* Fixed Save Button */}
+                <div className="flex-shrink-0 pt-4 border-t border-white border-opacity-20">
+                    <Button 
+                        className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-6 text-lg font-semibold"
+                        onClick={handleSave}
+                    >
+                        SAVE HABIT
+                    </Button>
+                </div>
             </DialogContent>
             
             {/* Schedule Dialog */}
