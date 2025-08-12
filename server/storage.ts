@@ -106,9 +106,14 @@ export class DatabaseStorage implements IStorage {
     }
 
     async createTask(taskData: InsertTask & { userId: string }): Promise<Task> {
+        const today = new Date().toISOString().split('T')[0];
         const [task] = await db
             .insert(tasks)
-            .values(taskData)
+            .values({
+                ...taskData,
+                timerState: "started",
+                lastActiveDate: today,
+            })
             .returning();
         return task;
     }
