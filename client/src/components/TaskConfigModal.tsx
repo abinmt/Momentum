@@ -233,78 +233,20 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                     </div>
 
-                    {/* Task Type Options - Compact */}
-                    <div className="border-t border-white border-opacity-20 pt-2">
-                        <h4 className="text-xs opacity-80 font-semibold mb-2">TASK TYPE</h4>
-                        
-                        <div className="space-y-1">
-                            <Button
-                                variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === null ? 'bg-white bg-opacity-20' : ''}`}
-                                onClick={readOnly ? undefined : () => setTaskType(null)}
-                                disabled={readOnly}
-                            >
-                                <div className="flex items-center space-x-2 w-full">
-                                    <div className="w-6 h-6 bg-gray-500 rounded-full flex items-center justify-center">
-                                        <span className="text-xs font-bold">○</span>
-                                    </div>
-                                    <div className="text-left flex-1">
-                                        <div className="font-medium text-sm">No Type</div>
-                                    </div>
-                                    {taskType === null && <Check className="w-4 h-4" />}
-                                </div>
-                            </Button>
-                            
-                            <Button
-                                variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
-                                onClick={readOnly ? undefined : () => setTaskType('timed')}
-                                disabled={readOnly}
-                            >
-                                <div className="flex items-center space-x-2 w-full">
-                                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                                        <span className="text-xs font-bold">T</span>
-                                    </div>
-                                    <div className="text-left flex-1">
-                                        <div className="font-medium text-sm">Timed Task</div>
-                                    </div>
-                                    {taskType === 'timed' && <Check className="w-4 h-4" />}
-                                </div>
-                            </Button>
-                            
-                            <Button
-                                variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
-                                onClick={readOnly ? undefined : () => setTaskType('negative')}
-                                disabled={readOnly}
-                            >
-                                <div className="flex items-center space-x-2 w-full">
-                                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                                        <span className="text-xs font-bold">-</span>
-                                    </div>
-                                    <div className="text-left flex-1">
-                                        <div className="font-medium text-sm">Negative Task</div>
-                                    </div>
-                                    {taskType === 'negative' && <Check className="w-4 h-4" />}
-                                </div>
-                            </Button>
-                            
-                            <Button
-                                variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
-                                onClick={readOnly ? undefined : () => setTaskType('health')}
-                                disabled={readOnly}
-                            >
-                                <div className="flex items-center space-x-2 w-full">
-                                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                                        <span className="text-xs font-bold">♥</span>
-                                    </div>
-                                    <div className="text-left flex-1">
-                                        <div className="font-medium text-sm">Health Task</div>
-                                    </div>
-                                    {taskType === 'health' && <Check className="w-4 h-4" />}
-                                </div>
-                            </Button>
+                    {/* Task Type Menu - Same UX as Goal/Habit Days */}
+                    <div 
+                        className={`flex items-center justify-between py-2 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        onClick={readOnly ? undefined : () => setShowTaskTypeDialog(true)}
+                    >
+                        <div className="flex items-center space-x-2">
+                            <Target className="w-4 h-4 text-white" />
+                            <span className="text-white text-sm">Task Type</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <span className="text-white opacity-80 text-sm">
+                                {taskType ? (taskType.charAt(0).toUpperCase() + taskType.slice(1)) : "No Type"}
+                            </span>
+                            {!readOnly && <ChevronRight className="w-4 h-4 text-white opacity-60" />}
                         </div>
                     </div>
 
@@ -840,6 +782,97 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     >
                         Done
                     </Button>
+                </DialogContent>
+            </Dialog>
+
+            {/* Task Type Dialog */}
+            <Dialog open={showTaskTypeDialog} onOpenChange={setShowTaskTypeDialog}>
+                <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-center">Task Type</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-2">
+                        <Button
+                            variant="ghost"
+                            className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === null ? 'bg-white bg-opacity-20' : ''}`}
+                            onClick={() => {
+                                setTaskType(null);
+                                setShowTaskTypeDialog(false);
+                            }}
+                        >
+                            <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-bold">○</span>
+                                </div>
+                                <div className="text-left">
+                                    <div className="font-semibold">No Type</div>
+                                    <div className="text-xs opacity-70">Simple habit tracking</div>
+                                </div>
+                                {taskType === null && <Check className="w-4 h-4 ml-auto" />}
+                            </div>
+                        </Button>
+                        
+                        <Button
+                            variant="ghost"
+                            className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
+                            onClick={() => {
+                                setTaskType('timed');
+                                setShowTaskTypeDialog(false);
+                            }}
+                        >
+                            <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-bold">T</span>
+                                </div>
+                                <div className="text-left">
+                                    <div className="font-semibold">Timed Task</div>
+                                    <div className="text-xs opacity-70">Track time spent on activity</div>
+                                </div>
+                                {taskType === 'timed' && <Check className="w-4 h-4 ml-auto" />}
+                            </div>
+                        </Button>
+                        
+                        <Button
+                            variant="ghost"
+                            className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
+                            onClick={() => {
+                                setTaskType('negative');
+                                setShowTaskTypeDialog(false);
+                            }}
+                        >
+                            <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-bold">-</span>
+                                </div>
+                                <div className="text-left">
+                                    <div className="font-semibold">Negative Task</div>
+                                    <div className="text-xs opacity-70">Break bad habits</div>
+                                </div>
+                                {taskType === 'negative' && <Check className="w-4 h-4 ml-auto" />}
+                            </div>
+                        </Button>
+                        
+                        <Button
+                            variant="ghost"
+                            className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
+                            onClick={() => {
+                                setTaskType('health');
+                                setShowTaskTypeDialog(false);
+                            }}
+                        >
+                            <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <span className="text-xs font-bold">♥</span>
+                                </div>
+                                <div className="text-left">
+                                    <div className="font-semibold">Health Task</div>
+                                    <div className="text-xs opacity-70">Integrate with health data</div>
+                                </div>
+                                {taskType === 'health' && <Check className="w-4 h-4 ml-auto" />}
+                            </div>
+                        </Button>
+                    </div>
                 </DialogContent>
             </Dialog>
         </Dialog>
