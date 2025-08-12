@@ -185,7 +185,7 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
 }).extend({
     isDayLongTask: z.boolean().optional(),
     selectedDays: z.string().optional(),
-    type: z.string().optional(),
+    type: z.string().nullable().optional(),
     goal: z.number().nullable().optional(),
     goalUnit: z.string().optional(),
     customDays: z.any().optional(),
