@@ -67,26 +67,26 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
   return (
     <div className="space-y-6">
       {/* App Status */}
-      <Card>
+      <Card className="bg-white bg-opacity-10 border-white/20 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
+          <CardTitle className="flex items-center space-x-2 text-white">
             <Smartphone className="w-5 h-5" />
             <span>App Status</span>
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-white opacity-70">
             Current installation and update status
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Installation Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium">Installation</span>
+            <span className="font-medium text-white">Installation</span>
             <div className="flex items-center space-x-2">
               <Badge variant={isInstalled ? 'default' : 'secondary'}>
                 {isInstalled ? 'Installed' : 'Web App'}
               </Badge>
               {canInstall && !isInstalled && (
-                <Button size="sm" onClick={handleInstall}>
+                <Button size="sm" onClick={handleInstall} className="bg-white/20 text-white hover:bg-white/30 border-0">
                   <Download className="w-4 h-4 mr-2" />
                   Install App
                 </Button>
@@ -96,12 +96,12 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
 
           {/* Update Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium">Updates</span>
+            <span className="font-medium text-white">Updates</span>
             <div className="flex items-center space-x-2">
               {updateAvailable ? (
                 <>
                   <Badge variant="destructive">Update Available</Badge>
-                  <Button size="sm" onClick={handleUpdate}>
+                  <Button size="sm" onClick={handleUpdate} className="bg-white/20 text-white hover:bg-white/30 border-0">
                     <Download className="w-4 h-4 mr-2" />
                     Update Now
                   </Button>
@@ -115,8 +115,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Auto Update Setting */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium">Auto Updates</span>
-              <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-white">Auto Updates</span>
+              <p className="text-sm text-white opacity-60">
                 Automatically install app updates
               </p>
             </div>
@@ -129,26 +129,26 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
       </Card>
 
       {/* Performance Settings */}
-      <Card>
+      <Card className="bg-white bg-opacity-10 border-white/20 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
+          <CardTitle className="flex items-center space-x-2 text-white">
             <Monitor className="w-5 h-5" />
             <span>Performance</span>
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-white opacity-70">
             Optimize app performance and data usage
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Network Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium">Network</span>
+            <span className="font-medium text-white">Network</span>
             <div className="flex items-center space-x-2">
               <Wifi className={`w-4 h-4 ${isOnline ? 'text-green-500' : 'text-red-500'}`} />
               <Badge variant={isOnline ? 'default' : 'destructive'}>
                 {isOnline ? `Online (${networkSpeed})` : 'Offline'}
               </Badge>
-              <Button size="sm" variant="outline" onClick={refreshNetworkInfo}>
+              <Button size="sm" variant="outline" onClick={refreshNetworkInfo} className="border-white/30 text-white hover:bg-white/10">
                 <RotateCw className="w-4 h-4" />
               </Button>
             </div>
@@ -157,8 +157,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Background Sync */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium">Background Sync</span>
-              <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-white">Background Sync</span>
+              <p className="text-sm text-white opacity-60">
                 Sync data when connection is restored
               </p>
             </div>
@@ -171,8 +171,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Preload Content */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium">Preload Content</span>
-              <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-white">Preload Content</span>
+              <p className="text-sm text-white opacity-60">
                 Download content for offline use
               </p>
             </div>
@@ -185,13 +185,13 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
       </Card>
 
       {/* Storage Management */}
-      <Card>
+      <Card className="bg-white bg-opacity-10 border-white/20 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
+          <CardTitle className="flex items-center space-x-2 text-white">
             <HardDrive className="w-5 h-5" />
             <span>Storage</span>
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-white opacity-70">
             Manage app data and cache storage
           </CardDescription>
         </CardHeader>
@@ -199,17 +199,17 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Storage Usage */}
           {storageQuota > 0 && (
             <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-sm text-white">
                 <span>Used Storage</span>
                 <span>{formatBytes(storageUsed)} / {formatBytes(storageQuota)}</span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-white/20 rounded-full h-2">
                 <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                  className="bg-blue-400 h-2 rounded-full transition-all duration-300" 
                   style={{ width: `${getStoragePercentage()}%` }}
                 />
               </div>
-              <div className="text-xs text-muted-foreground text-center">
+              <div className="text-xs text-white opacity-60 text-center">
                 {getStoragePercentage()}% used
               </div>
             </div>
@@ -217,7 +217,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
 
           {/* Cache Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium">Cache Status</span>
+            <span className="font-medium text-white">Cache Status</span>
             <Badge 
               variant={
                 cacheStatus === 'ready' ? 'default' :
@@ -232,8 +232,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Clear Cache */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium">Clear Cache</span>
-              <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-white">Clear Cache</span>
+              <p className="text-sm text-white opacity-60">
                 Remove all cached data and files
               </p>
             </div>
@@ -242,6 +242,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
               variant="outline" 
               onClick={handleClearCache}
               disabled={isClearing}
+              className="border-white/30 text-white hover:bg-white/10 disabled:opacity-50"
             >
               {isClearing ? (
                 <RotateCw className="w-4 h-4 mr-2 animate-spin" />
@@ -254,13 +255,13 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
 
           {/* Storage Warning */}
           {getStoragePercentage() > 80 && (
-            <div className="flex items-start space-x-2 p-3 bg-amber-50 dark:bg-amber-950 rounded-lg">
-              <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5" />
+            <div className="flex items-start space-x-2 p-3 bg-amber-500/20 backdrop-blur-sm border border-amber-400/30 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-amber-300 mt-0.5" />
               <div className="text-sm">
-                <p className="font-medium text-amber-800 dark:text-amber-200">
+                <p className="font-medium text-amber-200">
                   Storage Almost Full
                 </p>
-                <p className="text-amber-600 dark:text-amber-400">
+                <p className="text-amber-300">
                   Consider clearing cache to free up space and improve performance.
                 </p>
               </div>
