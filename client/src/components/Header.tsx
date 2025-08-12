@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { User, Settings, Bell, Download, Wifi, WifiOff, Plus, Menu, X } from 'lucide-react';
+import { User, Settings, Bell, Download, Wifi, WifiOff, Plus, Menu, X, RefreshCw, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -85,7 +85,7 @@ export default function Header({
             onClick={updateServiceWorker}
             className="bg-blue-600/90 hover:bg-blue-700 text-white px-3 py-1 h-8 text-xs backdrop-blur-sm"
           >
-            <Download className="w-3 h-3 mr-1" />
+            <RefreshCw className="w-3 h-3 mr-1" />
             Update
           </Button>
         )}
@@ -102,6 +102,7 @@ export default function Header({
             }}
             className="border-white/30 text-white hover:bg-white/10 px-3 py-1 h-8 text-xs backdrop-blur-sm"
           >
+            <Smartphone className="w-3 h-3 mr-1" />
             Install
           </Button>
         )}
@@ -246,7 +247,7 @@ export default function Header({
                   onClick={updateServiceWorker}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 h-7 text-xs"
                 >
-                  <Download className="w-3 h-3" />
+                  <RefreshCw className="w-3 h-3" />
                 </Button>
               )}
 
@@ -262,7 +263,7 @@ export default function Header({
                   }}
                   className="border-white/30 text-white hover:bg-white/10 px-2 py-1 h-7 text-xs"
                 >
-                  <Download className="w-3 h-3" />
+                  <Smartphone className="w-3 h-3" />
                 </Button>
               )}
             </div>
