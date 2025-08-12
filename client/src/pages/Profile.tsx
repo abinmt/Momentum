@@ -79,18 +79,6 @@ export default function Profile() {
         <div className="min-h-screen bg-gradient-primary relative">
             {/* Mobile View */}
             <div className="block md:hidden max-w-md mx-auto">
-                {/* Status Bar */}
-                <div className="flex justify-between items-center px-6 py-2 bg-gradient-primary text-white text-sm font-semibold">
-                    <span>{new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
-                    <div className="flex items-center space-x-1">
-                        <span className="text-xs">●●●●</span>
-                        <span className="text-xs">5G</span>
-                        <div className="w-6 h-3 border border-white rounded-sm">
-                            <div className="w-4 h-1.5 bg-white rounded-sm mt-0.5 ml-0.5"></div>
-                        </div>
-                    </div>
-                </div>
-
                 {/* Main Content */}
                 <main className="p-6 pb-24">
                     {/* Profile Header */}

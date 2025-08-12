@@ -91,26 +91,6 @@ export default function Journal() {
         }`}>
             {/* Mobile View */}
             <div className="block md:hidden max-w-md mx-auto">
-            {/* Status Bar */}
-            <div className={`flex justify-between items-center px-6 py-2 text-sm font-semibold ${
-                isDark 
-                    ? "bg-gray-800 text-white" 
-                    : "bg-gray-100 text-gray-900"
-            }`}>
-                <span>{new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
-                <div className="flex items-center space-x-1">
-                    <span className="text-xs">●●●●</span>
-                    <span className="text-xs">5G</span>
-                    <div className={`w-6 h-3 border rounded-sm ${
-                        isDark ? "border-white" : "border-gray-900"
-                    }`}>
-                        <div className={`w-4 h-1.5 rounded-sm mt-0.5 ml-0.5 ${
-                            isDark ? "bg-white" : "bg-gray-900"
-                        }`}></div>
-                    </div>
-                </div>
-            </div>
-
             {/* Main Content */}
             <main className="p-6 pb-24">
                 <div className="flex items-center justify-between mb-8">
