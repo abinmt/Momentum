@@ -191,7 +191,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         )}
                     </div>
 
-                    <div className="flex items-center justify-between py-2 border-b border-white border-opacity-20">
+                    <div className="flex items-center justify-between py-2">
                         <div className="flex items-center space-x-2">
                             <Calendar className="w-4 h-4 text-white" />
                             <span className="text-white text-sm">Day-Long Habit</span>
@@ -204,8 +204,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         />
                     </div>
 
+                    <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
+
                     <div 
-                        className={`flex items-center justify-between py-2 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        className={`flex items-center justify-between py-2 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} px-2 -mx-2 transition-colors`}
                         onClick={readOnly ? undefined : () => setShowGoalDialog(true)}
                     >
                         <div className="flex items-center space-x-2">
@@ -219,8 +221,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                     </div>
 
+                    <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
+
                     <div 
-                        className={`flex items-center justify-between py-2 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        className={`flex items-center justify-between py-2 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} px-2 -mx-2 transition-colors`}
                         onClick={readOnly ? undefined : () => setShowScheduleDialog(true)}
                     >
                         <div className="flex items-center space-x-2">
@@ -233,8 +237,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                     </div>
 
+                    <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
+
                     <div 
-                        className={`flex items-center justify-between py-2 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        className={`flex items-center justify-between py-2 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} px-2 -mx-2 transition-colors`}
                         onClick={readOnly ? undefined : () => setShowTaskTypeDialog(true)}
                     >
                         <div className="flex items-center space-x-2">
@@ -249,7 +255,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between py-2 border-b border-white border-opacity-20">
+                    <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
+
+                    <div className="flex items-center justify-between py-2">
                         <div className="flex items-center space-x-2">
                             <Calendar className="w-4 h-4 text-white" />
                             <span className="text-white text-sm">Enable Reminders</span>
@@ -263,17 +271,22 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     </div>
 
                     {reminderEnabled && (
-                        <div className="px-2 py-2 border-b border-white border-opacity-20">
-                            <label className="text-xs opacity-80">Reminder Time</label>
-                            <Input
-                                type="time"
-                                value={reminderTime}
-                                onChange={readOnly ? undefined : (e) => setReminderTime(e.target.value)}
-                                className="bg-white bg-opacity-20 border-none text-white mt-1 h-8"
-                                readOnly={readOnly}
-                            />
-                        </div>
+                        <>
+                            <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
+                            <div className="px-2 py-2">
+                                <label className="text-xs opacity-80">Reminder Time</label>
+                                <Input
+                                    type="time"
+                                    value={reminderTime}
+                                    onChange={readOnly ? undefined : (e) => setReminderTime(e.target.value)}
+                                    className="bg-white bg-opacity-20 border-none text-white mt-1 h-8"
+                                    readOnly={readOnly}
+                                />
+                            </div>
+                        </>
                     )}
+
+                    <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
 
                     {readOnly ? (
                         <div className="flex items-center justify-between py-2">
@@ -291,7 +304,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                     ) : (
                         <div 
-                            className={`flex items-center justify-between py-2 cursor-pointer hover:bg-white hover:bg-opacity-10 rounded-lg px-2 -mx-2 transition-colors`}
+                            className={`flex items-center justify-between py-2 cursor-pointer hover:bg-white hover:bg-opacity-10 px-2 -mx-2 transition-colors`}
                             onClick={() => setShowIconColorDialog(true)}
                         >
                             <div className="flex items-center space-x-2">
