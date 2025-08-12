@@ -11,6 +11,7 @@ import BottomNavigation from "@/components/BottomNavigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import NotificationSettings from "@/components/NotificationSettings";
 
 export default function Settings() {
     const { user } = useAuth();
@@ -125,70 +126,30 @@ export default function Settings() {
                         </div>
                     </div>
 
-                    {/* Notifications */}
+                    {/* Push Notifications */}
                     <div className="space-y-6">
-                        <div className="bg-white bg-opacity-10 rounded-2xl p-4">
-                            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                                <Bell className="w-5 h-5 mr-2" />
-                                Notifications
-                            </h3>
-                            
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-white">Push Notifications</span>
-                                    <Switch 
-                                        checked={notifications} 
-                                        onCheckedChange={(checked) => {
-                                            setNotifications(checked);
-                                            updateSetting('notificationsEnabled', checked);
-                                        }} 
-                                    />
-                                </div>
-                                
-                                <div className="flex items-center justify-between">
-                                    <span className="text-white">Sound</span>
-                                    <Switch 
-                                        checked={soundEnabled} 
-                                        onCheckedChange={(checked) => {
-                                            setSoundEnabled(checked);
-                                            updateSetting('soundEnabled', checked);
-                                        }} 
-                                    />
-                                </div>
-                                
-                                <div className="flex items-center justify-between">
-                                    <span className="text-white">Vibration</span>
-                                    <Switch 
-                                        checked={vibrationEnabled} 
-                                        onCheckedChange={(checked) => {
-                                            setVibrationEnabled(checked);
-                                            updateSetting('vibrationEnabled', checked);
-                                        }} 
-                                    />
-                                </div>
-                                
-                                <div className="space-y-2">
-                                    <span className="text-white text-sm">Daily Reminder Time</span>
-                                    <div className="flex items-center space-x-4">
-                                        <span className="text-white text-sm">6 AM</span>
-                                        <Slider
-                                            value={reminderTime}
-                                            onValueChange={(value) => {
-                                                setReminderTime(value);
-                                                updateSetting('reminderTime', value[0]);
-                                            }}
-                                            max={23}
-                                            min={6}
-                                            step={1}
-                                            className="flex-1"
-                                        />
-                                        <span className="text-white text-sm">11 PM</span>
-                                    </div>
-                                    <p className="text-white text-xs opacity-70">
-                                        Current: {reminderTime[0] === 12 ? '12 PM' : reminderTime[0] > 12 ? `${reminderTime[0] - 12} PM` : `${reminderTime[0]} AM`}
-                                    </p>
-                                </div>
-                            </div>
+                        <div className="[&>div]:bg-white [&>div]:bg-opacity-10 [&>div]:border-none [&>div]:text-white [&_h3]:text-white [&_label]:text-white [&_div.text-sm]:text-white">
+                            <NotificationSettings 
+                                initialSettings={{
+                                    enableNotifications: notifications,
+                                    reminderTime: `${reminderTime[0].toString().padStart(2, '0')}:00`,
+                                    motivationalMessages: true,
+                                    streakReminders: true
+                                }}
+                                onSettingsChange={(settings) => {
+                                    if (settings.enableNotifications !== notifications) {
+                                        setNotifications(settings.enableNotifications);
+                                        updateSetting('notificationsEnabled', settings.enableNotifications);
+                                    }
+                                    if (settings.reminderTime) {
+                                        const hour = parseInt(settings.reminderTime.split(':')[0]);
+                                        if (hour !== reminderTime[0]) {
+                                            setReminderTime([hour]);
+                                            updateSetting('reminderTime', hour);
+                                        }
+                                    }
+                                }}
+                            />
                         </div>
 
                         {/* Appearance */}

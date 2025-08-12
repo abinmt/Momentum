@@ -54,6 +54,11 @@ export interface IStorage {
     // Shared tasks operations
     shareTask(taskId: string, sharedBy: string, sharedWith: string): Promise<SharedTask>;
     getSharedTasks(userId: string): Promise<SharedTask[]>;
+    
+    // Notification subscription operations
+    saveNotificationSubscription(userId: string, subscription: any): Promise<void>;
+    removeNotificationSubscription(userId: string, subscription: any): Promise<void>;
+    getUserNotificationSubscriptions(userId: string): Promise<any[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -322,6 +327,42 @@ export class DatabaseStorage implements IStorage {
             .from(sharedTasks)
             .where(eq(sharedTasks.sharedWith, userId))
             .orderBy(desc(sharedTasks.createdAt));
+    }
+
+    // Notification subscription operations (stored in memory for demo)
+    private notificationSubscriptions = new Map<string, any[]>();
+
+    async saveNotificationSubscription(userId: string, subscription: any): Promise<void> {
+        const userSubscriptions = this.notificationSubscriptions.get(userId) || [];
+        
+        // Remove existing subscription with same endpoint
+        const filteredSubscriptions = userSubscriptions.filter(
+            sub => sub.endpoint !== subscription.endpoint
+        );
+        
+        // Add new subscription
+        filteredSubscriptions.push({
+            ...subscription,
+            createdAt: new Date()
+        });
+        
+        this.notificationSubscriptions.set(userId, filteredSubscriptions);
+        console.log(`Saved notification subscription for user ${userId}`);
+    }
+
+    async removeNotificationSubscription(userId: string, subscription: any): Promise<void> {
+        const userSubscriptions = this.notificationSubscriptions.get(userId) || [];
+        
+        const filteredSubscriptions = userSubscriptions.filter(
+            sub => sub.endpoint !== subscription.endpoint
+        );
+        
+        this.notificationSubscriptions.set(userId, filteredSubscriptions);
+        console.log(`Removed notification subscription for user ${userId}`);
+    }
+
+    async getUserNotificationSubscriptions(userId: string): Promise<any[]> {
+        return this.notificationSubscriptions.get(userId) || [];
     }
 
     private async updateTaskStreaks(taskId: string, userId: string): Promise<void> {

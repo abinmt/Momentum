@@ -343,6 +343,123 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
     });
 
+    // Push notification routes
+    app.get('/api/notifications/vapid-key', (req, res) => {
+        // In production, this should be a proper VAPID key pair
+        const vapidPublicKey = process.env.VAPID_PUBLIC_KEY || 'BCryqjhOW2CxKARP-2MuXPvyj7EJ3FgdvAr1_Lev8OWKi16x8Zz_FZp8xJJHyy1YHxKNYrKnWJrWJsWCcj6M7cQ';
+        res.json({ publicKey: vapidPublicKey });
+    });
+
+    app.post('/api/notifications/subscribe', isAuthenticated, async (req: any, res) => {
+        try {
+            const { subscription } = req.body;
+            const userId = req.user?.claims?.sub;
+            
+            // Store subscription in database
+            await storage.saveNotificationSubscription(userId, subscription);
+            
+            res.json({ success: true });
+        } catch (error) {
+            console.error('Error saving notification subscription:', error);
+            res.status(500).json({ message: 'Failed to save subscription' });
+        }
+    });
+
+    app.post('/api/notifications/unsubscribe', isAuthenticated, async (req: any, res) => {
+        try {
+            const { subscription } = req.body;
+            const userId = req.user?.claims?.sub;
+            
+            // Remove subscription from database
+            await storage.removeNotificationSubscription(userId, subscription);
+            
+            res.json({ success: true });
+        } catch (error) {
+            console.error('Error removing notification subscription:', error);
+            res.status(500).json({ message: 'Failed to remove subscription' });
+        }
+    });
+
+    app.post('/api/notifications/schedule', isAuthenticated, async (req: any, res) => {
+        try {
+            const { habitId, reminderTime, habitName, subscription } = req.body;
+            const userId = req.user?.claims?.sub;
+            
+            // Schedule the notification (this would typically use a job queue)
+            await scheduleHabitReminder(userId, habitId, reminderTime, habitName, subscription);
+            
+            res.json({ success: true });
+        } catch (error) {
+            console.error('Error scheduling notification:', error);
+            res.status(500).json({ message: 'Failed to schedule notification' });
+        }
+    });
+
+    app.post('/api/notifications/test', isAuthenticated, async (req: any, res) => {
+        try {
+            const { subscription } = req.body;
+            
+            await sendTestNotification(subscription);
+            
+            res.json({ success: true });
+        } catch (error) {
+            console.error('Error sending test notification:', error);
+            res.status(500).json({ message: 'Failed to send test notification' });
+        }
+    });
+
     const httpServer = createServer(app);
     return httpServer;
+}
+
+// Push notification helper functions
+async function scheduleHabitReminder(userId: string, habitId: string, reminderTime: string, habitName: string, subscription: any) {
+    // In a production app, you'd use a job queue like Bull/Agenda
+    // For now, we'll simulate scheduling
+    console.log(`Scheduled reminder for habit "${habitName}" at ${reminderTime} for user ${userId}`);
+    
+    // Example: Schedule a test notification in 10 seconds
+    setTimeout(async () => {
+        try {
+            await sendPushNotification(subscription, {
+                title: `Time for ${habitName}! 🎯`,
+                body: "Keep your momentum going - complete your habit now!",
+                icon: '/icon-192x192.svg',
+                data: { habitId, userId }
+            });
+        } catch (error) {
+            console.error('Failed to send scheduled notification:', error);
+        }
+    }, 10000);
+}
+
+async function sendTestNotification(subscription: any) {
+    const motivationalMessages = [
+        "Great job staying consistent! 🌟",
+        "You're building amazing habits! 💪",
+        "Every small step counts towards your goals! 🎯",
+        "Momentum is on your side - keep going! 🚀",
+        "Your future self will thank you! ✨"
+    ];
+    
+    const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+    
+    return sendPushNotification(subscription, {
+        title: "Momentum Test Notification",
+        body: randomMessage,
+        icon: '/icon-192x192.svg',
+        data: { test: true }
+    });
+}
+
+async function sendPushNotification(subscription: any, payload: any) {
+    // In production, you'd use a proper push notification service like web-push
+    // For demo purposes, we'll just log the notification
+    console.log('Sending push notification:', {
+        endpoint: subscription.endpoint.substring(0, 50) + '...',
+        payload
+    });
+    
+    // Simulate successful delivery
+    return Promise.resolve();
 }
