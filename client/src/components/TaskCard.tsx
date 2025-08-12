@@ -216,7 +216,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     
     // Apply grey overlay for paused/not started tasks
     const isInactive = taskState === 'not-started' || taskState === 'paused';
-    const cardClasses = `task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''} ${isDragging ? 'opacity-50 scale-105 rotate-2 z-50' : ''}`;
+    const cardClasses = `task-card group ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''} ${isDragging ? 'opacity-50 scale-105 rotate-2 z-50' : ''}`;
 
     return (
         <div 
@@ -262,8 +262,8 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </div>
             </div>
 
-            {/* Action Icons Vertically Aligned */}
-            <div className="absolute top-1.5 right-1.5 z-10 flex flex-col space-y-0.5">
+            {/* Action Icons Vertically Aligned - Auto Show/Hide */}
+            <div className="absolute top-1.5 right-1.5 z-10 flex flex-col space-y-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <Button
                     variant="ghost"
                     size="sm"
