@@ -100,7 +100,7 @@ export default function Header({
               const result = await installApp();
               console.log('Install result:', result);
             }}
-            className="border-white/30 text-white hover:bg-white/10 px-3 py-1 h-8 text-xs backdrop-blur-sm"
+            className="bg-white/20 hover:bg-white/30 text-white border-white/30 px-3 py-1 h-8 text-xs backdrop-blur-sm transition-all duration-200"
           >
             <Smartphone className="w-3 h-3 mr-1" />
             Install
