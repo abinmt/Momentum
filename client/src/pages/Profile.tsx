@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Settings, Power, Share2, Download, Bell } from "lucide-react";
+import { Settings, Power, Share2, Download, Bell, ArrowLeft } from "lucide-react";
 
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
@@ -73,6 +73,18 @@ export default function Profile() {
         <div className="min-h-screen bg-gradient-primary relative">
             {/* Mobile View */}
             <div className="block md:hidden max-w-md mx-auto">
+                {/* Mobile Header with Back Button */}
+                <header className="sticky top-0 z-40 bg-black/20 backdrop-blur-md border-b border-white/10">
+                    <div className="flex items-center justify-between px-4 py-3">
+                        <Link href="/">
+                            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 p-2">
+                                <ArrowLeft className="w-5 h-5" />
+                            </Button>
+                        </Link>
+                        <h1 className="text-xl font-bold text-white">Profile</h1>
+                        <div className="w-10"></div> {/* Spacer for centering */}
+                    </div>
+                </header>
                 {/* Main Content */}
                 <main className="p-6 pb-6">
                     {/* Profile Header */}
@@ -177,8 +189,18 @@ export default function Profile() {
 
             {/* Desktop View */}
             <div className="hidden md:block container mx-auto px-4 py-8">
+                {/* Desktop Header with Back Button */}
+                <header className="mb-8">
+                    <div className="flex items-center space-x-4">
+                        <Link href="/">
+                            <Button variant="ghost" className="text-white hover:bg-white/10 p-3">
+                                <ArrowLeft className="w-6 h-6" />
+                            </Button>
+                        </Link>
+                        <h1 className="text-4xl font-bold text-white">Profile</h1>
+                    </div>
+                </header>
                 <div className="max-w-4xl mx-auto">
-                    <h1 className="text-3xl font-bold text-white mb-8">Profile</h1>
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Profile Info */}
