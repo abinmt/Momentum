@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check, X } from "lucide-react";
+import { TASK_COLORS } from "@/lib/constants";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -190,14 +191,15 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                         <Switch
                             checked={isDayLongTask}
-                            onCheckedChange={setIsDayLongTask}
+                            onCheckedChange={readOnly ? undefined : setIsDayLongTask}
+                            disabled={readOnly}
                             className="data-[state=checked]:bg-green-500"
                         />
                     </div>
 
                     <div 
-                        className="flex items-center justify-between py-4 border-b border-white border-opacity-20 cursor-pointer hover:bg-white hover:bg-opacity-10 rounded-lg px-2 -mx-2 transition-colors"
-                        onClick={() => setShowGoalDialog(true)}
+                        className={`flex items-center justify-between py-4 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        onClick={readOnly ? undefined : () => setShowGoalDialog(true)}
                     >
                         <div className="flex items-center space-x-3">
                             <Target className="w-5 h-5 text-white" />
@@ -206,13 +208,13 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         <div className="flex items-center space-x-2">
                             <span className="text-white">{goal || "0"}</span>
                             <span className="text-white opacity-80">{goalUnit}</span>
-                            <ChevronRight className="w-5 h-5 text-white opacity-60" />
+                            {!readOnly && <ChevronRight className="w-5 h-5 text-white opacity-60" />}
                         </div>
                     </div>
 
                     <div 
-                        className="flex items-center justify-between py-4 cursor-pointer hover:bg-white hover:bg-opacity-10 rounded-lg px-2 -mx-2 transition-colors"
-                        onClick={() => setShowScheduleDialog(true)}
+                        className={`flex items-center justify-between py-4 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        onClick={readOnly ? undefined : () => setShowScheduleDialog(true)}
                     >
                         <div className="flex items-center space-x-3">
                             <Calendar className="w-5 h-5 text-white" />
@@ -220,7 +222,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                         <div className="flex items-center space-x-2">
                             <span className="text-white opacity-80">{getScheduleDisplayText()}</span>
-                            <ChevronRight className="w-5 h-5 text-white opacity-60" />
+                            {!readOnly && <ChevronRight className="w-5 h-5 text-white opacity-60" />}
                         </div>
                     </div>
 
@@ -231,8 +233,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         <div className="space-y-2">
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
-                                onClick={() => setTaskType('timed')}
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
+                                onClick={readOnly ? undefined : () => setTaskType('timed')}
+                                disabled={readOnly}
                             >
                                 <div className="flex items-center space-x-3">
                                     <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -248,8 +251,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                             
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
-                                onClick={() => setTaskType('negative')}
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
+                                onClick={readOnly ? undefined : () => setTaskType('negative')}
+                                disabled={readOnly}
                             >
                                 <div className="flex items-center space-x-3">
                                     <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
@@ -265,8 +269,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                             
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
-                                onClick={() => setTaskType('health')}
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
+                                onClick={readOnly ? undefined : () => setTaskType('health')}
+                                disabled={readOnly}
                             >
                                 <div className="flex items-center space-x-3">
                                     <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
@@ -291,7 +296,8 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                             </div>
                             <Switch
                                 checked={reminderEnabled}
-                                onCheckedChange={setReminderEnabled}
+                                onCheckedChange={readOnly ? undefined : setReminderEnabled}
+                                disabled={readOnly}
                                 className="data-[state=checked]:bg-green-500"
                             />
                         </div>
@@ -299,29 +305,48 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         {reminderEnabled && (
                             <div className="mt-3">
                                 <label className="text-sm opacity-80">Reminder Time</label>
-                                <Input
-                                    type="time"
-                                    value={reminderTime}
-                                    onChange={(e) => setReminderTime(e.target.value)}
-                                    className="bg-white bg-opacity-20 border-none text-white mt-2"
-                                />
+                                <div className="flex items-center">
+                                    <Input
+                                        type="time"
+                                        value={reminderTime}
+                                        onChange={readOnly ? undefined : (e) => setReminderTime(e.target.value)}
+                                        className="bg-white bg-opacity-20 border-none text-white mt-2"
+                                        readOnly={readOnly}
+                                    />
+                                </div>
                             </div>
                         )}
                     </div>
 
                     {/* Icon & Color Section */}
                     <div className="border-t border-white border-opacity-20 pt-4">
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
-                            onClick={() => setShowIconColorDialog(true)}
-                        >
-                            <div className="flex items-center space-x-3">
-                                <Target className="w-5 h-5 text-white" />
-                                <span>Icon & Color</span>
+                        {readOnly ? (
+                            <div className="flex items-center justify-between py-4">
+                                <div className="flex items-center space-x-3">
+                                    <Target className="w-5 h-5 text-white" />
+                                    <span className="text-white">Icon & Color</span>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${TASK_COLORS[selectedColor] || 'bg-blue-500'}`}>
+                                        <span className="text-xl text-white">
+                                            {getIconDisplay(selectedIcon)}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <ChevronRight className="w-4 h-4" />
-                        </Button>
+                        ) : (
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                onClick={() => setShowIconColorDialog(true)}
+                            >
+                                <div className="flex items-center space-x-3">
+                                    <Target className="w-5 h-5 text-white" />
+                                    <span>Icon & Color</span>
+                                </div>
+                                <ChevronRight className="w-4 h-4" />
+                            </Button>
+                        )}
                     </div>
                     </div>
                 </div>
@@ -635,7 +660,8 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                             <span>Enable Reminders</span>
                             <Switch
                                 checked={reminderEnabled}
-                                onCheckedChange={setReminderEnabled}
+                                onCheckedChange={readOnly ? undefined : setReminderEnabled}
+                                disabled={readOnly}
                                 className="data-[state=checked]:bg-green-500"
                             />
                         </div>
