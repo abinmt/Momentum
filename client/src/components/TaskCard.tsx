@@ -142,11 +142,8 @@ export default function TaskCard({ task }: TaskCardProps) {
                 timerElapsedSeconds: elapsedSeconds,
             });
         } else if (taskState === 'not-started' || taskState === 'paused') {
-            toast({
-                title: "Start your habit first",
-                description: "Tap the menu button to begin tracking.",
-                variant: "destructive",
-            });
+            // Don't show toast - user might just be viewing the card
+            return;
         }
     };
 

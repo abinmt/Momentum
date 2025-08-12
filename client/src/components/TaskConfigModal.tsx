@@ -174,14 +174,21 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     <div className="space-y-4 mb-8">
                     <div className="bg-white bg-opacity-20 rounded-xl p-4">
                         <div className="text-sm opacity-80 mb-1">TITLE:</div>
-                        <Input
-                            value={title}
-                            onChange={readOnly ? undefined : (e) => setTitle(e.target.value)}
-                            className="bg-transparent border-none text-white font-semibold p-0 focus:ring-0"
-                            placeholder="Habit title"
-                            readOnly={readOnly}
-                        />
-                        <div className="text-xs opacity-60 mt-1">{title.length} / 50</div>
+                        {readOnly ? (
+                            <div className="text-white font-semibold py-2">
+                                {title || "Untitled Habit"}
+                            </div>
+                        ) : (
+                            <>
+                                <Input
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className="bg-transparent border-none text-white font-semibold p-0 focus:ring-0"
+                                    placeholder="Habit title"
+                                />
+                                <div className="text-xs opacity-60 mt-1">{title.length} / 50</div>
+                            </>
+                        )}
                     </div>
 
                     <div className="flex items-center justify-between py-4 border-b border-white border-opacity-20">
@@ -327,7 +334,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                                     <span className="text-white">Icon & Color</span>
                                 </div>
                                 <div className="flex items-center space-x-3">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${TASK_COLORS[selectedColor] || 'bg-blue-500'}`}>
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${TASK_COLORS[selectedColor as keyof typeof TASK_COLORS]?.bg || 'bg-blue-500'}`}>
                                         <span className="text-xl text-white">
                                             {getIconDisplay(selectedIcon)}
                                         </span>
