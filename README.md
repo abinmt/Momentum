@@ -264,6 +264,7 @@ erDiagram
     USERS ||--o{ SHARED_TASKS_WITH : receives
     TASKS ||--o{ TASK_ENTRIES : tracks
     TASKS ||--o{ SHARED_TASKS : can_be_shared
+    SESSIONS }|--|| USERS : authenticates
 
     USERS {
         varchar id PK "UUID primary key"
@@ -295,6 +296,9 @@ erDiagram
         jsonb custom_days "Custom schedule array [1,2,3,4,5]"
         varchar selected_days "Comma-separated days"
         integer times_per_week "Weekly frequency target"
+        boolean reminder_enabled "Reminder notifications"
+        varchar reminder_time "Daily reminder time"
+        boolean is_private "Privacy setting"
         boolean is_active "Habit active status"
         integer current_streak "Current consecutive days"
         integer best_streak "All-time best streak"
@@ -493,3 +497,523 @@ export const insertTaskEntrySchema = createInsertSchema(taskEntries).omit({
 - Validation scripts for data integrity
 
 This comprehensive database design supports the full feature set of the Momentum habit tracking application while maintaining performance, scalability, and data integrity.
+
+## Sequence Diagrams
+
+### User Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant SW as Service Worker
+    participant C as Client App
+    participant S as Server
+    participant A as Auth Service
+    participant DB as Database
+
+    U->>B: Access Application
+    B->>SW: Check Cache
+    SW->>B: Serve Cached App
+    B->>C: Load React App
+    C->>S: GET /api/auth/user
+    S->>DB: Check Session
+    alt Session Invalid
+        S->>C: 401 Unauthorized
+        C->>U: Show Landing Page
+        U->>C: Click "Login"
+        C->>S: GET /api/login
+        S->>A: Redirect to OIDC Provider
+        A->>U: Show Login Form
+        U->>A: Enter Credentials
+        A->>S: POST /api/callback
+        S->>DB: Create/Update User
+        S->>DB: Store Session
+        S->>C: Redirect to Dashboard
+    else Session Valid
+        S->>C: Return User Data
+        C->>U: Show Dashboard
+    end
+```
+
+### Habit Creation and Management Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Client App
+    participant Q as TanStack Query
+    participant S as Server
+    participant DB as Database
+    participant SW as Service Worker
+
+    U->>C: Click "Add Habit"
+    C->>U: Show Habit Creation Form
+    U->>C: Fill Form & Submit
+    C->>Q: mutate(/api/tasks)
+    Q->>S: POST /api/tasks
+    S->>DB: INSERT task
+    DB->>S: Return Created Task
+    S->>Q: Return Task Data
+    Q->>C: Update UI (Optimistic)
+    Q->>SW: Cache New Data
+    C->>U: Show Success State
+    
+    Note over U,SW: Timer State Management
+    U->>C: Start Timer
+    C->>Q: mutate(/api/tasks/[id])
+    Q->>S: PATCH /api/tasks/[id]
+    S->>DB: UPDATE timer_state
+    DB->>S: Confirm Update
+    S->>Q: Return Updated Task
+    Q->>C: Update Timer UI
+    Q->>SW: Cache Timer State
+```
+
+### Offline Synchronization Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Client App
+    participant SW as Service Worker
+    participant IDB as IndexedDB
+    participant S as Server
+    participant DB as Database
+
+    Note over U,DB: User Goes Offline
+    U->>C: Complete Habit
+    C->>SW: Background Sync Request
+    SW->>IDB: Store Pending Changes
+    SW->>C: Show Offline Indicator
+    C->>U: Confirm Action (Cached)
+    
+    Note over U,DB: User Comes Back Online
+    SW->>SW: Detect Network
+    SW->>S: POST /sync/entries
+    S->>DB: Batch Update Entries
+    DB->>S: Confirm Updates
+    S->>SW: Return Success
+    SW->>IDB: Clear Pending Changes
+    SW->>C: Update UI
+    C->>U: Show Online Indicator
+```
+
+### PWA Installation and Update Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant SW as Service Worker
+    participant C as Client App
+    participant S as Server
+
+    Note over U,S: PWA Installation
+    U->>B: Visit Application
+    B->>SW: Register Service Worker
+    SW->>B: Cache App Shell
+    B->>U: Show Install Prompt
+    U->>B: Click Install
+    B->>U: Add to Home Screen
+    
+    Note over U,S: PWA Update
+    S->>SW: Deploy New Version
+    SW->>SW: Detect Update
+    SW->>C: Notify Update Available
+    C->>U: Show Update Banner
+    U->>C: Click Update
+    C->>SW: Skip Waiting
+    SW->>SW: Activate New Version
+    SW->>B: Reload Application
+    B->>U: Show Updated App
+```
+
+## Class Diagrams
+
+### Frontend Component Architecture
+
+```mermaid
+classDiagram
+    class App {
+        +Router()
+        +ThemeProvider()
+        +QueryClientProvider()
+        +render()
+    }
+    
+    class ThemeProvider {
+        -theme: string
+        -setTheme(theme: string)
+        +toggleTheme()
+        +getTheme()
+    }
+    
+    class Header {
+        -user: User
+        -isMenuOpen: boolean
+        +ActionButtons()
+        +UserMenu()
+        +render()
+    }
+    
+    class TaskCard {
+        -task: Task
+        -onUpdate(task: Task)
+        -onDelete(id: string)
+        +TimerControls()
+        +ProgressRing()
+        +ActionMenu()
+        +render()
+    }
+    
+    class TaskForm {
+        -initialData?: Task
+        -onSubmit(data: InsertTask)
+        +validateForm()
+        +handleSubmit()
+        +render()
+    }
+    
+    class PWAManager {
+        -updateAvailable: boolean
+        -canInstall: boolean
+        +checkForUpdate()
+        +installApp()
+        +updateServiceWorker()
+    }
+    
+    class ServiceWorker {
+        +cacheStrategy: CacheStrategy
+        +backgroundSync: BackgroundSync
+        +pushNotifications: PushManager
+        +handleInstall()
+        +handleActivate()
+        +handleFetch()
+    }
+
+    App --> ThemeProvider
+    App --> Header
+    App --> TaskCard
+    App --> TaskForm
+    Header --> PWAManager
+    PWAManager --> ServiceWorker
+    TaskCard --> TaskForm
+```
+
+### Backend API Architecture
+
+```mermaid
+classDiagram
+    class Server {
+        +express: Express
+        +setupMiddleware()
+        +registerRoutes()
+        +start()
+    }
+    
+    class AuthMiddleware {
+        +isAuthenticated(req, res, next)
+        +setupAuth(app: Express)
+        +handleLogin()
+        +handleLogout()
+    }
+    
+    class TaskController {
+        +getTasks(req, res)
+        +createTask(req, res)
+        +updateTask(req, res)
+        +deleteTask(req, res)
+    }
+    
+    class UserController {
+        +getUser(req, res)
+        +updateSettings(req, res)
+        +getUserStats(req, res)
+    }
+    
+    class DatabaseStorage {
+        -db: DrizzleDB
+        +getUser(id: string)
+        +upsertUser(user: UpsertUser)
+        +getTasks(userId: string)
+        +createTask(task: InsertTask)
+        +updateTask(id: string, data: UpdateTask)
+        +deleteTask(id: string)
+    }
+    
+    class ValidationService {
+        +validateTask(data: unknown)
+        +validateEntry(data: unknown)
+        +validateUser(data: unknown)
+    }
+
+    Server --> AuthMiddleware
+    Server --> TaskController
+    Server --> UserController
+    TaskController --> DatabaseStorage
+    UserController --> DatabaseStorage
+    TaskController --> ValidationService
+    UserController --> ValidationService
+```
+
+### Data Layer Architecture
+
+```mermaid
+classDiagram
+    class DrizzleORM {
+        +db: PostgresJsDatabase
+        +schema: Schema
+        +query()
+        +insert()
+        +update()
+        +delete()
+    }
+    
+    class Schema {
+        +users: UsersTable
+        +tasks: TasksTable
+        +taskEntries: TaskEntriesTable
+        +journalEntries: JournalEntriesTable
+        +sessions: SessionsTable
+    }
+    
+    class User {
+        +id: string
+        +email: string
+        +firstName: string
+        +lastName: string
+        +profileImageUrl: string
+        +notificationsEnabled: boolean
+        +darkModeEnabled: boolean
+        +reminderTime: number
+    }
+    
+    class Task {
+        +id: string
+        +userId: string
+        +title: string
+        +description: string
+        +type: string
+        +goal: number
+        +timerState: string
+        +currentStreak: number
+        +bestStreak: number
+        +isActive: boolean
+    }
+    
+    class TaskEntry {
+        +id: string
+        +taskId: string
+        +userId: string
+        +date: Date
+        +completed: boolean
+        +value: number
+        +duration: number
+    }
+
+    DrizzleORM --> Schema
+    Schema --> User
+    Schema --> Task
+    Schema --> TaskEntry
+    User ||--o{ Task : owns
+    Task ||--o{ TaskEntry : tracks
+```
+
+## PWA Architecture
+
+### PWA System Overview
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        UI[React UI Components]
+        SW[Service Worker]
+        IDB[IndexedDB Cache]
+        Manifest[Web App Manifest]
+    end
+    
+    subgraph "Network Layer"
+        API[REST API Server]
+        Push[Push Notification Service]
+        CDN[Static Asset CDN]
+    end
+    
+    subgraph "Data Layer"
+        DB[(PostgreSQL Database)]
+        Session[(Session Store)]
+        Cache[(Server Cache)]
+    end
+    
+    UI <--> SW
+    SW <--> IDB
+    SW <--> API
+    SW <--> Push
+    SW <--> CDN
+    API <--> DB
+    API <--> Session
+    API <--> Cache
+    
+    UI -.-> Manifest
+    SW -.-> Manifest
+```
+
+### PWA Class Architecture
+
+```mermaid
+classDiagram
+    class PWACore {
+        +manifestConfig: ManifestConfig
+        +serviceWorker: ServiceWorkerManager
+        +cacheManager: CacheManager
+        +installManager: InstallManager
+        +updateManager: UpdateManager
+        +init()
+    }
+    
+    class ServiceWorkerManager {
+        -registration: ServiceWorkerRegistration
+        +register()
+        +update()
+        +skipWaiting()
+        +postMessage(data)
+    }
+    
+    class CacheManager {
+        +strategies: CacheStrategy[]
+        +cacheFirst(request)
+        +networkFirst(request)
+        +staleWhileRevalidate(request)
+        +cacheOnly(request)
+        +networkOnly(request)
+    }
+    
+    class InstallManager {
+        -deferredPrompt: BeforeInstallPromptEvent
+        +canInstall: boolean
+        +isInstalled: boolean
+        +showInstallPrompt()
+        +handleInstall()
+    }
+    
+    class UpdateManager {
+        +hasUpdate: boolean
+        +isUpdatePending: boolean
+        +checkForUpdate()
+        +applyUpdate()
+        +showUpdateUI()
+    }
+    
+    class BackgroundSync {
+        +pendingRequests: SyncRequest[]
+        +register(tag: string)
+        +handleSync(event)
+        +queueRequest(request)
+    }
+    
+    class PushManager {
+        +subscription: PushSubscription
+        +subscribe()
+        +unsubscribe()
+        +handlePush(event)
+        +showNotification(data)
+    }
+    
+    class OfflineManager {
+        +isOnline: boolean
+        +pendingOperations: Operation[]
+        +handleOnline()
+        +handleOffline()
+        +syncPendingOperations()
+    }
+
+    PWACore --> ServiceWorkerManager
+    PWACore --> CacheManager
+    PWACore --> InstallManager
+    PWACore --> UpdateManager
+    ServiceWorkerManager --> BackgroundSync
+    ServiceWorkerManager --> PushManager
+    ServiceWorkerManager --> OfflineManager
+    CacheManager --> OfflineManager
+```
+
+### PWA Sequence: Installation & Caching
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant SW as Service Worker
+    participant CM as Cache Manager
+    participant API as API Server
+    participant IDB as IndexedDB
+
+    Note over U,IDB: PWA Installation Process
+    U->>B: First Visit
+    B->>SW: Register Service Worker
+    SW->>CM: Initialize Cache Strategies
+    CM->>SW: Cache App Shell
+    SW->>B: Installation Complete
+    B->>U: Show Install Banner
+    
+    Note over U,IDB: Data Caching Strategy
+    U->>B: Navigate to Habits
+    B->>SW: Fetch Habits Data
+    SW->>API: Network Request
+    API->>SW: Return Habits JSON
+    SW->>IDB: Cache Response
+    SW->>B: Return Data
+    B->>U: Display Habits
+    
+    Note over U,IDB: Offline Operation
+    U->>B: Complete Habit (Offline)
+    B->>SW: POST Request
+    SW->>IDB: Queue for Sync
+    SW->>B: Return Optimistic Response
+    B->>U: Show Success (Cached)
+    
+    Note over U,IDB: Background Sync
+    SW->>SW: Detect Network
+    SW->>API: Sync Queued Operations
+    API->>SW: Confirm Success
+    SW->>IDB: Clear Sync Queue
+    SW->>B: Update UI State
+```
+
+### PWA Sequence: Push Notifications
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant SW as Service Worker
+    participant PM as Push Manager
+    participant API as API Server
+    participant PS as Push Service
+
+    Note over U,PS: Notification Setup
+    U->>B: Enable Notifications
+    B->>SW: Request Permission
+    SW->>PM: Subscribe to Push
+    PM->>PS: Create Subscription
+    PS->>PM: Return Subscription
+    PM->>API: Send Subscription
+    API->>API: Store Subscription
+    
+    Note over U,PS: Sending Notifications
+    API->>API: Habit Reminder Trigger
+    API->>PS: Send Push Message
+    PS->>SW: Deliver Message
+    SW->>SW: Handle Push Event
+    SW->>B: Show Notification
+    B->>U: Display Notification
+    
+    Note over U,PS: User Interaction
+    U->>B: Click Notification
+    B->>SW: Handle Notification Click
+    SW->>B: Focus/Open App
+    SW->>B: Navigate to Habits
+    B->>U: Show App Interface
+```
+
+This comprehensive documentation provides detailed technical diagrams covering the entire Momentum PWA architecture, from database relationships to real-time user interactions and offline functionality.
