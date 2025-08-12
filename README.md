@@ -250,3 +250,246 @@ momentum/
 - **Adaptive UI**: Components that adapt to screen size and input method
 
 This architecture provides a scalable, maintainable, and performant foundation for the Momentum habit tracking application, with clear separation of concerns and modern development practices throughout.
+
+## Database Schema
+
+### Entity Relationship Diagram
+
+```mermaid
+erDiagram
+    USERS ||--o{ TASKS : owns
+    USERS ||--o{ TASK_ENTRIES : creates
+    USERS ||--o{ JOURNAL_ENTRIES : writes
+    USERS ||--o{ SHARED_TASKS_BY : shares
+    USERS ||--o{ SHARED_TASKS_WITH : receives
+    TASKS ||--o{ TASK_ENTRIES : tracks
+    TASKS ||--o{ SHARED_TASKS : can_be_shared
+
+    USERS {
+        varchar id PK "UUID primary key"
+        varchar email UK "Unique email address"
+        varchar first_name "User's first name"
+        varchar last_name "User's last name"
+        varchar profile_image_url "Avatar URL"
+        boolean notifications_enabled "Push notifications toggle"
+        boolean sound_enabled "Sound alerts toggle"
+        boolean vibration_enabled "Haptic feedback toggle"
+        boolean dark_mode_enabled "Theme preference"
+        integer reminder_time "Daily reminder hour (0-23)"
+        timestamp created_at "Account creation timestamp"
+        timestamp updated_at "Last profile update"
+    }
+
+    TASKS {
+        varchar id PK "UUID primary key"
+        varchar user_id FK "Owner reference"
+        text title "Habit name/title"
+        text description "Optional habit description"
+        varchar icon "Icon identifier (lucide-react)"
+        varchar color "Theme color (primary, blue, green, etc.)"
+        varchar type "Habit type (simple, timed, health, negative)"
+        integer goal "Target value (steps, minutes, etc.)"
+        varchar goal_unit "Unit of measurement"
+        boolean is_day_long_task "All-day habit flag"
+        varchar schedule "Frequency (daily, weekdays, custom)"
+        jsonb custom_days "Custom schedule array [1,2,3,4,5]"
+        varchar selected_days "Comma-separated days"
+        integer times_per_week "Weekly frequency target"
+        boolean is_active "Habit active status"
+        integer current_streak "Current consecutive days"
+        integer best_streak "All-time best streak"
+        integer total_completions "Lifetime completion count"
+        integer display_order "UI sort order"
+        varchar timer_state "Timer status (not-started, in-progress, paused, completed)"
+        timestamp timer_started_at "Timer start timestamp"
+        integer timer_elapsed_seconds "Accumulated timer duration"
+        date last_active_date "Last interaction date"
+        timestamp created_at "Habit creation timestamp"
+        timestamp updated_at "Last modification timestamp"
+    }
+
+    TASK_ENTRIES {
+        varchar id PK "UUID primary key"
+        varchar task_id FK "Habit reference"
+        varchar user_id FK "User reference"
+        date date "Completion date (YYYY-MM-DD)"
+        boolean completed "Completion status"
+        integer value "Measured value (steps, reps, etc.)"
+        integer duration "Duration in seconds"
+        text notes "Optional completion notes"
+        timestamp created_at "Entry creation timestamp"
+        timestamp updated_at "Last modification timestamp"
+    }
+
+    JOURNAL_ENTRIES {
+        varchar id PK "UUID primary key"
+        varchar user_id FK "Author reference"
+        date date "Journal entry date (YYYY-MM-DD)"
+        text content "Journal entry text"
+        integer mood "Mood rating (1-5 scale)"
+        timestamp created_at "Entry creation timestamp"
+        timestamp updated_at "Last modification timestamp"
+    }
+
+    SHARED_TASKS {
+        varchar id PK "UUID primary key"
+        varchar task_id FK "Shared habit reference"
+        varchar shared_by FK "Sharer user reference"
+        varchar shared_with FK "Recipient user reference"
+        timestamp created_at "Share timestamp"
+    }
+
+    SESSIONS {
+        varchar sid PK "Session identifier"
+        jsonb sess "Session data payload"
+        timestamp expire "Session expiration timestamp"
+    }
+```
+
+### Table Descriptions
+
+#### **Users Table**
+The central user management table storing authentication data, profile information, and application preferences.
+
+**Key Features:**
+- UUID-based primary keys for security and scalability
+- Comprehensive user preference storage (notifications, theme, reminders)
+- Profile information with optional avatar support
+- Created/updated timestamps for audit trails
+
+**Relationships:**
+- One-to-many with Tasks (user owns multiple habits)
+- One-to-many with TaskEntries (user creates multiple completions)
+- One-to-many with JournalEntries (user writes multiple journal entries)
+- Many-to-many with SharedTasks (users can share and receive habits)
+
+#### **Tasks Table**
+Core habit definition table with comprehensive configuration options and real-time state management.
+
+**Key Features:**
+- Flexible habit types: simple completion, timed activities, health metrics, negative habits
+- Advanced scheduling: daily, weekdays, custom patterns, weekly frequency targets
+- Real-time timer state persistence across sessions and devices
+- Comprehensive progress tracking: current streak, best streak, total completions
+- Drag-and-drop ordering support with display_order field
+- Visual customization: icons, colors, descriptions
+
+**Business Logic:**
+- Timer state machine: not-started → in-progress → paused → completed
+- Daily timer reset logic using last_active_date comparison
+- Streak calculation based on consecutive TaskEntry completions
+- Goal tracking with flexible units (steps, minutes, calories, etc.)
+
+#### **Task Entries Table**
+Daily completion records linking users and habits with detailed tracking data.
+
+**Key Features:**
+- Unique constraint: one entry per user/task/date combination
+- Flexible value storage for measurable habits (steps, duration, reps)
+- Optional notes for completion context
+- Boolean completion status for simple habits
+- Duration tracking for timed activities
+
+**Data Integrity:**
+- Composite unique constraint prevents duplicate daily entries
+- Foreign key constraints ensure referential integrity
+- Date-based partitioning ready for performance optimization
+
+#### **Journal Entries Table**
+Daily reflection and mood tracking system for personal development insights.
+
+**Key Features:**
+- One entry per user per day (enforced by unique constraint)
+- Rich text content support for detailed reflections
+- Mood tracking on 1-5 scale for emotional pattern analysis
+- Date-based organization for timeline views
+
+**Analytics Support:**
+- Mood trend analysis over time
+- Correlation with habit completion patterns
+- Content analysis for personal insights
+
+#### **Shared Tasks Table**
+Social features enabling habit sharing and accountability partnerships.
+
+**Key Features:**
+- Many-to-many relationship between users through shared habits
+- Tracks sharing origin and destination
+- Timestamp for sharing analytics
+- Supports accountability partner features
+
+**Future Extensions:**
+- Sharing permissions and visibility controls
+- Collaborative goal setting
+- Social progress sharing
+
+#### **Sessions Table**
+Secure session management with PostgreSQL storage for scalability and persistence.
+
+**Key Features:**
+- Standard Express session structure
+- JSONB storage for flexible session data
+- Automatic expiration handling
+- Index on expire column for cleanup performance
+
+### Database Indexes and Performance
+
+#### **Optimized Queries:**
+- User-based habit lookups: `tasks.user_id`
+- Date-range entry queries: `task_entries.date`
+- Session expiration cleanup: `sessions.expire`
+- Task ordering: `tasks.display_order`
+
+#### **Composite Indexes:**
+- Task entries uniqueness: `(task_id, user_id, date)`
+- Journal entries uniqueness: `(user_id, date)`
+- User task lookup: `(user_id, is_active, display_order)`
+
+### Data Validation and Types
+
+#### **Drizzle ORM Integration:**
+- Compile-time type safety with TypeScript
+- Runtime validation with Zod schemas
+- Automatic type inference for API responses
+- Schema-driven form validation
+
+#### **Key Validation Rules:**
+```typescript
+// Task creation validation
+export const insertTaskSchema = createInsertSchema(tasks).omit({
+    id: true,
+    userId: true,
+    currentStreak: true,
+    bestStreak: true,
+    totalCompletions: true,
+    createdAt: true,
+    updatedAt: true,
+}).extend({
+    isDayLongTask: z.boolean().optional(),
+    selectedDays: z.string().optional(),
+});
+
+// Task entry validation
+export const insertTaskEntrySchema = createInsertSchema(taskEntries).omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+});
+```
+
+### Migration Strategy
+
+#### **Schema Evolution:**
+- Drizzle Kit for automated migration generation
+- Forward-only migrations for data safety
+- Rollback strategies for critical updates
+- Zero-downtime deployment support
+
+#### **Data Migration Patterns:**
+- Additive changes preferred (new columns with defaults)
+- Careful handling of NOT NULL constraints
+- Batch updates for large datasets
+- Validation scripts for data integrity
+
+This comprehensive database design supports the full feature set of the Momentum habit tracking application while maintaining performance, scalability, and data integrity.
