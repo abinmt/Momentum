@@ -86,7 +86,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
                 {isInstalled ? 'Installed' : 'Web App'}
               </Badge>
               {canInstall && !isInstalled && (
-                <Button size="sm" onClick={handleInstall} className="bg-white/20 text-white hover:bg-white/30 border-0">
+                <Button size="sm" onClick={handleInstall} className="bg-white/20 text-white hover:bg-white/30 border-white/20">
                   <Download className="w-4 h-4 mr-2" />
                   Install App
                 </Button>
@@ -101,7 +101,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
               {updateAvailable ? (
                 <>
                   <Badge variant="destructive">Update Available</Badge>
-                  <Button size="sm" onClick={handleUpdate} className="bg-white/20 text-white hover:bg-white/30 border-0">
+                  <Button size="sm" onClick={handleUpdate} className="bg-white/20 text-white hover:bg-white/30 border-white/20">
                     <Download className="w-4 h-4 mr-2" />
                     Update Now
                   </Button>
@@ -148,7 +148,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
               <Badge variant={isOnline ? 'default' : 'destructive'}>
                 {isOnline ? `Online (${networkSpeed})` : 'Offline'}
               </Badge>
-              <Button size="sm" variant="outline" onClick={refreshNetworkInfo} className="border-white/30 text-white hover:bg-white/10">
+              <Button size="sm" variant="outline" onClick={refreshNetworkInfo} className="border-white/30 text-white hover:bg-white/10 bg-transparent">
                 <RotateCw className="w-4 h-4" />
               </Button>
             </div>
@@ -242,7 +242,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
               variant="outline" 
               onClick={handleClearCache}
               disabled={isClearing}
-              className="border-white/30 text-white hover:bg-white/10 disabled:opacity-50"
+              className="border-white/30 text-white hover:bg-white/10 disabled:opacity-50 bg-transparent"
             >
               {isClearing ? (
                 <RotateCw className="w-4 h-4 mr-2 animate-spin" />

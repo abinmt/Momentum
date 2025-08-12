@@ -210,24 +210,24 @@ export default function PWAStatusIndicator({ compact = false, showDetails = fals
         {/* Actions */}
         <div className="flex flex-wrap gap-2 pt-2">
           {updateAvailable && (
-            <Button size="sm" onClick={updateServiceWorker} className="bg-white/20 text-white hover:bg-white/30 border-0">
+            <Button size="sm" onClick={updateServiceWorker} className="bg-white/20 text-white hover:bg-white/30 border-white/20">
               <Download className="w-4 h-4 mr-2" />
               Update App
             </Button>
           )}
           
           {canInstall && (
-            <Button size="sm" variant="outline" onClick={installApp} className="border-white/30 text-white hover:bg-white/10">
+            <Button size="sm" variant="outline" onClick={installApp} className="border-white/30 text-white hover:bg-white/10 bg-transparent">
               Install App
             </Button>
           )}
           
-          <Button size="sm" variant="outline" onClick={clearCache} className="border-white/30 text-white hover:bg-white/10">
+          <Button size="sm" variant="outline" onClick={clearCache} className="border-white/30 text-white hover:bg-white/10 bg-transparent">
             <RotateCw className="w-4 h-4 mr-2" />
             Clear Cache
           </Button>
           
-          <Button size="sm" variant="outline" onClick={handleShowCacheStats} className="border-white/30 text-white hover:bg-white/10">
+          <Button size="sm" variant="outline" onClick={handleShowCacheStats} className="border-white/30 text-white hover:bg-white/10 bg-transparent">
             <HardDrive className="w-4 h-4 mr-2" />
             {showCacheStats ? 'Hide' : 'Show'} Cache Stats
           </Button>
