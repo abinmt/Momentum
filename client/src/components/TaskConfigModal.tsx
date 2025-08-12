@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -108,11 +108,11 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl [&>button[aria-label='Close']]:hidden">
                 <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <Button variant="ghost" size="icon" onClick={onClose}>
-                        <ChevronLeft className="w-6 h-6 text-white" />
-                    </Button>
-                    <DialogTitle className="text-xl font-bold">Confirm Habit</DialogTitle>
                     <div></div>
+                    <DialogTitle className="text-xl font-bold">Create Habit</DialogTitle>
+                    <Button variant="ghost" size="icon" onClick={onClose}>
+                        <X className="w-6 h-6 text-white" />
+                    </Button>
                 </DialogHeader>
 
                 {/* Habit Icon and Title */}
@@ -135,19 +135,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                 selectedIcon === 'music' ? '🎵' : '✓'}
                             </span>
                         </div>
-                        <Button 
-                            variant="ghost" 
-                            size="icon"
-                            className="absolute -top-1 -right-1 bg-gray-600 rounded-full p-1 w-6 h-6 md:w-8 md:h-8 hover:bg-gray-500"
-                            onClick={() => setShowMoreOptions(true)}
-                        >
-                            <MoreHorizontal className="w-4 h-4 md:w-5 md:h-5 text-white" />
-                        </Button>
+
                     </div>
-                    <h3 className="text-lg md:text-2xl font-bold mb-2">{title.toUpperCase()}</h3>
-                    <p className="text-sm md:text-base opacity-80">
-                        ♥ This habit uses data from the Health app. Please grant Momentum permission if prompted.
-                    </p>
+                    <h3 className="text-lg md:text-2xl font-bold mb-2">{title.toUpperCase() || "NEW HABIT"}</h3>
                 </div>
 
                 {/* Habit Configuration */}
@@ -204,6 +194,121 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                         <div className="flex items-center space-x-2">
                             <span className="text-white opacity-80">{getScheduleDisplayText()}</span>
                             <ChevronRight className="w-5 h-5 text-white opacity-60" />
+                        </div>
+                    </div>
+
+                    {/* Task Type Options */}
+                    <div className="border-t border-white border-opacity-20 pt-4">
+                        <h4 className="text-sm opacity-80 font-semibold mb-3">TASK TYPE</h4>
+                        
+                        <div className="space-y-2">
+                            <Button
+                                variant="ghost"
+                                className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
+                                onClick={() => setTaskType('timed')}
+                            >
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <span className="text-xs font-bold">T</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="font-semibold">Timed Task</div>
+                                        <div className="text-xs opacity-70">Track time spent on activity</div>
+                                    </div>
+                                    {taskType === 'timed' && <Check className="w-4 h-4 ml-auto" />}
+                                </div>
+                            </Button>
+                            
+                            <Button
+                                variant="ghost"
+                                className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
+                                onClick={() => setTaskType('negative')}
+                            >
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                        <span className="text-xs font-bold">-</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="font-semibold">Negative Task</div>
+                                        <div className="text-xs opacity-70">Break bad habits</div>
+                                    </div>
+                                    {taskType === 'negative' && <Check className="w-4 h-4 ml-auto" />}
+                                </div>
+                            </Button>
+                            
+                            <Button
+                                variant="ghost"
+                                className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
+                                onClick={() => setTaskType('health')}
+                            >
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                        <span className="text-xs font-bold">♥</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="font-semibold">Health Task</div>
+                                        <div className="text-xs opacity-70">Integrate with health data</div>
+                                    </div>
+                                    {taskType === 'health' && <Check className="w-4 h-4 ml-auto" />}
+                                </div>
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Reminders Section */}
+                    <div className="border-t border-white border-opacity-20 pt-4">
+                        <div className="flex items-center justify-between py-2">
+                            <div className="flex items-center space-x-3">
+                                <Calendar className="w-5 h-5 text-white" />
+                                <span className="text-white">Enable Reminders</span>
+                            </div>
+                            <Switch
+                                checked={reminderEnabled}
+                                onCheckedChange={setReminderEnabled}
+                                className="data-[state=checked]:bg-green-500"
+                            />
+                        </div>
+                        
+                        {reminderEnabled && (
+                            <div className="mt-3">
+                                <label className="text-sm opacity-80">Reminder Time</label>
+                                <Input
+                                    type="time"
+                                    value={reminderTime}
+                                    onChange={(e) => setReminderTime(e.target.value)}
+                                    className="bg-white bg-opacity-20 border-none text-white mt-2"
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Icon & Color Section */}
+                    <div className="border-t border-white border-opacity-20 pt-4">
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                            onClick={() => setShowIconColorDialog(true)}
+                        >
+                            <div className="flex items-center space-x-3">
+                                <Target className="w-5 h-5 text-white" />
+                                <span>Icon & Color</span>
+                            </div>
+                            <ChevronRight className="w-4 h-4" />
+                        </Button>
+                    </div>
+
+                    {/* Privacy Section */}
+                    <div className="border-t border-white border-opacity-20 pt-4">
+                        <div className="flex items-center justify-between py-2">
+                            <div className="flex items-center space-x-3">
+                                <Target className="w-5 h-5 text-white" />
+                                <span className="text-white">Private Habit</span>
+                            </div>
+                            <Switch
+                                checked={isPrivate}
+                                onCheckedChange={setIsPrivate}
+                                className="data-[state=checked]:bg-green-500"
+                            />
                         </div>
                     </div>
                 </div>
