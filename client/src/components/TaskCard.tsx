@@ -164,14 +164,10 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        console.log('Card clicked! Current state:', taskState, 'Current count:', dailyCount);
         // Allow multiple completions per day when in progress
         if (taskState === 'in-progress') {
-            console.log('Triggering toggle mutation...');
             toggleMutation.mutate();
             // Don't change timer state, keep it in-progress for multiple clicks
-        } else {
-            console.log('Not in progress, task state is:', taskState);
         }
         // If not in progress, do nothing (habits start as in-progress by default)
     };

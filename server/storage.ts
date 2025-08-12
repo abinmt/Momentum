@@ -169,6 +169,10 @@ export class DatabaseStorage implements IStorage {
     }
 
     async createOrUpdateTaskEntry(entryData: InsertTaskEntry & { userId: string }): Promise<TaskEntry> {
+        // Check if this is the first completion today (before the upsert)
+        const existingEntry = await this.getTaskEntry(entryData.taskId, entryData.userId, entryData.date);
+        const isFirstCompletionToday = !existingEntry || !existingEntry.completed || (existingEntry.value || 0) === 0;
+        
         const [entry] = await db
             .insert(taskEntries)
             .values(entryData)
@@ -181,8 +185,8 @@ export class DatabaseStorage implements IStorage {
             })
             .returning();
         
-        // Update task streaks if entry is completed
-        if (entryData.completed) {
+        // Update task streaks only on the first completion of the day
+        if (entryData.completed && isFirstCompletionToday) {
             await this.updateTaskStreaks(entryData.taskId, entryData.userId);
         }
         
