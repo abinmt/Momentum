@@ -138,9 +138,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
                 {/* Habit Icon and Title */}
                 <div className="text-center mb-6 md:mb-8">
-                    <div className="relative w-20 h-20 md:w-32 md:h-32 mx-auto mb-4">
+                    <div className="relative mx-auto mb-4 w-20 h-20 md:w-32 md:h-32">
                         <ProgressRing progress={0} size={80} strokeWidth={6} />
-                        <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <div className="absolute inset-0 flex items-center justify-center">
                             <span className="text-xl md:text-3xl text-white leading-none">
                                 {getIconDisplay(selectedIcon)}
                             </span>
