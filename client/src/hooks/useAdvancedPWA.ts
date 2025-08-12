@@ -43,10 +43,16 @@ export function useAdvancedPWA() {
     const checkInstallStatus = () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       const isInWebApp = (window.navigator as any).standalone === true;
+      const isInstalled = isStandalone || isInWebApp;
+      
       setState(prev => ({ 
         ...prev, 
-        isInstalled: isStandalone || isInWebApp 
+        isInstalled,
+        // Always show install option when not installed (for testing)
+        canInstall: !isInstalled
       }));
+      
+      console.log('Install status check:', { isStandalone, isInWebApp, isInstalled });
     };
 
     // Listen for install prompt
@@ -189,26 +195,48 @@ export function useAdvancedPWA() {
 
   // Install the app
   const installApp = async (): Promise<boolean> => {
-    if (!installPrompt) return false;
-
-    try {
-      const result = await installPrompt.prompt();
-      const isInstalled = result.outcome === 'accepted';
-      
-      if (isInstalled) {
-        setState(prev => ({ 
-          ...prev, 
-          isInstalled: true, 
-          canInstall: false 
-        }));
-        setInstallPrompt(null);
+    console.log('installApp called, installPrompt:', installPrompt);
+    
+    if (installPrompt) {
+      try {
+        const result = await installPrompt.prompt();
+        console.log('Install prompt result:', result);
+        const isInstalled = result.outcome === 'accepted';
+        
+        if (isInstalled) {
+          setState(prev => ({ 
+            ...prev, 
+            isInstalled: true, 
+            canInstall: false 
+          }));
+          setInstallPrompt(null);
+        }
+        
+        return isInstalled;
+      } catch (error) {
+        console.error('Installation failed', error);
+        return false;
       }
-      
-      return isInstalled;
-    } catch (error) {
-      console.error('Installation failed', error);
-      return false;
     }
+    
+    // Fallback: Show instructions for manual installation
+    const userAgent = navigator.userAgent.toLowerCase();
+    let instructions = '';
+    
+    if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
+      instructions = 'To install Momentum on iOS:\n\n1. Tap the Share button (square with arrow)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm';
+    } else if (userAgent.includes('android')) {
+      instructions = 'To install Momentum on Android:\n\n1. Tap the menu (⋮) in your browser\n2. Tap "Add to Home screen" or "Install app"\n3. Tap "Install" to confirm';
+    } else if (userAgent.includes('chrome')) {
+      instructions = 'To install Momentum on Chrome:\n\n1. Click the menu (⋮) in the top right\n2. Click "Install Momentum..."\n3. Click "Install" to confirm';
+    } else if (userAgent.includes('edge')) {
+      instructions = 'To install Momentum on Edge:\n\n1. Click the menu (...) in the top right\n2. Click "Apps" > "Install Momentum"\n3. Click "Install" to confirm';
+    } else {
+      instructions = 'To install Momentum:\n\n1. Look for an install option in your browser menu\n2. Or bookmark this page for quick access\n3. Some browsers show an install icon in the address bar';
+    }
+    
+    alert(instructions);
+    return false;
   };
 
   // Update the service worker

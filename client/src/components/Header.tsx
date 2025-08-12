@@ -95,7 +95,11 @@ export default function Header({
           <Button
             size="sm"
             variant="outline"
-            onClick={installApp}
+            onClick={async () => {
+              console.log('Install button clicked');
+              const result = await installApp();
+              console.log('Install result:', result);
+            }}
             className="border-white/30 text-white hover:bg-white/10 px-3 py-1 h-8 text-xs backdrop-blur-sm"
           >
             Install
@@ -251,7 +255,11 @@ export default function Header({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={installApp}
+                  onClick={async () => {
+                    console.log('Mobile install button clicked');
+                    const result = await installApp();
+                    console.log('Mobile install result:', result);
+                  }}
                   className="border-white/30 text-white hover:bg-white/10 px-2 py-1 h-7 text-xs"
                 >
                   <Download className="w-3 h-3" />
