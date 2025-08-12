@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Play, Pause, Trash2, MoreVertical, Eye } from "lucide-react";
+import { Play, Pause, Trash2, MoreVertical, Eye, Edit } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -34,6 +34,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     const [isTimerRunning, setIsTimerRunning] = useState(initialTimerState === 'in-progress');
     const [showDropdown, setShowDropdown] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Timer update mutation
@@ -122,6 +123,22 @@ export default function TaskCard({ task }: TaskCardProps) {
             toast({
                 title: "Error",
                 description: "Failed to delete task.",
+                variant: "destructive",
+            });
+        },
+    });
+
+    const updateTaskMutation = useMutation({
+        mutationFn: async (updatedTask: any) => {
+            return await apiRequest("PATCH", `/api/tasks/${task.id}`, updatedTask);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+        },
+        onError: () => {
+            toast({
+                title: "Error",
+                description: "Failed to update habit.",
                 variant: "destructive",
             });
         },
@@ -319,6 +336,17 @@ export default function TaskCard({ task }: TaskCardProps) {
                             <Eye className="w-4 h-4" />
                             View Habit
                         </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowEditModal(true);
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <Edit className="w-4 h-4" />
+                            Edit Habit
+                        </button>
                         <hr className="my-1 border-gray-200 dark:border-gray-700" />
                         <button
                             onClick={(e) => {
@@ -342,6 +370,19 @@ export default function TaskCard({ task }: TaskCardProps) {
                 task={task}
                 onSave={() => {}} // Read-only mode, no save needed
                 readOnly={true}
+            />
+
+            {/* Edit Habit Modal */}
+            <TaskConfigModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                task={task}
+                onSave={(updatedTask: any) => {
+                    // Handle updating the task
+                    updateTaskMutation.mutate(updatedTask);
+                    setShowEditModal(false);
+                }}
+                readOnly={false}
             />
         </div>
     );
