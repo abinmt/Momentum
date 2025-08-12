@@ -159,20 +159,20 @@ export default function PWAStatusIndicator({ compact = false, showDetails = fals
   }
 
   return (
-    <Card>
+    <Card className="bg-white bg-opacity-10 border-white/20 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
+        <CardTitle className="flex items-center space-x-2 text-white">
           <span>PWA Status</span>
           {getNetworkIcon()}
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-white opacity-70">
           Application performance and connectivity status
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Network Status */}
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">Network</span>
+          <span className="text-sm font-medium text-white">Network</span>
           <div className="flex items-center space-x-2">
             <Badge variant={isOnline ? 'default' : 'destructive'}>
               {isOnline ? `Online (${networkSpeed})` : 'Offline'}
@@ -182,10 +182,10 @@ export default function PWAStatusIndicator({ compact = false, showDetails = fals
 
         {/* Cache Status */}
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">Cache</span>
+          <span className="text-sm font-medium text-white">Cache</span>
           <div className="flex items-center space-x-2">
             <div className={`w-2 h-2 rounded-full ${getCacheStatusColor()}`} />
-            <span className="text-sm capitalize">{cacheStatus}</span>
+            <span className="text-sm capitalize text-white">{cacheStatus}</span>
           </div>
         </div>
 
@@ -193,14 +193,14 @@ export default function PWAStatusIndicator({ compact = false, showDetails = fals
         {storageQuota > 0 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Storage</span>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm font-medium text-white">Storage</span>
+              <span className="text-sm text-white opacity-60">
                 {formatBytes(storageUsed)} / {formatBytes(storageQuota)}
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-white/20 rounded-full h-2">
               <div 
-                className="bg-blue-600 h-2 rounded-full" 
+                className="bg-blue-400 h-2 rounded-full" 
                 style={{ width: `${(storageUsed / storageQuota) * 100}%` }}
               />
             </div>
@@ -210,24 +210,24 @@ export default function PWAStatusIndicator({ compact = false, showDetails = fals
         {/* Actions */}
         <div className="flex flex-wrap gap-2 pt-2">
           {updateAvailable && (
-            <Button size="sm" onClick={updateServiceWorker}>
+            <Button size="sm" onClick={updateServiceWorker} className="bg-white/20 text-white hover:bg-white/30 border-0">
               <Download className="w-4 h-4 mr-2" />
               Update App
             </Button>
           )}
           
           {canInstall && (
-            <Button size="sm" variant="outline" onClick={installApp}>
+            <Button size="sm" variant="outline" onClick={installApp} className="border-white/30 text-white hover:bg-white/10">
               Install App
             </Button>
           )}
           
-          <Button size="sm" variant="outline" onClick={clearCache}>
+          <Button size="sm" variant="outline" onClick={clearCache} className="border-white/30 text-white hover:bg-white/10">
             <RotateCw className="w-4 h-4 mr-2" />
             Clear Cache
           </Button>
           
-          <Button size="sm" variant="outline" onClick={handleShowCacheStats}>
+          <Button size="sm" variant="outline" onClick={handleShowCacheStats} className="border-white/30 text-white hover:bg-white/10">
             <HardDrive className="w-4 h-4 mr-2" />
             {showCacheStats ? 'Hide' : 'Show'} Cache Stats
           </Button>
@@ -235,12 +235,12 @@ export default function PWAStatusIndicator({ compact = false, showDetails = fals
 
         {/* Cache Statistics */}
         {showCacheStats && cacheStats && (
-          <div className="pt-4 border-t space-y-2">
-            <h4 className="text-sm font-medium">Cache Statistics</h4>
+          <div className="pt-4 border-t border-white/20 space-y-2">
+            <h4 className="text-sm font-medium text-white">Cache Statistics</h4>
             {cacheStats.map((cache: any, index: number) => (
               <div key={index} className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{cache.name}</span>
-                <span>{cache.entries} entries</span>
+                <span className="text-white opacity-60">{cache.name}</span>
+                <span className="text-white">{cache.entries} entries</span>
               </div>
             ))}
           </div>
