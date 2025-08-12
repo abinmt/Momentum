@@ -279,8 +279,8 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </div>
             </div>
 
-            {/* Hamburger Menu */}
-            <div className="absolute top-2 right-2 z-10" ref={dropdownRef}>
+            {/* Mobile: Hamburger Menu Only */}
+            <div className="absolute top-2 right-2 z-10 md:hidden" ref={dropdownRef}>
                 <Button
                     variant="ghost"
                     size="sm"
@@ -361,6 +361,69 @@ export default function TaskCard({ task }: TaskCardProps) {
                         </button>
                     </div>
                 )}
+            </div>
+
+            {/* Desktop: Individual Icons */}
+            <div className="hidden md:block absolute top-2 right-2 z-10">
+                <div className="flex flex-col space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-1 w-6 h-6"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleStartPause(e);
+                        }}
+                        title={taskState === 'not-started' ? 'Start Habit' : 
+                               taskState === 'in-progress' ? 'Pause Habit' : 
+                               taskState === 'paused' ? 'Resume Habit' : 'Start Habit'}
+                    >
+                        {taskState === 'not-started' || taskState === 'paused' || taskState === 'completed' ? (
+                            <Play className="w-3 h-3" />
+                        ) : (
+                            <Pause className="w-3 h-3" />
+                        )}
+                    </Button>
+                    
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-1 w-6 h-6"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowViewModal(true);
+                        }}
+                        title="View Habit"
+                    >
+                        <Eye className="w-3 h-3" />
+                    </Button>
+                    
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-1 w-6 h-6"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowEditModal(true);
+                        }}
+                        title="Edit Habit"
+                    >
+                        <Edit className="w-3 h-3" />
+                    </Button>
+                    
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="bg-black bg-opacity-30 hover:bg-opacity-50 text-red-400 hover:text-red-300 rounded-full p-1 w-6 h-6"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(e);
+                        }}
+                        title="Delete Habit"
+                    >
+                        <Trash2 className="w-3 h-3" />
+                    </Button>
+                </div>
             </div>
 
             {/* View Habit Modal */}
