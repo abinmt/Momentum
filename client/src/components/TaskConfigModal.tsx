@@ -188,7 +188,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                 placeholder="0"
                                 type="number"
                             />
-                            <span className="text-white opacity-80">{task.unit}</span>
+                            <span className="text-white opacity-80">{task?.unit || "times"}</span>
                             <ChevronRight className="w-5 h-5 text-white opacity-60" />
                         </div>
                     </div>
