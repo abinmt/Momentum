@@ -319,7 +319,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
 
                 {/* Fixed Save Button - Compact */}
                 {!readOnly && (
-                    <div className="flex-shrink-0 pt-3 border-t border-white border-opacity-20">
+                    <div className="flex-shrink-0 pt-3">
                         <Button 
                             className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-3 text-base font-semibold"
                             onClick={handleSave}
