@@ -241,18 +241,7 @@ export default function Home() {
                     </DndContext>
                 </main>
 
-                {/* Page Indicators */}
-                {/* Only show pagination dots if there are habits */}
-                {sortedTasks && sortedTasks.length > 0 && (
-                    <div className="flex justify-center items-center mt-8">
-                        <div className="flex space-x-2">
-                            <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
-                            <div className="w-2 h-2 bg-white rounded-full"></div>
-                            <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
-                            <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
-                        </div>
-                    </div>
-                )}
+
 
 
             </div>
