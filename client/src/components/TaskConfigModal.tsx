@@ -286,8 +286,6 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </>
                     )}
 
-                    <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
-
                     {readOnly ? (
                         <div className="flex items-center justify-between py-2">
                             <div className="flex items-center space-x-2">
