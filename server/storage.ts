@@ -111,7 +111,7 @@ export class DatabaseStorage implements IStorage {
             .insert(tasks)
             .values({
                 ...taskData,
-                timerState: "started",
+                timerState: "in-progress",
                 lastActiveDate: today,
             })
             .returning();

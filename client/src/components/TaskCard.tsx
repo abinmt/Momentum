@@ -146,8 +146,8 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // Allow completion from not-started, paused, or in-progress states
-        if (taskState === 'not-started' || taskState === 'paused' || taskState === 'in-progress') {
+        // Only allow completion if task is in progress
+        if (taskState === 'in-progress') {
             toggleMutation.mutate();
             setTaskState('completed');
             setIsTimerRunning(false);
@@ -159,7 +159,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 timerElapsedSeconds: elapsedSeconds,
             });
         }
-        // If already completed, do nothing
+        // If not in progress, do nothing (habits start as in-progress by default)
     };
 
     const handleStartPause = (e: React.MouseEvent) => {
