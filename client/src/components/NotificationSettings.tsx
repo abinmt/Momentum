@@ -165,7 +165,7 @@ export default function NotificationSettings({
         </div>
 
         {isDenied && (
-          <div className="text-sm text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 p-3 rounded-md">
+          <div className="text-sm text-white dark:text-gray-200 bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm border border-white/20 dark:border-gray-600/20 p-3 rounded-lg">
             Notifications are blocked. Please enable them in your browser settings to receive reminders.
           </div>
         )}
