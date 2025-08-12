@@ -321,19 +321,6 @@ export default function Home() {
                                         <TaskCard task={task} />
                                     </div>
                                 ))}
-                                
-                                {/* Add Habit Card */}
-                                <div 
-                                    className="task-card bg-white bg-opacity-20 backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:bg-opacity-30 transition-all duration-300 transform scale-110"
-                                    onClick={() => setIsAddTaskModalOpen(true)}
-                                >
-                                    <div className="relative w-20 h-20 mb-4 flex items-center justify-center">
-                                        <Plus className="w-12 h-12 text-white" />
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="text-xs font-semibold mb-1">ADD HABIT</div>
-                                    </div>
-                                </div>
                             </div>
                         </SortableContext>
                     </DndContext>
