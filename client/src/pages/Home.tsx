@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Settings, Star, Plus, User, ChevronDown, Power } from "lucide-react";
 import TaskCard from "@/components/TaskCard";
-import BottomNavigation from "@/components/BottomNavigation";
+
 import AddTaskModal from "@/components/AddTaskModal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -197,7 +197,7 @@ export default function Home() {
                 </div>
 
                 {/* Main Content */}
-                <main className="p-6 pb-24">
+                <main className="p-6 pb-6">
                     <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
@@ -254,7 +254,7 @@ export default function Home() {
                     </div>
                 )}
 
-                <BottomNavigation activeTab="tasks" />
+
             </div>
 
             {/* Desktop View */}

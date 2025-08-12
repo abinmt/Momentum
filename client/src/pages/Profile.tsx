@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Settings, Power, Share2, Download, Bell } from "lucide-react";
-import BottomNavigation from "@/components/BottomNavigation";
+
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@shared/schema";
@@ -74,7 +74,7 @@ export default function Profile() {
             {/* Mobile View */}
             <div className="block md:hidden max-w-md mx-auto">
                 {/* Main Content */}
-                <main className="p-6 pb-24">
+                <main className="p-6 pb-6">
                     {/* Profile Header */}
                     <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none text-white mb-6">
                         <CardContent className="p-6 text-center">
@@ -172,7 +172,7 @@ export default function Profile() {
                     </Button>
                 </main>
 
-                <BottomNavigation activeTab="profile" />
+
             </div>
 
             {/* Desktop View */}
