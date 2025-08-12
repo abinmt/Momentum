@@ -190,7 +190,7 @@ export default function Settings() {
                                     Import Data
                                 </Button>
                                 
-                                <Button variant="ghost" className="w-full justify-start text-red-400 hover:bg-red-500 hover:bg-opacity-20">
+                                <Button variant="ghost" className="w-full justify-start text-red-300 hover:bg-red-500 hover:bg-opacity-20 hover:text-white">
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Delete All Data
                                 </Button>
@@ -204,7 +204,7 @@ export default function Settings() {
                             <div className="space-y-3">
                                 <Button 
                                     variant="ghost" 
-                                    className="w-full justify-start text-red-400 hover:bg-red-500 hover:bg-opacity-20"
+                                    className="w-full justify-start text-red-300 hover:bg-red-500 hover:bg-opacity-20 hover:text-white"
                                     onClick={() => window.location.href = '/api/logout'}
                                 >
                                     <Power className="w-4 h-4 mr-2" />
@@ -334,7 +334,7 @@ export default function Settings() {
                                     Import Data
                                 </Button>
                                 
-                                <Button variant="ghost" className="w-full justify-start text-red-400 hover:bg-red-500 hover:bg-opacity-20">
+                                <Button variant="ghost" className="w-full justify-start text-red-300 hover:bg-red-500 hover:bg-opacity-20 hover:text-white">
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Delete All Data
                                 </Button>
@@ -348,7 +348,7 @@ export default function Settings() {
                             <h3 className="text-xl font-semibold text-white mb-4">Account</h3>
                             <Button 
                                 variant="ghost" 
-                                className="text-red-400 hover:bg-red-500 hover:bg-opacity-20"
+                                className="text-red-300 hover:bg-red-500 hover:bg-opacity-20 hover:text-white"
                                 onClick={() => window.location.href = '/api/logout'}
                             >
                                 <Power className="w-4 h-4 mr-2" />
