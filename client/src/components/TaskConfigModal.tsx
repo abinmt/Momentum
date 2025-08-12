@@ -115,7 +115,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
             color: selectedColor,
             type: taskType,
             goal: goal ? parseInt(goal) : null,
-            goalUnit: task?.unit || "times",
+            goalUnit: goalUnit,
             schedule,
             isDayLongTask,
             selectedDays: selectedDays.join(','),

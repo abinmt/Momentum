@@ -59,6 +59,9 @@ export const tasks = pgTable("tasks", {
     customDays: jsonb("custom_days"), // [1,2,3,4,5] for mon-fri
     selectedDays: varchar("selected_days").default("mon,tue,wed,thu,fri,sat,sun"), // New field for task days
     timesPerWeek: integer("times_per_week"), // for flexible scheduling
+    reminderEnabled: boolean("reminder_enabled").default(false),
+    reminderTime: varchar("reminder_time"), // "09:00" format
+    isPrivate: boolean("is_private").default(false),
     isActive: boolean("is_active").notNull().default(true),
     currentStreak: integer("current_streak").notNull().default(0),
     bestStreak: integer("best_streak").notNull().default(0),
