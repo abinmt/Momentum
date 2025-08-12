@@ -304,34 +304,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 
                 {showDropdown && (
                     <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-top-2 duration-200 flex flex-col items-center">
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleStartPause(e);
-                                setShowDropdown(false);
-                            }}
-                            className="flex items-center justify-center w-6 h-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded"
-                            title={taskState === 'not-started' ? 'Start Habit' : 
-                                   taskState === 'in-progress' ? 'Pause Habit' : 
-                                   taskState === 'paused' ? 'Resume Habit' : 'Start Habit'}
-                        >
-                            {taskState === 'not-started' || taskState === 'paused' || taskState === 'completed' ? (
-                                <Play className="w-3.5 h-3.5" />
-                            ) : (
-                                <Pause className="w-3.5 h-3.5" />
-                            )}
-                        </button>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setShowViewModal(true);
-                                setShowDropdown(false);
-                            }}
-                            className="flex items-center justify-center w-6 h-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded"
-                            title="View Habit"
-                        >
-                            <Eye className="w-3.5 h-3.5" />
-                        </button>
+
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -362,37 +335,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             {/* Desktop: Individual Icons */}
             <div className="hidden md:block absolute top-1.5 right-1.5 z-10">
                 <div className="flex flex-col space-y-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleStartPause(e);
-                        }}
-                        title={taskState === 'not-started' ? 'Start Habit' : 
-                               taskState === 'in-progress' ? 'Pause Habit' : 
-                               taskState === 'paused' ? 'Resume Habit' : 'Start Habit'}
-                    >
-                        {taskState === 'not-started' || taskState === 'paused' || taskState === 'completed' ? (
-                            <Play className="w-2.5 h-2.5" />
-                        ) : (
-                            <Pause className="w-2.5 h-2.5" />
-                        )}
-                    </Button>
-                    
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setShowViewModal(true);
-                        }}
-                        title="View Habit"
-                    >
-                        <Eye className="w-2.5 h-2.5" />
-                    </Button>
+
                     
                     <Button
                         variant="ghost"
