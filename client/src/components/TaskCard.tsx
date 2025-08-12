@@ -147,8 +147,8 @@ export default function TaskCard({ task }: TaskCardProps) {
             });
         } else if (taskState === 'not-started' || taskState === 'paused') {
             toast({
-                title: "Task not started",
-                description: "Please start the task first using the menu.",
+                title: "Start your habit first",
+                description: "Tap the menu button to begin tracking.",
                 variant: "destructive",
             });
         }
@@ -164,17 +164,15 @@ export default function TaskCard({ task }: TaskCardProps) {
             newState = 'in-progress';
             newTimerStarted = new Date();
             setIsTimerRunning(true);
-            toast({
-                title: "Task Started",
-                description: `${task.title} is now active. Click the card to complete it.`,
-            });
+            // No notification needed - the visual state change is sufficient
         } else if (taskState === 'in-progress') {
             newState = 'paused';
             newTimerStarted = null;
             setIsTimerRunning(false);
+            // Optional: subtle notification for pause
             toast({
-                title: "Task Paused",
-                description: `${task.title} has been paused.`,
+                title: "Paused",
+                description: `${task.title} paused. Tap to resume.`,
             });
         } else {
             return; // No action for completed tasks
