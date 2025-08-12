@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check, X, Type, Clock, Bell, Palette } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Target, Tags, Check, X, Type, Clock, Bell, Palette } from "lucide-react";
 import { TASK_COLORS } from "@/lib/constants";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -257,7 +257,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         onClick={readOnly ? undefined : () => setShowTaskTypeDialog(true)}
                     >
                         <div className="flex items-center space-x-2">
-                            <MoreHorizontal className="w-4 h-4 text-white" />
+                            <Tags className="w-4 h-4 text-white" />
                             <span className="text-white text-sm">Task Type</span>
                         </div>
                         <div className="flex items-center space-x-2">
