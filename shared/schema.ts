@@ -176,12 +176,22 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
     currentStreak: true,
     bestStreak: true,
     totalCompletions: true,
+    timerState: true,
+    timerStartedAt: true,
+    timerElapsedSeconds: true,
+    lastActiveDate: true,
     createdAt: true,
     updatedAt: true,
 }).extend({
     isDayLongTask: z.boolean().optional(),
     selectedDays: z.string().optional(),
     type: z.string().optional(),
+    goal: z.number().optional(),
+    goalUnit: z.string().optional(),
+    customDays: z.any().optional(),
+    timesPerWeek: z.number().optional(),
+    reminderTime: z.string().optional(),
+    displayOrder: z.number().optional(),
 });
 
 export const insertTaskEntrySchema = createInsertSchema(taskEntries).omit({
