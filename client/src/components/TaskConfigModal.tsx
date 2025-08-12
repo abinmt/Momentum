@@ -151,7 +151,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
             <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl max-h-[90vh] flex flex-col overflow-hidden">
                 <DialogHeader className="flex flex-row items-center justify-center space-y-0 pb-4">
                     <DialogTitle className="text-xl font-bold">
-                        {readOnly ? "View Habit" : "Create Habit"}
+                        {readOnly ? "View Habit" : "Add Habit"}
                     </DialogTitle>
                 </DialogHeader>
 

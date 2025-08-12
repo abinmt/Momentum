@@ -213,7 +213,7 @@ export default function Home() {
                                         <Plus className="w-12 h-12 text-white" />
                                     </div>
                                     <div className="text-center">
-                                        <div className="text-xs font-semibold mb-1">ADD A HABIT</div>
+                                        <div className="text-xs font-semibold mb-1">ADD HABIT</div>
                                     </div>
                                 </div>
                             </div>
@@ -333,7 +333,7 @@ export default function Home() {
                                         <Plus className="w-12 h-12 text-white" />
                                     </div>
                                     <div className="text-center">
-                                        <div className="text-xs font-semibold mb-1">ADD A HABIT</div>
+                                        <div className="text-xs font-semibold mb-1">ADD HABIT</div>
                                     </div>
                                 </div>
                             </div>
