@@ -144,7 +144,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const today = new Date().toISOString().split('T')[0];
             const task = await storage.updateTask(id, userId, {
                 timerState,
-                timerStartedAt: timerStartedAt ? new Date(timerStartedAt) : null,
+                timerStartedAt: timerStartedAt ? new Date(timerStartedAt) : undefined,
                 timerElapsedSeconds,
                 lastActiveDate: today,
             });
@@ -170,6 +170,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } catch (error) {
             console.error("Error fetching task entries:", error);
             res.status(500).json({ message: "Failed to fetch task entries" });
+        }
+    });
+
+    app.get('/api/tasks/:taskId/entries/today', isAuthenticated, async (req: any, res) => {
+        try {
+            const userId = req.user.claims.sub;
+            const { taskId } = req.params;
+            const today = new Date().toISOString().split('T')[0];
+            const entry = await storage.getTaskEntry(taskId, userId, today);
+            res.json(entry || { value: 0 });
+        } catch (error) {
+            console.error("Error fetching today's task entry:", error);
+            res.status(500).json({ message: "Failed to fetch today's task entry" });
         }
     });
 

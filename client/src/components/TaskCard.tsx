@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Play, Pause, Trash2, Eye, Edit, MoreVertical } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import { apiRequest } from "@/lib/queryClient";
@@ -90,17 +90,35 @@ export default function TaskCard({ task }: TaskCardProps) {
         transition,
     };
 
+    const [dailyCount, setDailyCount] = useState(0);
+
+    // Fetch today's task entry to get current count
+    const { data: todayEntry } = useQuery({
+        queryKey: [`/api/tasks/${task.id}/entries/today`],
+        retry: false,
+    });
+
+    // Update local count when data changes
+    useEffect(() => {
+        if (todayEntry) {
+            setDailyCount(todayEntry.value || 0);
+        }
+    }, [todayEntry]);
+
     const toggleMutation = useMutation({
         mutationFn: async () => {
             const today = new Date().toISOString().split('T')[0];
+            const newCount = dailyCount + 1;
             return await apiRequest("POST", `/api/tasks/${task.id}/entries`, {
                 date: today,
                 completed: true,
+                value: newCount,
             });
         },
-        onSuccess: () => {
-            // Visual feedback through UI animation is sufficient
+        onSuccess: (data: any) => {
+            setDailyCount(data.value || 0);
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
+            queryClient.invalidateQueries({ queryKey: [`/api/tasks/${task.id}/entries/today`] });
         },
         onError: () => {
             toast({
@@ -146,18 +164,10 @@ export default function TaskCard({ task }: TaskCardProps) {
 
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        // Only allow completion if task is in progress
+        // Allow multiple completions per day when in progress
         if (taskState === 'in-progress') {
             toggleMutation.mutate();
-            setTaskState('completed');
-            setIsTimerRunning(false);
-            
-            // Update database to mark as completed
-            updateTimerMutation.mutate({
-                timerState: 'completed',
-                timerStartedAt: null,
-                timerElapsedSeconds: elapsedSeconds,
-            });
+            // Don't change timer state, keep it in-progress for multiple clicks
         }
         // If not in progress, do nothing (habits start as in-progress by default)
     };
@@ -198,10 +208,9 @@ export default function TaskCard({ task }: TaskCardProps) {
     };
 
     const getProgressPercentage = () => {
-        // This is a simplified calculation - in a real app, you'd get this from task entries
-        const today = new Date().toISOString().split('T')[0];
-        // For demo purposes, showing random progress
-        return Math.min(100, (task.currentStreak * 20) % 100);
+        // Calculate progress based on daily count and goal
+        const goal = task.goal || 1; // Default goal is 1 if not set
+        return Math.min(100, (dailyCount / goal) * 100);
     };
 
     // Handle both icon keys and emoji icons
@@ -262,9 +271,9 @@ export default function TaskCard({ task }: TaskCardProps) {
                         {getIconDisplay(task.icon)}
                     </span>
                 </div>
-                {task.currentStreak > 0 && (
+                {dailyCount > 0 && (
                     <div className="absolute top-0 right-0 bg-red-500 text-white text-sm md:text-xs rounded-full w-8 h-8 md:w-5 md:h-5 flex items-center justify-center font-bold">
-                        {task.currentStreak}
+                        {dailyCount}
                     </div>
                 )}
                 {/* Goal display on bottom left */}
@@ -280,7 +289,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                     {task.title.toUpperCase()}
                 </div>
                 <div className="text-base md:text-xs opacity-80">
-                    {taskState === 'completed' && task.currentStreak > 0 ? `${task.currentStreak} day streak` : 
+                    {task.currentStreak > 0 ? `${task.currentStreak} day streak` : 
                      taskState === 'in-progress' ? "In progress" :
                      taskState === 'paused' ? "Paused" : "Not started"}
                 </div>
