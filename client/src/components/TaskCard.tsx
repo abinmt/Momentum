@@ -113,10 +113,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             return await apiRequest("DELETE", `/api/tasks/${task.id}`);
         },
         onSuccess: () => {
-            toast({
-                title: "Task deleted",
-                description: `${task.title} has been removed.`,
-            });
+            // Visual removal from UI provides sufficient feedback
             queryClient.invalidateQueries({ queryKey: ["/api/tasks"] });
         },
         onError: () => {
