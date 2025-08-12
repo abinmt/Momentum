@@ -352,7 +352,7 @@ export default function TaskCard({ task }: TaskCardProps) {
 
             {/* Desktop: Individual Icons */}
             <div className="hidden md:block absolute top-1.5 right-1.5 z-10">
-                <div className="flex flex-col space-y-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="flex flex-col opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <Button
                         variant="ghost"
                         size="sm"
