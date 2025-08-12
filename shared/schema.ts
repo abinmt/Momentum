@@ -186,7 +186,7 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
     isDayLongTask: z.boolean().optional(),
     selectedDays: z.string().optional(),
     type: z.string().optional(),
-    goal: z.number().optional(),
+    goal: z.number().nullable().optional(),
     goalUnit: z.string().optional(),
     customDays: z.any().optional(),
     timesPerWeek: z.number().optional(),
@@ -208,7 +208,12 @@ export const insertJournalEntrySchema = createInsertSchema(journalEntries).omit(
     updatedAt: true,
 });
 
-export const updateTaskSchema = insertTaskSchema.partial();
+export const updateTaskSchema = insertTaskSchema.partial().extend({
+    timerState: z.string().optional(),
+    timerStartedAt: z.date().optional(),
+    timerElapsedSeconds: z.number().optional(),
+    lastActiveDate: z.string().optional(),
+});
 
 // Types
 export type UpsertUser = typeof users.$inferInsert;

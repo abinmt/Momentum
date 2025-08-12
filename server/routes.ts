@@ -86,11 +86,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     app.post('/api/tasks', isAuthenticated, async (req: any, res) => {
         try {
             const userId = req.user.claims.sub;
+            console.log("Creating task with data:", JSON.stringify(req.body, null, 2));
             const taskData = insertTaskSchema.parse(req.body);
             const task = await storage.createTask({ ...taskData, userId });
             res.status(201).json(task);
         } catch (error) {
             if (error instanceof z.ZodError) {
+                console.error("Validation errors:", JSON.stringify(error.errors, null, 2));
                 return res.status(400).json({ message: "Invalid task data", errors: error.errors });
             }
             console.error("Error creating task:", error);
