@@ -155,27 +155,27 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     </DialogTitle>
                 </DialogHeader>
 
-                {/* Habit Icon and Title */}
-                <div className="text-center mb-6 md:mb-8">
-                    <div className="flex items-center justify-center mx-auto mb-4 w-20 h-20">
+                {/* Compact Habit Icon and Title */}
+                <div className="text-center mb-3">
+                    <div className="flex items-center justify-center mx-auto mb-2 w-16 h-16">
                         <div className="absolute">
-                            <ProgressRing progress={0} size={80} strokeWidth={6} />
+                            <ProgressRing progress={0} size={64} strokeWidth={4} />
                         </div>
-                        <span className="text-2xl text-white z-10 relative">
+                        <span className="text-xl text-white z-10 relative">
                             {getIconDisplay(selectedIcon)}
                         </span>
                     </div>
-                    <h3 className="text-lg md:text-2xl font-bold mb-2">{title.toUpperCase() || "NEW HABIT"}</h3>
+                    <h3 className="text-base font-bold">{title.toUpperCase() || "NEW HABIT"}</h3>
                 </div>
 
                 {/* Scrollable Content */}
                 <div className="flex-1 overflow-y-auto px-2">
-                    {/* Habit Configuration */}
-                    <div className="space-y-4 mb-8">
-                    <div className="bg-white bg-opacity-20 rounded-xl p-4">
-                        <div className="text-sm opacity-80 mb-1">TITLE:</div>
+                    {/* Habit Configuration - Compact spacing */}
+                    <div className="space-y-2 mb-4">
+                    <div className="bg-white bg-opacity-20 rounded-xl p-3">
+                        <div className="text-xs opacity-80 mb-1">TITLE:</div>
                         {readOnly ? (
-                            <div className="text-white font-semibold py-2">
+                            <div className="text-white font-semibold py-1">
                                 {title || "Untitled Habit"}
                             </div>
                         ) : (
@@ -183,7 +183,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                                 <Input
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    className="bg-transparent border-none text-white font-semibold p-0 focus:ring-0"
+                                    className="bg-transparent border-none text-white font-semibold p-0 focus:ring-0 h-8"
                                     placeholder="Habit title"
                                 />
                                 <div className="text-xs opacity-60 mt-1">{title.length} / 50</div>
@@ -191,10 +191,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         )}
                     </div>
 
-                    <div className="flex items-center justify-between py-4 border-b border-white border-opacity-20">
-                        <div className="flex items-center space-x-3">
-                            <Calendar className="w-5 h-5 text-white" />
-                            <span className="text-white">Day-Long Habit</span>
+                    <div className="flex items-center justify-between py-2 border-b border-white border-opacity-20">
+                        <div className="flex items-center space-x-2">
+                            <Calendar className="w-4 h-4 text-white" />
+                            <span className="text-white text-sm">Day-Long Habit</span>
                         </div>
                         <Switch
                             checked={isDayLongTask}
@@ -205,119 +205,115 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     </div>
 
                     <div 
-                        className={`flex items-center justify-between py-4 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        className={`flex items-center justify-between py-2 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
                         onClick={readOnly ? undefined : () => setShowGoalDialog(true)}
                     >
-                        <div className="flex items-center space-x-3">
-                            <Target className="w-5 h-5 text-white" />
-                            <span className="text-white">Goal</span>
+                        <div className="flex items-center space-x-2">
+                            <Target className="w-4 h-4 text-white" />
+                            <span className="text-white text-sm">Goal</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <span className="text-white">{goal || "0"}</span>
-                            <span className="text-white opacity-80">{goalUnit}</span>
-                            {!readOnly && <ChevronRight className="w-5 h-5 text-white opacity-60" />}
+                            <span className="text-white text-sm">{goal || "0"}</span>
+                            <span className="text-white opacity-80 text-sm">{goalUnit}</span>
+                            {!readOnly && <ChevronRight className="w-4 h-4 text-white opacity-60" />}
                         </div>
                     </div>
 
                     <div 
-                        className={`flex items-center justify-between py-4 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        className={`flex items-center justify-between py-2 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
                         onClick={readOnly ? undefined : () => setShowScheduleDialog(true)}
                     >
-                        <div className="flex items-center space-x-3">
-                            <Calendar className="w-5 h-5 text-white" />
-                            <span className="text-white">Habit Days</span>
+                        <div className="flex items-center space-x-2">
+                            <Calendar className="w-4 h-4 text-white" />
+                            <span className="text-white text-sm">Habit Days</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <span className="text-white opacity-80">{getScheduleDisplayText()}</span>
-                            {!readOnly && <ChevronRight className="w-5 h-5 text-white opacity-60" />}
+                            <span className="text-white opacity-80 text-sm">{getScheduleDisplayText()}</span>
+                            {!readOnly && <ChevronRight className="w-4 h-4 text-white opacity-60" />}
                         </div>
                     </div>
 
-                    {/* Task Type Options */}
-                    <div className="border-t border-white border-opacity-20 pt-4">
-                        <h4 className="text-sm opacity-80 font-semibold mb-3">TASK TYPE</h4>
+                    {/* Task Type Options - Compact */}
+                    <div className="border-t border-white border-opacity-20 pt-2">
+                        <h4 className="text-xs opacity-80 font-semibold mb-2">TASK TYPE</h4>
                         
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === null ? 'bg-white bg-opacity-20' : ''}`}
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === null ? 'bg-white bg-opacity-20' : ''}`}
                                 onClick={readOnly ? undefined : () => setTaskType(null)}
                                 disabled={readOnly}
                             >
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
+                                <div className="flex items-center space-x-2 w-full">
+                                    <div className="w-6 h-6 bg-gray-500 rounded-full flex items-center justify-center">
                                         <span className="text-xs font-bold">○</span>
                                     </div>
-                                    <div className="text-left">
-                                        <div className="font-semibold">No Type</div>
-                                        <div className="text-xs opacity-70">Simple habit tracking</div>
+                                    <div className="text-left flex-1">
+                                        <div className="font-medium text-sm">No Type</div>
                                     </div>
-                                    {taskType === null && <Check className="w-4 h-4 ml-auto" />}
+                                    {taskType === null && <Check className="w-4 h-4" />}
                                 </div>
                             </Button>
                             
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
                                 onClick={readOnly ? undefined : () => setTaskType('timed')}
                                 disabled={readOnly}
                             >
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                <div className="flex items-center space-x-2 w-full">
+                                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                                         <span className="text-xs font-bold">T</span>
                                     </div>
-                                    <div className="text-left">
-                                        <div className="font-semibold">Timed Task</div>
-                                        <div className="text-xs opacity-70">Track time spent on activity</div>
+                                    <div className="text-left flex-1">
+                                        <div className="font-medium text-sm">Timed Task</div>
                                     </div>
-                                    {taskType === 'timed' && <Check className="w-4 h-4 ml-auto" />}
+                                    {taskType === 'timed' && <Check className="w-4 h-4" />}
                                 </div>
                             </Button>
                             
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === 'negative' ? 'bg-white bg-opacity-20' : ''}`}
                                 onClick={readOnly ? undefined : () => setTaskType('negative')}
                                 disabled={readOnly}
                             >
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                <div className="flex items-center space-x-2 w-full">
+                                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
                                         <span className="text-xs font-bold">-</span>
                                     </div>
-                                    <div className="text-left">
-                                        <div className="font-semibold">Negative Task</div>
-                                        <div className="text-xs opacity-70">Break bad habits</div>
+                                    <div className="text-left flex-1">
+                                        <div className="font-medium text-sm">Negative Task</div>
                                     </div>
-                                    {taskType === 'negative' && <Check className="w-4 h-4 ml-auto" />}
+                                    {taskType === 'negative' && <Check className="w-4 h-4" />}
                                 </div>
                             </Button>
                             
                             <Button
                                 variant="ghost"
-                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-2 ${taskType === 'health' ? 'bg-white bg-opacity-20' : ''}`}
                                 onClick={readOnly ? undefined : () => setTaskType('health')}
                                 disabled={readOnly}
                             >
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                <div className="flex items-center space-x-2 w-full">
+                                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                                         <span className="text-xs font-bold">♥</span>
                                     </div>
-                                    <div className="text-left">
-                                        <div className="font-semibold">Health Task</div>
-                                        <div className="text-xs opacity-70">Integrate with health data</div>
+                                    <div className="text-left flex-1">
+                                        <div className="font-medium text-sm">Health Task</div>
                                     </div>
-                                    {taskType === 'health' && <Check className="w-4 h-4 ml-auto" />}
+                                    {taskType === 'health' && <Check className="w-4 h-4" />}
                                 </div>
                             </Button>
                         </div>
                     </div>
 
-                    {/* Reminders Section */}
-                    <div className="border-t border-white border-opacity-20 pt-4">
-                        <div className="flex items-center justify-between py-2">
-                            <div className="flex items-center space-x-3">
-                                <Calendar className="w-5 h-5 text-white" />
-                                <span className="text-white">Enable Reminders</span>
+                    {/* Reminders Section - Compact */}
+                    <div className="border-t border-white border-opacity-20 pt-2">
+                        <div className="flex items-center justify-between py-1">
+                            <div className="flex items-center space-x-2">
+                                <Calendar className="w-4 h-4 text-white" />
+                                <span className="text-white text-sm">Enable Reminders</span>
                             </div>
                             <Switch
                                 checked={reminderEnabled}
@@ -343,17 +339,17 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         )}
                     </div>
 
-                    {/* Icon & Color Section */}
-                    <div className="border-t border-white border-opacity-20 pt-4">
+                    {/* Icon & Color Section - Compact */}
+                    <div className="border-t border-white border-opacity-20 pt-2">
                         {readOnly ? (
-                            <div className="flex items-center justify-between py-4">
-                                <div className="flex items-center space-x-3">
-                                    <Target className="w-5 h-5 text-white" />
-                                    <span className="text-white">Icon & Color</span>
+                            <div className="flex items-center justify-between py-2">
+                                <div className="flex items-center space-x-2">
+                                    <Target className="w-4 h-4 text-white" />
+                                    <span className="text-white text-sm">Icon & Color</span>
                                 </div>
-                                <div className="flex items-center space-x-3">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${TASK_COLORS[selectedColor as keyof typeof TASK_COLORS]?.bg || 'bg-blue-500'}`}>
-                                        <span className="text-xl text-white">
+                                <div className="flex items-center space-x-2">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${TASK_COLORS[selectedColor as keyof typeof TASK_COLORS]?.bg || 'bg-blue-500'}`}>
+                                        <span className="text-lg text-white">
                                             {getIconDisplay(selectedIcon)}
                                         </span>
                                     </div>
@@ -362,12 +358,12 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         ) : (
                             <Button
                                 variant="ghost"
-                                className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20"
+                                className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20 py-2"
                                 onClick={() => setShowIconColorDialog(true)}
                             >
-                                <div className="flex items-center space-x-3">
-                                    <Target className="w-5 h-5 text-white" />
-                                    <span>Icon & Color</span>
+                                <div className="flex items-center space-x-2">
+                                    <Target className="w-4 h-4 text-white" />
+                                    <span className="text-sm">Icon & Color</span>
                                 </div>
                                 <ChevronRight className="w-4 h-4" />
                             </Button>
@@ -376,11 +372,11 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     </div>
                 </div>
 
-                {/* Fixed Save Button */}
+                {/* Fixed Save Button - Compact */}
                 {!readOnly && (
-                    <div className="flex-shrink-0 pt-4 border-t border-white border-opacity-20">
+                    <div className="flex-shrink-0 pt-3 border-t border-white border-opacity-20">
                         <Button 
-                            className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-6 text-lg font-semibold"
+                            className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-3 text-base font-semibold"
                             onClick={handleSave}
                         >
                             SAVE HABIT
