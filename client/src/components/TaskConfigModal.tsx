@@ -24,6 +24,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
     const [showRemindersDialog, setShowRemindersDialog] = useState(false);
     const [showIconColorDialog, setShowIconColorDialog] = useState(false);
     const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
+    const [showGoalDialog, setShowGoalDialog] = useState(false);
     const [selectedDays, setSelectedDays] = useState<string[]>(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
     const [taskType, setTaskType] = useState("simple");
     const [selectedColor, setSelectedColor] = useState("primary");
@@ -31,6 +32,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
     const [reminderEnabled, setReminderEnabled] = useState(false);
     const [reminderTime, setReminderTime] = useState("09:00");
     const [isPrivate, setIsPrivate] = useState(false);
+    const [goalUnit, setGoalUnit] = useState("times");
     
     const daysOfWeek = [
         { key: "mon", label: "Monday", short: "M" },
@@ -46,6 +48,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
         if (task) {
             setTitle(task.name);
             setGoal(task.defaultGoal || "");
+            setGoalUnit(task.unit || "times");
             setSchedule("daily");
             setIsDayLongTask(false);
             setSelectedDays(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
@@ -167,20 +170,17 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                         />
                     </div>
 
-                    <div className="flex items-center justify-between py-4 border-b border-white border-opacity-20">
+                    <div 
+                        className="flex items-center justify-between py-4 border-b border-white border-opacity-20 cursor-pointer hover:bg-white hover:bg-opacity-10 rounded-lg px-2 -mx-2 transition-colors"
+                        onClick={() => setShowGoalDialog(true)}
+                    >
                         <div className="flex items-center space-x-3">
                             <Target className="w-5 h-5 text-white" />
                             <span className="text-white">Goal</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <Input
-                                value={goal}
-                                onChange={(e) => setGoal(e.target.value)}
-                                className="bg-transparent border-none text-white text-right w-20 p-0 focus:ring-0"
-                                placeholder="0"
-                                type="number"
-                            />
-                            <span className="text-white opacity-80">{task?.unit || "times"}</span>
+                            <span className="text-white">{goal || "0"}</span>
+                            <span className="text-white opacity-80">{goalUnit}</span>
                             <ChevronRight className="w-5 h-5 text-white opacity-60" />
                         </div>
                     </div>
@@ -326,6 +326,110 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                     </Button>
                 </div>
             </DialogContent>
+            
+            {/* Goal Dialog */}
+            <Dialog open={showGoalDialog} onOpenChange={setShowGoalDialog}>
+                <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-bold text-center">Goal</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        {/* Goal Amount Input */}
+                        <div className="space-y-2">
+                            <label className="text-sm opacity-80">Target Amount</label>
+                            <Input
+                                type="number"
+                                value={goal}
+                                onChange={(e) => setGoal(e.target.value)}
+                                className="bg-white bg-opacity-20 border-none text-white text-center text-2xl font-bold"
+                                placeholder="0"
+                            />
+                        </div>
+                        
+                        {/* Unit Selection */}
+                        <div className="space-y-2">
+                            <label className="text-sm opacity-80">Unit</label>
+                            <div className="grid grid-cols-2 gap-2">
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'times' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('times')}
+                                >
+                                    times
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'minutes' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('minutes')}
+                                >
+                                    minutes
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'hours' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('hours')}
+                                >
+                                    hours
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'pages' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('pages')}
+                                >
+                                    pages
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'cups' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('cups')}
+                                >
+                                    cups
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'steps' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('steps')}
+                                >
+                                    steps
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'miles' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('miles')}
+                                >
+                                    miles
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-center text-white hover:bg-white hover:bg-opacity-20 ${goalUnit === 'calories' ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setGoalUnit('calories')}
+                                >
+                                    calories
+                                </Button>
+                            </div>
+                        </div>
+                        
+                        {/* Custom Unit Input */}
+                        <div className="space-y-2">
+                            <label className="text-sm opacity-80">Or enter custom unit</label>
+                            <Input
+                                value={goalUnit === 'times' || goalUnit === 'minutes' || goalUnit === 'hours' || goalUnit === 'pages' || goalUnit === 'cups' || goalUnit === 'steps' || goalUnit === 'miles' || goalUnit === 'calories' ? '' : goalUnit}
+                                onChange={(e) => setGoalUnit(e.target.value)}
+                                className="bg-white bg-opacity-20 border-none text-white"
+                                placeholder="e.g., glasses, books, workouts"
+                            />
+                        </div>
+                    </div>
+                    
+                    <Button
+                        className="w-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 mt-6"
+                        onClick={() => setShowGoalDialog(false)}
+                    >
+                        Done
+                    </Button>
+                </DialogContent>
+            </Dialog>
             
             {/* Schedule Dialog */}
             <Dialog open={showScheduleDialog} onOpenChange={setShowScheduleDialog}>
