@@ -294,7 +294,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </Button>
                 
                 {showDropdown && (
-                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[130px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-top-2 duration-200">
+                    <div className="absolute bottom-full right-0 mb-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[130px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-bottom-2 duration-200">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
