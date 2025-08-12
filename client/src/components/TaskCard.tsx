@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Play, Pause, Trash2, Eye, Edit } from "lucide-react";
+import { Play, Pause, Trash2, Eye, Edit, MoreVertical } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -32,8 +32,10 @@ export default function TaskCard({ task }: TaskCardProps) {
     );
     const [elapsedSeconds, setElapsedSeconds] = useState(initialElapsedSeconds);
     const [isTimerRunning, setIsTimerRunning] = useState(initialTimerState === 'in-progress');
+    const [showDropdown, setShowDropdown] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Timer update mutation
     const updateTimerMutation = useMutation({
@@ -56,7 +58,22 @@ export default function TaskCard({ task }: TaskCardProps) {
         },
     });
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShowDropdown(false);
+            }
+        };
 
+        if (showDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showDropdown]);
 
     // Initialize sortable functionality
     const {
@@ -216,7 +233,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     
     // Apply grey overlay for paused/not started tasks
     const isInactive = taskState === 'not-started' || taskState === 'paused';
-    const cardClasses = `task-card group ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''} ${isDragging ? 'opacity-50 scale-105 rotate-2 z-50' : ''}`;
+    const cardClasses = `task-card ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''} ${isDragging ? 'opacity-50 scale-105 rotate-2 z-50' : ''}`;
 
     return (
         <div 
@@ -262,65 +279,88 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </div>
             </div>
 
-            {/* Action Icons Vertically Aligned - Auto Show/Hide */}
-            <div className="absolute top-1.5 right-1.5 z-10 flex flex-col space-y-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
+            {/* Hamburger Menu */}
+            <div className="absolute top-2 right-2 z-10" ref={dropdownRef}>
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
+                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-2 w-8 h-8"
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleStartPause(e);
+                        setShowDropdown(!showDropdown);
                     }}
-                    title={taskState === 'not-started' ? 'Start Habit' : 
-                           taskState === 'in-progress' ? 'Pause Habit' : 
-                           taskState === 'paused' ? 'Resume Habit' : 'Start Habit'}
                 >
-                    {taskState === 'not-started' || taskState === 'paused' || taskState === 'completed' ? (
-                        <Play className="w-2.5 h-2.5" />
-                    ) : (
-                        <Pause className="w-2.5 h-2.5" />
-                    )}
+                    <MoreVertical className="w-4 h-4" />
                 </Button>
                 
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setShowViewModal(true);
-                    }}
-                    title="View Habit"
-                >
-                    <Eye className="w-2.5 h-2.5" />
-                </Button>
-                
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-white rounded-full p-0.5 w-5 h-5"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setShowEditModal(true);
-                    }}
-                    title="Edit Habit"
-                >
-                    <Edit className="w-2.5 h-2.5" />
-                </Button>
-                
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="bg-black bg-opacity-30 hover:bg-opacity-50 text-red-400 hover:text-red-300 rounded-full p-0.5 w-5 h-5"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteClick(e);
-                    }}
-                    title="Delete Habit"
-                >
-                    <Trash2 className="w-2.5 h-2.5" />
-                </Button>
+                {showDropdown && (
+                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[130px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-top-2 duration-200">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleStartPause(e);
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            {taskState === 'not-started' ? (
+                                <>
+                                    <Play className="w-4 h-4" />
+                                    Start Habit
+                                </>
+                            ) : taskState === 'in-progress' ? (
+                                <>
+                                    <Pause className="w-4 h-4" />
+                                    Pause Habit
+                                </>
+                            ) : taskState === 'paused' ? (
+                                <>
+                                    <Play className="w-4 h-4" />
+                                    Resume Habit
+                                </>
+                            ) : (
+                                <>
+                                    <Play className="w-4 h-4" />
+                                    Start Habit
+                                </>
+                            )}
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowViewModal(true);
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <Eye className="w-4 h-4" />
+                            View Habit
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowEditModal(true);
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <Edit className="w-4 h-4" />
+                            Edit Habit
+                        </button>
+                        <hr className="my-0.5 border-gray-200 dark:border-gray-700" />
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClick(e);
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                            Delete Habit
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* View Habit Modal */}
