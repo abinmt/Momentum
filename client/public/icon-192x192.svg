@@ -1,0 +1,6 @@
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" fill="#3b82f6" rx="24"/>
+  <text x="96" y="120" font-family="Arial" font-size="48" font-weight="bold" text-anchor="middle" fill="white">M</text>
+  <circle cx="96" cy="80" r="8" fill="white"/>
+  <path d="M96 60 L96 40 M88 68 L104 68" stroke="white" stroke-width="3" stroke-linecap="round"/>
+</svg>

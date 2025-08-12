@@ -3,7 +3,7 @@ const CACHE_NAME = 'momentum-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/icons/generate-icons.svg',
+  '/icon-192x192.svg',
   // Static assets will be cached automatically by Vite
 ];
 
@@ -72,15 +72,15 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: '/icons/generate-icons.svg',
-      badge: '/icons/generate-icons.svg',
+      icon: '/icon-192x192.svg',
+      badge: '/icon-192x192.svg',
       vibrate: [200, 100, 200],
       data: data.data || {},
       actions: [
         {
           action: 'mark-complete',
           title: 'Mark Complete',
-          icon: '/icons/generate-icons.svg'
+          icon: '/icon-192x192.svg'
         },
         {
           action: 'dismiss',
