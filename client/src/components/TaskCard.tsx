@@ -233,7 +233,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     
     // Apply grey overlay for paused/not started tasks
     const isInactive = taskState === 'not-started' || taskState === 'paused';
-    const cardClasses = `task-card group ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''} ${isDragging ? 'opacity-50 scale-105 rotate-2 z-50' : ''}`;
+    const cardClasses = `task-card group ${colorClasses.bg} backdrop-blur-sm rounded-3xl p-6 md:p-6 flex flex-col items-center text-white cursor-pointer hover:scale-105 transition-all duration-300 relative overflow-hidden ${isInactive ? 'opacity-60 saturate-50' : ''} ${isDragging ? 'opacity-50 scale-105 rotate-2 z-50' : ''}`;
 
     return (
         <div 
@@ -244,19 +244,28 @@ export default function TaskCard({ task }: TaskCardProps) {
             {...attributes}
             {...listeners}
         >
-            <div className="relative w-20 h-20 mb-4">
-                <ProgressRing
-                    progress={getProgressPercentage()}
-                    size={80}
-                    strokeWidth={6}
-                />
+            <div className="relative w-24 h-24 md:w-20 md:h-20 mb-4 md:mb-4">
+                <div className="block md:hidden">
+                    <ProgressRing
+                        progress={getProgressPercentage()}
+                        size={96}
+                        strokeWidth={7}
+                    />
+                </div>
+                <div className="hidden md:block">
+                    <ProgressRing
+                        progress={getProgressPercentage()}
+                        size={80}
+                        strokeWidth={6}
+                    />
+                </div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl text-white leading-none">
+                    <span className="text-3xl md:text-2xl text-white leading-none">
                         {getIconDisplay(task.icon)}
                     </span>
                 </div>
                 {task.currentStreak > 0 && (
-                    <div className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    <div className="absolute top-0 right-0 bg-red-500 text-white text-xs md:text-xs rounded-full w-6 h-6 md:w-5 md:h-5 flex items-center justify-center font-bold">
                         {task.currentStreak}
                     </div>
                 )}
@@ -269,10 +278,10 @@ export default function TaskCard({ task }: TaskCardProps) {
             </div>
             
             <div className="text-center">
-                <div className="text-xs font-semibold mb-1 line-clamp-2">
+                <div className="text-sm md:text-xs font-semibold mb-1 line-clamp-2">
                     {task.title.toUpperCase()}
                 </div>
-                <div className="text-xs opacity-80">
+                <div className="text-sm md:text-xs opacity-80">
                     {taskState === 'completed' && task.currentStreak > 0 ? `${task.currentStreak} day streak` : 
                      taskState === 'in-progress' ? "In progress" :
                      taskState === 'paused' ? "Paused" : "Not started"}
