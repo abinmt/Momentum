@@ -129,7 +129,7 @@ export default function Settings() {
 
                     {/* Push Notifications */}
                     <div className="space-y-6">
-                        <div className="[&>div]:bg-white [&>div]:bg-opacity-10 [&>div]:border-none [&>div]:text-white [&_h3]:text-white [&_label]:text-white [&_div.text-sm]:text-white">
+                        <div className="[&>div]:bg-white [&>div]:bg-opacity-10 [&>div]:border-none [&>div]:text-white [&_h3]:text-white [&_label]:text-white [&_div.text-sm]:text-white [&_div.text-muted-foreground]:text-white [&_div.text-muted-foreground]:opacity-60 [&_button]:bg-transparent [&_button]:border-white/30 [&_button]:text-white [&_button:hover]:bg-white/10 [&_input]:bg-white/10 [&_input]:border-white/30 [&_input]:text-white">
                             <NotificationSettings 
                                 initialSettings={{
                                     enableNotifications: notifications,
@@ -165,6 +165,7 @@ export default function Settings() {
                                 <Switch 
                                     checked={isDarkMode} 
                                     onCheckedChange={handleThemeToggle} 
+                                    className="data-[state=checked]:bg-white/30 data-[state=unchecked]:bg-white/10 border-white/20"
                                 />
                             </div>
                         </div>
@@ -271,6 +272,7 @@ export default function Settings() {
                                             setNotifications(checked);
                                             updateSetting('notificationsEnabled', checked);
                                         }} 
+                                        className="data-[state=checked]:bg-white/30 data-[state=unchecked]:bg-white/10 border-white/20"
                                     />
                                 </div>
                                 
@@ -282,6 +284,7 @@ export default function Settings() {
                                             setSoundEnabled(checked);
                                             updateSetting('soundEnabled', checked);
                                         }} 
+                                        className="data-[state=checked]:bg-white/30 data-[state=unchecked]:bg-white/10 border-white/20"
                                     />
                                 </div>
                                 
@@ -293,6 +296,7 @@ export default function Settings() {
                                             setVibrationEnabled(checked);
                                             updateSetting('vibrationEnabled', checked);
                                         }} 
+                                        className="data-[state=checked]:bg-white/30 data-[state=unchecked]:bg-white/10 border-white/20"
                                     />
                                 </div>
                             </div>
@@ -310,6 +314,7 @@ export default function Settings() {
                                 <Switch 
                                     checked={isDarkMode} 
                                     onCheckedChange={handleThemeToggle} 
+                                    className="data-[state=checked]:bg-white/30 data-[state=unchecked]:bg-white/10 border-white/20"
                                 />
                             </div>
                         </div>
