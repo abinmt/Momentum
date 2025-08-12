@@ -28,7 +28,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
     const [showPrivacyDialog, setShowPrivacyDialog] = useState(false);
     const [showGoalDialog, setShowGoalDialog] = useState(false);
     const [selectedDays, setSelectedDays] = useState<string[]>(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
-    const [taskType, setTaskType] = useState("simple");
+    const [taskType, setTaskType] = useState<string | null>(null);
     const [selectedColor, setSelectedColor] = useState("primary");
     const [selectedIcon, setSelectedIcon] = useState("check");
     const [reminderEnabled, setReminderEnabled] = useState(false);
@@ -77,7 +77,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
             setSchedule(task.schedule || "daily");
             setIsDayLongTask(task.isDayLongTask || false);
             setSelectedDays(task.selectedDays ? task.selectedDays.split(',') : ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
-            setTaskType(task.type || "simple");
+            setTaskType(task.type || null);
             setSelectedColor(task.color || "primary");
             setSelectedIcon(task.icon || "check");
             setReminderEnabled(task.reminderEnabled || false);
@@ -91,7 +91,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
             setSchedule("daily");
             setIsDayLongTask(false);
             setSelectedDays(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
-            setTaskType("simple");
+            setTaskType(null);
             setSelectedColor("primary");
             setSelectedIcon("check");
             setReminderEnabled(false);
@@ -238,6 +238,24 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         <h4 className="text-sm opacity-80 font-semibold mb-3">TASK TYPE</h4>
                         
                         <div className="space-y-2">
+                            <Button
+                                variant="ghost"
+                                className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === null ? 'bg-white bg-opacity-20' : ''}`}
+                                onClick={readOnly ? undefined : () => setTaskType(null)}
+                                disabled={readOnly}
+                            >
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
+                                        <span className="text-xs font-bold">○</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="font-semibold">No Type</div>
+                                        <div className="text-xs opacity-70">Simple habit tracking</div>
+                                    </div>
+                                    {taskType === null && <Check className="w-4 h-4 ml-auto" />}
+                                </div>
+                            </Button>
+                            
                             <Button
                                 variant="ghost"
                                 className={`w-full justify-start text-white ${!readOnly ? 'hover:bg-white hover:bg-opacity-20' : ''} p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}
@@ -558,6 +576,23 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                             <h4 className="text-sm opacity-80 font-semibold">TASK TYPE</h4>
                             
                             <div className="space-y-2">
+                                <Button
+                                    variant="ghost"
+                                    className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === null ? 'bg-white bg-opacity-20' : ''}`}
+                                    onClick={() => setTaskType(null)}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
+                                            <span className="text-xs font-bold">○</span>
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold">No Type</div>
+                                            <div className="text-xs opacity-70">Simple habit tracking</div>
+                                        </div>
+                                        {taskType === null && <Check className="w-4 h-4 ml-auto" />}
+                                    </div>
+                                </Button>
+                                
                                 <Button
                                     variant="ghost"
                                     className={`w-full justify-start text-white hover:bg-white hover:bg-opacity-20 p-4 ${taskType === 'timed' ? 'bg-white bg-opacity-20' : ''}`}

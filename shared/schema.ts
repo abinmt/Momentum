@@ -51,7 +51,7 @@ export const tasks = pgTable("tasks", {
     description: text("description"),
     icon: varchar("icon").notNull().default("check"),
     color: varchar("color").notNull().default("primary"),
-    type: varchar("type").notNull().default("simple"), // simple, timed, health, negative
+    type: varchar("type"), // simple, timed, health, negative - now optional
     goal: integer("goal"), // e.g., 5000 steps, 30 minutes
     goalUnit: varchar("goal_unit"), // steps, minutes, calories, etc.
     isDayLongTask: boolean("is_day_long_task").default(false), // New field for day-long tasks
@@ -181,6 +181,7 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
 }).extend({
     isDayLongTask: z.boolean().optional(),
     selectedDays: z.string().optional(),
+    type: z.string().optional(),
 });
 
 export const insertTaskEntrySchema = createInsertSchema(taskEntries).omit({
