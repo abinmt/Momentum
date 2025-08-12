@@ -220,14 +220,17 @@ export default function Home() {
                 </main>
 
                 {/* Page Indicators */}
-                <div className="flex justify-center items-center mt-8">
-                    <div className="flex space-x-2">
-                        <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                        <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
-                        <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
+                {/* Only show pagination dots if there are habits */}
+                {sortedTasks && sortedTasks.length > 0 && (
+                    <div className="flex justify-center items-center mt-8">
+                        <div className="flex space-x-2">
+                            <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                            <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
+                            <div className="w-2 h-2 bg-white opacity-60 rounded-full"></div>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <BottomNavigation activeTab="tasks" />
             </div>
