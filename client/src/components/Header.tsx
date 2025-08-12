@@ -48,17 +48,19 @@ export default function Header({
   }, [isMenuOpen]);
 
   const getNetworkIcon = () => {
-    if (!isOnline) return <WifiOff className="w-4 h-4 text-red-400" />;
+    const iconSize = isMobile ? "w-3 h-3" : "w-4 h-4";
+    
+    if (!isOnline) return <WifiOff className={`${iconSize} text-red-400`} />;
     
     switch (networkSpeed) {
       case 'fast':
-        return <Wifi className="w-4 h-4 text-green-400" />;
+        return <Wifi className={`${iconSize} text-green-400`} />;
       case 'medium':
-        return <Wifi className="w-4 h-4 text-yellow-400" />;
+        return <Wifi className={`${iconSize} text-yellow-400`} />;
       case 'slow':
-        return <Wifi className="w-4 h-4 text-orange-400" />;
+        return <Wifi className={`${iconSize} text-orange-400`} />;
       default:
-        return <Wifi className="w-4 h-4 text-blue-400" />;
+        return <Wifi className={`${iconSize} text-blue-400`} />;
     }
   };
 
@@ -221,15 +223,18 @@ export default function Header({
 
           {/* Right: Actions */}
           <div className="flex items-center space-x-2">
+            {/* Network Status - Always visible on mobile */}
+            <div className="flex items-center space-x-1 px-2 py-1 bg-white/10 rounded-lg backdrop-blur-sm">
+              {getNetworkIcon()}
+              {!isOnline && (
+                <Badge variant="destructive" className="text-xs px-1 py-0 h-4">
+                  Offline
+                </Badge>
+              )}
+            </div>
+
             {/* PWA Status */}
             <div className="flex items-center space-x-1">
-              {/* Network */}
-              {!isOnline && (
-                <div className="p-1 bg-red-500/20 rounded">
-                  {getNetworkIcon()}
-                </div>
-              )}
-
               {/* Update */}
               {updateAvailable && (
                 <Button
