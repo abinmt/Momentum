@@ -1,0 +1,28 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#gradient)" rx="64"/>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Momentum Icon - Upward Arrow with Circular Motion -->
+  <g transform="translate(256,256)">
+    <!-- Circular path indicating momentum -->
+    <circle cx="0" cy="0" r="120" fill="none" stroke="white" stroke-width="8" stroke-dasharray="20,10" opacity="0.6"/>
+    
+    <!-- Central rocket/arrow indicating upward momentum -->
+    <path d="M0,-80 L-30,-20 L-15,-20 L-15,40 L15,40 L15,-20 L30,-20 Z" fill="white"/>
+    
+    <!-- Flame/thrust lines -->
+    <path d="M-8,40 L-8,60 M0,40 L0,65 M8,40 L8,60" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Speed lines -->
+    <path d="M-60,-40 L-40,-40 M-60,-20 L-45,-20 M-60,0 L-40,0" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <path d="M40,-40 L60,-40 M45,-20 L60,-20 M40,0 L60,0" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  </g>
+</svg>

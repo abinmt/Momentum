@@ -4,6 +4,7 @@ import { Loader2, Settings, Star, Plus, User, ChevronDown, Power } from "lucide-
 import TaskCard from "@/components/TaskCard";
 
 import AddTaskModal from "@/components/AddTaskModal";
+import InstallPrompt from "@/components/InstallPrompt";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -368,6 +369,8 @@ export default function Home() {
                 isOpen={isAddTaskModalOpen}
                 onClose={() => setIsAddTaskModalOpen(false)}
             />
+            
+            <InstallPrompt />
         </div>
     );
 }
