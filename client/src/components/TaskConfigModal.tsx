@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check, X, Type } from "lucide-react";
 import { TASK_COLORS } from "@/lib/constants";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -172,24 +172,37 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                 <div className="flex-1 overflow-y-auto px-2">
                     {/* Habit Configuration - Compact spacing */}
                     <div className="space-y-2 mb-4">
-                    <div className="bg-white bg-opacity-20 rounded-xl p-3">
-                        <div className="text-xs opacity-80 mb-1">TITLE:</div>
-                        {readOnly ? (
-                            <div className="text-white font-semibold py-1">
-                                {title || "Untitled Habit"}
+                    {readOnly ? (
+                        <div className="flex items-center justify-between py-2">
+                            <div className="flex items-center space-x-2">
+                                <Type className="w-4 h-4 text-white" />
+                                <span className="text-white text-sm">Title</span>
                             </div>
-                        ) : (
-                            <>
-                                <Input
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    className="bg-transparent border-none text-white font-semibold p-0 focus:ring-0 h-8"
-                                    placeholder="Habit title"
-                                />
-                                <div className="text-xs opacity-60 mt-1">{title.length} / 50</div>
-                            </>
-                        )}
-                    </div>
+                            <div className="text-white text-sm">{title || "Untitled Habit"}</div>
+                        </div>
+                    ) : (
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between py-1">
+                                <div className="flex items-center space-x-2">
+                                    <Type className="w-4 h-4 text-white" />
+                                    <span className="text-white text-sm">Title</span>
+                                </div>
+                                <div className="text-xs text-white opacity-60">
+                                    {title.length} / 50
+                                </div>
+                            </div>
+                            <Input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                className="bg-white bg-opacity-20 border-none text-white placeholder-white placeholder-opacity-60 h-9"
+                                placeholder="Habit title"
+                                maxLength={50}
+                            />
+                        </div>
+                    )}
+
+                    <div className="w-full h-px bg-white bg-opacity-20 my-1"></div>
 
                     <div className="flex items-center justify-between py-2">
                         <div className="flex items-center space-x-2">
