@@ -220,7 +220,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     </div>
 
                     <div 
-                        className={`flex items-center justify-between py-2 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
+                        className={`flex items-center justify-between py-2 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
                         onClick={readOnly ? undefined : () => setShowScheduleDialog(true)}
                     >
                         <div className="flex items-center space-x-2">
@@ -233,7 +233,6 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                     </div>
 
-                    {/* Task Type Menu - Same UX as Goal/Habit Days */}
                     <div 
                         className={`flex items-center justify-between py-2 border-b border-white border-opacity-20 ${!readOnly ? 'cursor-pointer hover:bg-white hover:bg-opacity-10' : ''} rounded-lg px-2 -mx-2 transition-colors`}
                         onClick={readOnly ? undefined : () => setShowTaskTypeDialog(true)}
@@ -250,67 +249,58 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         </div>
                     </div>
 
-                    {/* Reminders Section - Compact */}
-                    <div className="border-t border-white border-opacity-20 pt-2">
-                        <div className="flex items-center justify-between py-1">
-                            <div className="flex items-center space-x-2">
-                                <Calendar className="w-4 h-4 text-white" />
-                                <span className="text-white text-sm">Enable Reminders</span>
-                            </div>
-                            <Switch
-                                checked={reminderEnabled}
-                                onCheckedChange={readOnly ? undefined : setReminderEnabled}
-                                disabled={readOnly}
-                                className="data-[state=checked]:bg-green-500"
-                            />
+                    <div className="flex items-center justify-between py-2 border-b border-white border-opacity-20">
+                        <div className="flex items-center space-x-2">
+                            <Calendar className="w-4 h-4 text-white" />
+                            <span className="text-white text-sm">Enable Reminders</span>
                         </div>
-                        
-                        {reminderEnabled && (
-                            <div className="mt-3">
-                                <label className="text-sm opacity-80">Reminder Time</label>
-                                <div className="flex items-center">
-                                    <Input
-                                        type="time"
-                                        value={reminderTime}
-                                        onChange={readOnly ? undefined : (e) => setReminderTime(e.target.value)}
-                                        className="bg-white bg-opacity-20 border-none text-white mt-2"
-                                        readOnly={readOnly}
-                                    />
-                                </div>
-                            </div>
-                        )}
+                        <Switch
+                            checked={reminderEnabled}
+                            onCheckedChange={readOnly ? undefined : setReminderEnabled}
+                            disabled={readOnly}
+                            className="data-[state=checked]:bg-green-500"
+                        />
                     </div>
 
-                    {/* Icon & Color Section - Compact */}
-                    <div className="border-t border-white border-opacity-20 pt-2">
-                        {readOnly ? (
-                            <div className="flex items-center justify-between py-2">
-                                <div className="flex items-center space-x-2">
-                                    <Target className="w-4 h-4 text-white" />
-                                    <span className="text-white text-sm">Icon & Color</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${TASK_COLORS[selectedColor as keyof typeof TASK_COLORS]?.bg || 'bg-blue-500'}`}>
-                                        <span className="text-lg text-white">
-                                            {getIconDisplay(selectedIcon)}
-                                        </span>
-                                    </div>
+                    {reminderEnabled && (
+                        <div className="px-2 py-2 border-b border-white border-opacity-20">
+                            <label className="text-xs opacity-80">Reminder Time</label>
+                            <Input
+                                type="time"
+                                value={reminderTime}
+                                onChange={readOnly ? undefined : (e) => setReminderTime(e.target.value)}
+                                className="bg-white bg-opacity-20 border-none text-white mt-1 h-8"
+                                readOnly={readOnly}
+                            />
+                        </div>
+                    )}
+
+                    {readOnly ? (
+                        <div className="flex items-center justify-between py-2">
+                            <div className="flex items-center space-x-2">
+                                <Target className="w-4 h-4 text-white" />
+                                <span className="text-white text-sm">Icon & Color</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${TASK_COLORS[selectedColor as keyof typeof TASK_COLORS]?.bg || 'bg-blue-500'}`}>
+                                    <span className="text-lg text-white">
+                                        {getIconDisplay(selectedIcon)}
+                                    </span>
                                 </div>
                             </div>
-                        ) : (
-                            <Button
-                                variant="ghost"
-                                className="w-full justify-between text-white hover:bg-white hover:bg-opacity-20 py-2"
-                                onClick={() => setShowIconColorDialog(true)}
-                            >
-                                <div className="flex items-center space-x-2">
-                                    <Target className="w-4 h-4 text-white" />
-                                    <span className="text-sm">Icon & Color</span>
-                                </div>
-                                <ChevronRight className="w-4 h-4" />
-                            </Button>
-                        )}
-                    </div>
+                        </div>
+                    ) : (
+                        <div 
+                            className={`flex items-center justify-between py-2 cursor-pointer hover:bg-white hover:bg-opacity-10 rounded-lg px-2 -mx-2 transition-colors`}
+                            onClick={() => setShowIconColorDialog(true)}
+                        >
+                            <div className="flex items-center space-x-2">
+                                <Target className="w-4 h-4 text-white" />
+                                <span className="text-white text-sm">Icon & Color</span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-white opacity-60" />
+                        </div>
+                    )}
                     </div>
                 </div>
 
