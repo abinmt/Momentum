@@ -8,6 +8,7 @@ import InstallPrompt from "@/components/InstallPrompt";
 import OfflineIndicator from "@/components/OfflineIndicator";
 import PWAStatusIndicator from "@/components/PWAStatusIndicator";
 import ResponsiveLayout from "@/components/ResponsiveLayout";
+import NetworkStatus from "@/components/NetworkStatus";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -374,8 +375,8 @@ export default function Home() {
             />
             
             <InstallPrompt />
-            <OfflineIndicator />
             <PWAStatusIndicator compact={true} />
+            <NetworkStatus className="fixed top-4 right-4 z-50" />
         </div>
     );
 }

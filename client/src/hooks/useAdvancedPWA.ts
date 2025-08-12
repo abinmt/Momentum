@@ -70,7 +70,17 @@ export function useAdvancedPWA() {
     const setupServiceWorker = async () => {
       if ('serviceWorker' in navigator) {
         try {
-          const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
+          // Try enhanced service worker first, fallback to basic
+          let registration;
+          try {
+            registration = await navigator.serviceWorker.register('/sw-enhanced.js');
+          } catch (enhancedError) {
+            console.warn('Enhanced SW failed, falling back to basic SW');
+            registration = await navigator.serviceWorker.register('/sw.js');
+          }
+          
+          // Check for updates immediately
+          registration.update();
           
           // Check for updates
           registration.addEventListener('updatefound', () => {
@@ -99,6 +109,11 @@ export function useAdvancedPWA() {
           if (registration.waiting) {
             setSWUpdate(prev => ({ ...prev, available: true, waiting: true }));
           }
+
+          // Periodic update checks
+          setInterval(() => {
+            registration.update();
+          }, 60000); // Check every minute
 
           setState(prev => ({ ...prev, cacheStatus: 'ready' }));
         } catch (error) {
@@ -198,7 +213,17 @@ export function useAdvancedPWA() {
 
   // Update the service worker
   const updateServiceWorker = () => {
-    if (!swUpdate.waiting) return;
+    if (!swUpdate.waiting) {
+      // Check for updates manually
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(registration => {
+            registration.update();
+          });
+        });
+      }
+      return;
+    }
 
     // Send message to waiting SW to skip waiting
     navigator.serviceWorker.controller?.postMessage({ type: 'SKIP_WAITING' });

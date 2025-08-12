@@ -99,25 +99,59 @@ export default function PWAStatusIndicator({ compact = false, showDetails = fals
   }
 
   if (!showDetails) {
+    // Don't show anything if everything is normal and working
+    if (isOnline && !updateAvailable && !canInstall && cacheStatus === 'ready') {
+      return null;
+    }
+
     return (
-      <div className="fixed bottom-4 right-4 z-50">
-        <div className="flex items-center space-x-2 bg-background/90 backdrop-blur-sm border rounded-lg px-3 py-2 shadow-lg">
-          {getNetworkIcon()}
-          <Badge variant={isOnline ? 'default' : 'destructive'}>
-            {isOnline ? 'Online' : 'Offline'}
-          </Badge>
+      <div className="fixed top-4 left-4 z-50">
+        <div className="flex items-center space-x-2 bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 shadow-lg">
+          {/* Network Status - only show if offline */}
+          {!isOnline && (
+            <>
+              {getNetworkIcon()}
+              <Badge variant="destructive" className="text-xs">
+                Offline
+              </Badge>
+            </>
+          )}
           
+          {/* Update Available */}
           {updateAvailable && (
-            <Button size="sm" onClick={updateServiceWorker}>
-              <Download className="w-4 h-4 mr-2" />
-              Update Available
+            <Button 
+              size="sm" 
+              onClick={updateServiceWorker}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 py-1 h-6"
+            >
+              <Download className="w-3 h-3 mr-1" />
+              Update
             </Button>
           )}
           
+          {/* Install Available */}
           {canInstall && (
-            <Button size="sm" variant="outline" onClick={installApp}>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={installApp}
+              className="border-white/30 text-white hover:bg-white/10 text-xs px-2 py-1 h-6"
+            >
               Install App
             </Button>
+          )}
+
+          {/* Cache Status - only show if there's an issue */}
+          {cacheStatus === 'error' && (
+            <Badge variant="destructive" className="text-xs">
+              Cache Error
+            </Badge>
+          )}
+          
+          {cacheStatus === 'updating' && (
+            <Badge variant="secondary" className="text-xs">
+              Updating...
+            </Badge>
           )}
         </div>
       </div>
