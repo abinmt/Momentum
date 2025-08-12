@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Settings, Star, Plus, User, ChevronDown } from "lucide-react";
+import { Loader2, Settings, Star, Plus, User, ChevronDown, Power } from "lucide-react";
 import TaskCard from "@/components/TaskCard";
 import BottomNavigation from "@/components/BottomNavigation";
 import AddTaskModal from "@/components/AddTaskModal";
@@ -192,7 +192,7 @@ export default function Home() {
                                     }}
                                     className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                 >
-                                    <span className="w-4 h-4">🚪</span>
+                                    <Power className="w-4 h-4" />
                                     Sign Out
                                 </button>
                             </div>
@@ -313,7 +313,7 @@ export default function Home() {
                                             }}
                                             className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                                         >
-                                            <span className="w-4 h-4">🚪</span>
+                                            <Power className="w-4 h-4" />
                                             Sign Out
                                         </button>
                                     </div>

@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Settings, LogOut, Share2, Download, Bell } from "lucide-react";
+import { Settings, Power, Share2, Download, Bell } from "lucide-react";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
@@ -185,7 +185,7 @@ export default function Profile() {
                         className="w-full mt-8 bg-red-500 hover:bg-red-600 text-white border-none py-4"
                         onClick={() => window.location.href = '/api/logout'}
                     >
-                        <LogOut className="w-5 h-5 mr-2" />
+                        <Power className="w-5 h-5 mr-2" />
                         Sign Out
                     </Button>
                 </main>
@@ -218,7 +218,7 @@ export default function Profile() {
                                     className="w-full bg-red-500 hover:bg-red-600 text-white border-none"
                                     onClick={() => window.location.href = '/api/logout'}
                                 >
-                                    <LogOut className="w-4 h-4 mr-2" />
+                                    <Power className="w-4 h-4 mr-2" />
                                     Sign Out
                                 </Button>
                             </CardContent>

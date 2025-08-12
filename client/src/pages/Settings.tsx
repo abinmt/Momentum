@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, Bell, Moon, Sun, Volume2, Vibrate, Trash2, Download, Upload } from "lucide-react";
+import { ChevronLeft, Bell, Moon, Sun, Volume2, Vibrate, Trash2, Download, Upload, Power } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -242,6 +242,7 @@ export default function Settings() {
                                     className="w-full justify-start text-red-400 hover:bg-red-500 hover:bg-opacity-20"
                                     onClick={() => window.location.href = '/api/logout'}
                                 >
+                                    <Power className="w-4 h-4 mr-2" />
                                     Sign Out
                                 </Button>
                             </div>
@@ -381,6 +382,7 @@ export default function Settings() {
                                 className="text-red-400 hover:bg-red-500 hover:bg-opacity-20"
                                 onClick={() => window.location.href = '/api/logout'}
                             >
+                                <Power className="w-4 h-4 mr-2" />
                                 Sign Out
                             </Button>
                         </div>
