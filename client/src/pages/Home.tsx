@@ -6,6 +6,8 @@ import TaskCard from "@/components/TaskCard";
 import AddTaskModal from "@/components/AddTaskModal";
 import InstallPrompt from "@/components/InstallPrompt";
 import OfflineIndicator from "@/components/OfflineIndicator";
+import PWAStatusIndicator from "@/components/PWAStatusIndicator";
+import ResponsiveLayout from "@/components/ResponsiveLayout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -373,6 +375,7 @@ export default function Home() {
             
             <InstallPrompt />
             <OfflineIndicator />
+            <PWAStatusIndicator compact={true} />
         </div>
     );
 }

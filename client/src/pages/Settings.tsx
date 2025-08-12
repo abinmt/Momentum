@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import NotificationSettings from "@/components/NotificationSettings";
+import PWASettings from "@/components/PWASettings";
 
 export default function Settings() {
     const { user } = useAuth();
@@ -166,6 +167,11 @@ export default function Settings() {
                                     onCheckedChange={handleThemeToggle} 
                                 />
                             </div>
+                        </div>
+
+                        {/* PWA Settings */}
+                        <div className="[&>div]:bg-white [&>div]:bg-opacity-10 [&>div]:border-none [&>div]:text-white [&_h3]:text-white [&_label]:text-white [&_div.text-sm]:text-white">
+                            <PWASettings />
                         </div>
 
                         {/* Data Management */}
