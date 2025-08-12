@@ -816,8 +816,8 @@ classDiagram
     Schema --> User
     Schema --> Task
     Schema --> TaskEntry
-    User ||--o{ Task : owns
-    Task ||--o{ TaskEntry : tracks
+    User "1" --> "*" Task : owns
+    Task "1" --> "*" TaskEntry : tracks
 ```
 
 ## PWA Architecture
