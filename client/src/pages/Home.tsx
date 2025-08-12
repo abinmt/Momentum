@@ -207,14 +207,36 @@ export default function Home() {
                             items={sortedTasks?.map(task => task.id) || []}
                             strategy={rectSortingStrategy}
                         >
-                            <div className="grid grid-cols-1 gap-8">
-                                {sortedTasks?.map((task) => (
-                                    <TaskCard 
-                                        key={task.id} 
-                                        task={task}
-                                    />
-                                ))}
-                            </div>
+                            {sortedTasks && sortedTasks.length > 0 ? (
+                                <div className="grid grid-cols-1 gap-8">
+                                    {sortedTasks?.map((task) => (
+                                        <TaskCard 
+                                            key={task.id} 
+                                            task={task}
+                                        />
+                                    ))}
+                                </div>
+                            ) : !isLoading ? (
+                                <div className="text-center py-12 px-6">
+                                    <div className="max-w-md mx-auto">
+                                        <div className="text-6xl mb-6">🚀</div>
+                                        <h3 className="text-xl font-bold text-white mb-4">Start Your Journey</h3>
+                                        <p className="text-white opacity-80 mb-6 leading-relaxed">
+                                            "We are what we repeatedly do. Excellence, then, is not an act, but a habit."
+                                        </p>
+                                        <p className="text-sm text-white opacity-60 mb-8">
+                                            Build lasting habits, track your progress, and create the momentum you need to achieve your goals.
+                                        </p>
+                                        <Button 
+                                            className="bg-white bg-opacity-20 text-white hover:bg-opacity-30 px-8 py-3 text-base font-semibold"
+                                            onClick={() => setIsAddTaskModalOpen(true)}
+                                        >
+                                            <Plus className="w-5 h-5 mr-2" />
+                                            Add Your First Habit
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : null}
                         </SortableContext>
                     </DndContext>
                 </main>
@@ -318,13 +340,36 @@ export default function Home() {
                             items={sortedTasks?.map(task => task.id) || []}
                             strategy={rectSortingStrategy}
                         >
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10">
-                                {sortedTasks?.map((task) => (
-                                    <div key={task.id} className="transform scale-110">
-                                        <TaskCard task={task} />
+                            {sortedTasks && sortedTasks.length > 0 ? (
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10">
+                                    {sortedTasks?.map((task) => (
+                                        <div key={task.id} className="transform scale-110">
+                                            <TaskCard task={task} />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : !isLoading ? (
+                                <div className="text-center py-20 px-6">
+                                    <div className="max-w-lg mx-auto">
+                                        <div className="text-8xl mb-8">🚀</div>
+                                        <h3 className="text-3xl font-bold text-white mb-6">Start Your Journey</h3>
+                                        <p className="text-xl text-white opacity-80 mb-8 leading-relaxed">
+                                            "We are what we repeatedly do. Excellence, then, is not an act, but a habit."
+                                        </p>
+                                        <p className="text-base text-white opacity-60 mb-10 leading-relaxed">
+                                            Build lasting habits, track your progress, and create the momentum you need to achieve your goals. 
+                                            Every expert was once a beginner, and every streak starts with a single day.
+                                        </p>
+                                        <Button 
+                                            className="bg-white bg-opacity-20 text-white hover:bg-opacity-30 px-10 py-4 text-lg font-semibold"
+                                            onClick={() => setIsAddTaskModalOpen(true)}
+                                        >
+                                            <Plus className="w-6 h-6 mr-3" />
+                                            Add Your First Habit
+                                        </Button>
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            ) : null}
                         </SortableContext>
                     </DndContext>
                 </div>
