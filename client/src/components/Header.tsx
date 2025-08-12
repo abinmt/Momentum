@@ -144,8 +144,8 @@ export default function Header({
 
       {/* Dropdown Menu */}
       {isMenuOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-white/20 z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-200/50">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl shadow-xl border border-white/20 dark:border-gray-600/20 z-50 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-200/50 dark:border-gray-600/50">
             <div className="flex items-center space-x-3">
               <Avatar className="w-10 h-10">
                 <AvatarImage src={user?.profileImageUrl || ""} alt="Profile" />
@@ -154,10 +154,10 @@ export default function Header({
                 </AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-medium text-gray-900">
+                <div className="font-medium text-gray-900 dark:text-gray-100">
                   {user?.firstName || 'User'} {user?.lastName || ''}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
                   {user?.email}
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function Header({
           <div className="py-2">
             <Link href="/profile">
               <button
-                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100/50 transition-colors"
+                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <User className="w-4 h-4" />
@@ -177,7 +177,7 @@ export default function Header({
 
             <Link href="/settings">
               <button
-                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100/50 transition-colors"
+                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Settings className="w-4 h-4" />
@@ -188,7 +188,7 @@ export default function Header({
             {/* Notifications Badge */}
             <Link href="/notifications">
               <button
-                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100/50 transition-colors"
+                className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Bell className="w-4 h-4" />
@@ -200,10 +200,10 @@ export default function Header({
             </Link>
           </div>
 
-          <div className="border-t border-gray-200/50 py-2">
+          <div className="border-t border-gray-200/50 dark:border-gray-600/50 py-2">
             <a
               href="/api/logout"
-              className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50/50 transition-colors"
+              className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/50 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

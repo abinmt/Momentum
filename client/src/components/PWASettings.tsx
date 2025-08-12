@@ -67,20 +67,20 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
   return (
     <div className="space-y-6">
       {/* App Status */}
-      <Card className="bg-white bg-opacity-10 border-white/20 backdrop-blur-sm">
+      <Card className="bg-white bg-opacity-10 dark:bg-gray-800/50 border-white/20 dark:border-gray-600/20 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-white">
+          <CardTitle className="flex items-center space-x-2 text-white dark:text-gray-100">
             <Smartphone className="w-5 h-5" />
             <span>App Status</span>
           </CardTitle>
-          <CardDescription className="text-white opacity-70">
+          <CardDescription className="text-white dark:text-gray-400 opacity-70">
             Current installation and update status
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Installation Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium text-white">Installation</span>
+            <span className="font-medium text-white dark:text-gray-100">Installation</span>
             <div className="flex items-center space-x-2">
               <Badge variant={isInstalled ? 'default' : 'secondary'}>
                 {isInstalled ? 'Installed' : 'Web App'}
@@ -96,7 +96,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
 
           {/* Update Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium text-white">Updates</span>
+            <span className="font-medium text-white dark:text-gray-100">Updates</span>
             <div className="flex items-center space-x-2">
               {updateAvailable ? (
                 <>
@@ -115,8 +115,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Auto Update Setting */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium text-white">Auto Updates</span>
-              <p className="text-sm text-white opacity-60">
+              <span className="font-medium text-white dark:text-gray-100">Auto Updates</span>
+              <p className="text-sm text-white dark:text-gray-400 opacity-60">
                 Automatically install app updates
               </p>
             </div>
@@ -129,20 +129,20 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
       </Card>
 
       {/* Performance Settings */}
-      <Card className="bg-white bg-opacity-10 border-white/20 backdrop-blur-sm">
+      <Card className="bg-white bg-opacity-10 dark:bg-gray-800/50 border-white/20 dark:border-gray-600/20 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-white">
+          <CardTitle className="flex items-center space-x-2 text-white dark:text-gray-100">
             <Monitor className="w-5 h-5" />
             <span>Performance</span>
           </CardTitle>
-          <CardDescription className="text-white opacity-70">
+          <CardDescription className="text-white dark:text-gray-400 opacity-70">
             Optimize app performance and data usage
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Network Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium text-white">Network</span>
+            <span className="font-medium text-white dark:text-gray-100">Network</span>
             <div className="flex items-center space-x-2">
               <Wifi className={`w-4 h-4 ${isOnline ? 'text-green-500' : 'text-red-500'}`} />
               <Badge variant={isOnline ? 'default' : 'destructive'}>
@@ -157,8 +157,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Background Sync */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium text-white">Background Sync</span>
-              <p className="text-sm text-white opacity-60">
+              <span className="font-medium text-white dark:text-gray-100">Background Sync</span>
+              <p className="text-sm text-white dark:text-gray-400 opacity-60">
                 Sync data when connection is restored
               </p>
             </div>
@@ -171,8 +171,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Preload Content */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium text-white">Preload Content</span>
-              <p className="text-sm text-white opacity-60">
+              <span className="font-medium text-white dark:text-gray-100">Preload Content</span>
+              <p className="text-sm text-white dark:text-gray-400 opacity-60">
                 Download content for offline use
               </p>
             </div>
@@ -185,13 +185,13 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
       </Card>
 
       {/* Storage Management */}
-      <Card className="bg-white bg-opacity-10 border-white/20 backdrop-blur-sm">
+      <Card className="bg-white bg-opacity-10 dark:bg-gray-800/50 border-white/20 dark:border-gray-600/20 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-white">
+          <CardTitle className="flex items-center space-x-2 text-white dark:text-gray-100">
             <HardDrive className="w-5 h-5" />
             <span>Storage</span>
           </CardTitle>
-          <CardDescription className="text-white opacity-70">
+          <CardDescription className="text-white dark:text-gray-400 opacity-70">
             Manage app data and cache storage
           </CardDescription>
         </CardHeader>
@@ -200,8 +200,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {storageQuota > 0 && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm text-white">
-                <span>Used Storage</span>
-                <span>{formatBytes(storageUsed)} / {formatBytes(storageQuota)}</span>
+                <span className="text-white dark:text-gray-300">Used Storage</span>
+                <span className="text-white dark:text-gray-300">{formatBytes(storageUsed)} / {formatBytes(storageQuota)}</span>
               </div>
               <div className="w-full bg-white/20 rounded-full h-2">
                 <div 
@@ -209,7 +209,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
                   style={{ width: `${getStoragePercentage()}%` }}
                 />
               </div>
-              <div className="text-xs text-white opacity-60 text-center">
+              <div className="text-xs text-white dark:text-gray-400 opacity-60 text-center">
                 {getStoragePercentage()}% used
               </div>
             </div>
@@ -217,7 +217,7 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
 
           {/* Cache Status */}
           <div className="flex items-center justify-between">
-            <span className="font-medium text-white">Cache Status</span>
+            <span className="font-medium text-white dark:text-gray-100">Cache Status</span>
             <Badge 
               variant={
                 cacheStatus === 'ready' ? 'default' :
@@ -232,8 +232,8 @@ export default function PWASettings({ onClose }: PWASettingsProps) {
           {/* Clear Cache */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-medium text-white">Clear Cache</span>
-              <p className="text-sm text-white opacity-60">
+              <span className="font-medium text-white dark:text-gray-100">Clear Cache</span>
+              <p className="text-sm text-white dark:text-gray-400 opacity-60">
                 Remove all cached data and files
               </p>
             </div>
