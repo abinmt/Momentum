@@ -3,7 +3,6 @@ const CACHE_NAME = 'momentum-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/icon-192x192.svg',
   // Static assets will be cached automatically by Vite
 ];
 
@@ -72,15 +71,15 @@ self.addEventListener('push', (event) => {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: '/icon-192x192.svg',
-      badge: '/icon-192x192.svg',
+      icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzNiODJmNiIgcng9IjI0Ii8+CiAgPHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPk08L3RleHQ+CiAgPGNpcmNsZSBjeD0iOTYiIGN5PSI4MCIgcj0iOCIgZmlsbD0id2hpdGUiLz4KICA8cGF0aCBkPSJNOTYgNjAgTDk2IDQwIE04OCA2OCBMMTA0IDY4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=',
+      badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzNiODJmNiIgcng9IjI0Ii8+CiAgPHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPk08L3RleHQ+CiAgPGNpcmNsZSBjeD0iOTYiIGN5PSI4MCIgcj0iOCIgZmlsbD0id2hpdGUiLz4KICA8cGF0aCBkPSJNOTYgNjAgTDk2IDQwIE04OCA2OCBMMTA0IDY4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=',
       vibrate: [200, 100, 200],
       data: data.data || {},
       actions: [
         {
           action: 'mark-complete',
           title: 'Mark Complete',
-          icon: '/icon-192x192.svg'
+          icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzNiODJmNiIgcng9IjI0Ii8+CiAgPHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPk08L3RleHQ+CiAgPGNpcmNsZSBjeD0iOTYiIGN5PSI4MCIgcj0iOCIgZmlsbD0id2hpdGUiLz4KICA8cGF0aCBkPSJNOTYgNjAgTDk2IDQwIE04OCA2OCBMMTA0IDY4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4='
         },
         {
           action: 'dismiss',
