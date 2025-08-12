@@ -1,9 +1,9 @@
 import { useLocation } from "wouter";
-import { Grid3X3, BarChart3, BookOpen, User } from "lucide-react";
+import { Grid3X3, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface BottomNavigationProps {
-    activeTab: "tasks" | "statistics" | "journal" | "profile";
+    activeTab: "tasks" | "profile";
 }
 
 export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
@@ -11,8 +11,6 @@ export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
 
     const tabs = [
         { id: "tasks", icon: Grid3X3, label: "Habits", path: "/" },
-        { id: "statistics", icon: BarChart3, label: "Stats", path: "/statistics" },
-        { id: "journal", icon: BookOpen, label: "Journal", path: "/journal" },
         { id: "profile", icon: User, label: "Profile", path: "/profile" },
     ];
 
