@@ -3,6 +3,7 @@
 Momentum is a Progressive Web App (PWA) habit tracker that replicates the design and functionality of Streaks App. The application allows users to create, manage, and track daily habits with comprehensive progress visualization, streak tracking, and social sharing features. Built as a full-stack web application with modern technologies, it provides offline functionality and cross-platform compatibility through PWA standards.
 
 ## Recent Changes (August 2025)
+- ✅ **Back Button Navigation Fix**: Fixed Settings page back button navigation to correctly return to Profile page instead of Home page for both mobile and desktop views
 - ✅ **Profile Menu Spacing Fix**: Fixed inconsistent spacing between profile menu items by replacing space-y utility with explicit margin-bottom classes for uniform spacing across all menu options
 - ✅ **Mobile UI Optimization**: Removed mobile status bar header (time, signal indicators, battery) from all pages for cleaner interface and better screen space utilization
 - ✅ **Icon Enhancement**: Updated all signout icons to attractive Power icon from lucide-react, replacing LogOut icon and door emoji for consistent theme-matching design
