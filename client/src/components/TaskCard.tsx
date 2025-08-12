@@ -294,35 +294,22 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </Button>
                 
                 {showDropdown && (
-                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white min-w-[130px] border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-0 z-50 animate-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-200 dark:border-gray-700 shadow-lg rounded-md py-1 z-50 animate-in slide-in-from-top-2 duration-200 flex flex-col items-center">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleStartPause(e);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            className="flex items-center justify-center w-8 h-8 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded"
+                            title={taskState === 'not-started' ? 'Start Habit' : 
+                                   taskState === 'in-progress' ? 'Pause Habit' : 
+                                   taskState === 'paused' ? 'Resume Habit' : 'Start Habit'}
                         >
-                            {taskState === 'not-started' ? (
-                                <>
-                                    <Play className="w-4 h-4" />
-                                    Start Habit
-                                </>
-                            ) : taskState === 'in-progress' ? (
-                                <>
-                                    <Pause className="w-4 h-4" />
-                                    Pause Habit
-                                </>
-                            ) : taskState === 'paused' ? (
-                                <>
-                                    <Play className="w-4 h-4" />
-                                    Resume Habit
-                                </>
+                            {taskState === 'not-started' || taskState === 'paused' || taskState === 'completed' ? (
+                                <Play className="w-4 h-4" />
                             ) : (
-                                <>
-                                    <Play className="w-4 h-4" />
-                                    Start Habit
-                                </>
+                                <Pause className="w-4 h-4" />
                             )}
                         </button>
                         <button
@@ -331,10 +318,10 @@ export default function TaskCard({ task }: TaskCardProps) {
                                 setShowViewModal(true);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            className="flex items-center justify-center w-8 h-8 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded"
+                            title="View Habit"
                         >
                             <Eye className="w-4 h-4" />
-                            View Habit
                         </button>
                         <button
                             onClick={(e) => {
@@ -342,22 +329,22 @@ export default function TaskCard({ task }: TaskCardProps) {
                                 setShowEditModal(true);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                            className="flex items-center justify-center w-8 h-8 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded"
+                            title="Edit Habit"
                         >
                             <Edit className="w-4 h-4" />
-                            Edit Habit
                         </button>
-                        <hr className="my-0.5 border-gray-200 dark:border-gray-700" />
+                        <hr className="w-6 border-gray-200 dark:border-gray-700" />
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleDeleteClick(e);
                                 setShowDropdown(false);
                             }}
-                            className="flex items-center gap-2 w-full px-2.5 py-1 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                            className="flex items-center justify-center w-8 h-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded"
+                            title="Delete Habit"
                         >
                             <Trash2 className="w-4 h-4" />
-                            Delete Habit
                         </button>
                     </div>
                 )}
