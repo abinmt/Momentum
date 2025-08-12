@@ -44,6 +44,28 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
         { key: "sun", label: "Sunday", short: "S" },
     ];
 
+    const getIconDisplay = (iconName: string): string => {
+        const iconMap: { [key: string]: string } = {
+            // Basic icons
+            'check': '✓', 'heart': '♥', 'star': '★', 'target': '●', 'zap': '⚡', 'book': '📚',
+            'dumbbell': '🏋️', 'apple': '🍎', 'moon': '🌙', 'sun': '☀️', 'coffee': '☕', 'music': '🎵',
+            // Exercise & Fitness
+            'running': '🏃', 'swimming': '🏊', 'climbing': '🧗', 'stairs': '🪜', 'trekking': '🥾', 
+            'walk': '🚶', 'bike': '🚴', 'yoga': '🧘', 'stretch': '🤸', 'pushup': '💪', 'pullup': '🏋️‍♂️',
+            // Learning & Productivity
+            'coding': '💻', 'learning': '🎓', 'writing': '✍️', 'painting': '🎨', 'study': '📖',
+            'guitar': '🎸', 'piano': '🎹', 'journal': '📝',
+            // Health & Wellness
+            'meditation': '🧘‍♀️', 'water': '💧', 'sleep': '😴', 'pill': '💊', 'brush': '🪥', 
+            'shower': '🚿', 'floss': '🦷', 'breathe': '💨', 'pray': '🙏',
+            // Social & Communication
+            'call': '📞', 'email': '📧', 'dance': '💃', 'sing': '🎤',
+            // Daily Activities
+            'clean': '🧹', 'cook': '👨‍🍳', 'garden': '🌱', 'photo': '📸'
+        };
+        return iconMap[iconName] || '✓';
+    };
+
     useEffect(() => {
         if (task) {
             setTitle(task.name);
@@ -120,18 +142,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                         <ProgressRing progress={0} size={80} strokeWidth={6} />
                         <div className="absolute inset-0 flex items-center justify-center">
                             <span className="text-2xl md:text-4xl text-white">
-                                {selectedIcon === 'check' ? '✓' : 
-                                selectedIcon === 'heart' ? '♥' : 
-                                selectedIcon === 'star' ? '★' : 
-                                selectedIcon === 'target' ? '●' : 
-                                selectedIcon === 'zap' ? '⚡' : 
-                                selectedIcon === 'book' ? '📚' : 
-                                selectedIcon === 'dumbbell' ? '🏋️' : 
-                                selectedIcon === 'apple' ? '🍎' : 
-                                selectedIcon === 'moon' ? '🌙' : 
-                                selectedIcon === 'sun' ? '☀️' : 
-                                selectedIcon === 'coffee' ? '☕' : 
-                                selectedIcon === 'music' ? '🎵' : '✓'}
+                                {getIconDisplay(selectedIcon)}
                             </span>
                         </div>
 
@@ -675,10 +686,16 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                         {/* Icon Selection */}
                         <div>
                             <h4 className="text-sm opacity-80 font-semibold mb-3">ICONS</h4>
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto">
                                 {[
                                     'check', 'heart', 'star', 'target', 'zap', 'book',
-                                    'dumbbell', 'apple', 'moon', 'sun', 'coffee', 'music'
+                                    'dumbbell', 'apple', 'moon', 'sun', 'coffee', 'music',
+                                    'running', 'swimming', 'climbing', 'stairs', 'trekking', 'meditation',
+                                    'coding', 'learning', 'writing', 'painting', 'guitar', 'piano',
+                                    'water', 'sleep', 'pill', 'brush', 'shower', 'floss',
+                                    'walk', 'bike', 'yoga', 'stretch', 'pushup', 'pullup',
+                                    'journal', 'pray', 'breathe', 'call', 'email', 'clean',
+                                    'cook', 'garden', 'photo', 'dance', 'sing', 'study'
                                 ].map((iconName) => (
                                     <Button
                                         key={iconName}
@@ -689,7 +706,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                                         }`}
                                         onClick={() => setSelectedIcon(iconName)}
                                     >
-                                        <span className="text-lg">{iconName === 'check' ? '✓' : iconName === 'heart' ? '♥' : iconName === 'star' ? '★' : iconName === 'target' ? '●' : iconName === 'zap' ? '⚡' : iconName === 'book' ? '📚' : iconName === 'dumbbell' ? '🏋️' : iconName === 'apple' ? '🍎' : iconName === 'moon' ? '🌙' : iconName === 'sun' ? '☀️' : iconName === 'coffee' ? '☕' : '🎵'}</span>
+                                        <span className="text-lg">{getIconDisplay(iconName)}</span>
                                     </Button>
                                 ))}
                             </div>
