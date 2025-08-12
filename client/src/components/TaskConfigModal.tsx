@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check, X, Type } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Target, MoreHorizontal, Check, X, Type, Clock, Bell, Palette } from "lucide-react";
 import { TASK_COLORS } from "@/lib/constants";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -206,7 +206,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
 
                     <div className="flex items-center justify-between py-2">
                         <div className="flex items-center space-x-2">
-                            <Calendar className="w-4 h-4 text-white" />
+                            <Clock className="w-4 h-4 text-white" />
                             <span className="text-white text-sm">Day-Long Habit</span>
                         </div>
                         <Switch
@@ -257,7 +257,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                         onClick={readOnly ? undefined : () => setShowTaskTypeDialog(true)}
                     >
                         <div className="flex items-center space-x-2">
-                            <Target className="w-4 h-4 text-white" />
+                            <MoreHorizontal className="w-4 h-4 text-white" />
                             <span className="text-white text-sm">Task Type</span>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -272,7 +272,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
 
                     <div className="flex items-center justify-between py-2">
                         <div className="flex items-center space-x-2">
-                            <Calendar className="w-4 h-4 text-white" />
+                            <Bell className="w-4 h-4 text-white" />
                             <span className="text-white text-sm">Enable Reminders</span>
                         </div>
                         <Switch
@@ -304,7 +304,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     {readOnly ? (
                         <div className="flex items-center justify-between py-2">
                             <div className="flex items-center space-x-2">
-                                <Target className="w-4 h-4 text-white" />
+                                <Palette className="w-4 h-4 text-white" />
                                 <span className="text-white text-sm">Icon & Color</span>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -321,7 +321,7 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                             onClick={() => setShowIconColorDialog(true)}
                         >
                             <div className="flex items-center space-x-2">
-                                <Target className="w-4 h-4 text-white" />
+                                <Palette className="w-4 h-4 text-white" />
                                 <span className="text-white text-sm">Icon & Color</span>
                             </div>
                             <ChevronRight className="w-4 h-4 text-white opacity-60" />
