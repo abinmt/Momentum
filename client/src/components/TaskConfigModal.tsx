@@ -138,13 +138,13 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
                 {/* Habit Icon and Title */}
                 <div className="text-center mb-6 md:mb-8">
-                    <div className="relative mx-auto mb-4 w-20 h-20 md:w-32 md:h-32">
-                        <ProgressRing progress={0} size={80} strokeWidth={6} />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xl md:text-3xl text-white leading-none">
-                                {getIconDisplay(selectedIcon)}
-                            </span>
+                    <div className="flex items-center justify-center mx-auto mb-4 w-20 h-20">
+                        <div className="absolute">
+                            <ProgressRing progress={0} size={80} strokeWidth={6} />
                         </div>
+                        <span className="text-2xl text-white z-10 relative">
+                            {getIconDisplay(selectedIcon)}
+                        </span>
                     </div>
                     <h3 className="text-lg md:text-2xl font-bold mb-2">{title.toUpperCase() || "NEW HABIT"}</h3>
                 </div>
