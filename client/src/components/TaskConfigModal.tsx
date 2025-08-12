@@ -335,7 +335,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnl
                     <div className="flex-shrink-0 pt-3">
                         <Button 
                             className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-3 text-base font-semibold"
-                            onClick={handleSave}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleSave();
+                            }}
                         >
                             {task ? "UPDATE HABIT" : "SAVE HABIT"}
                         </Button>
