@@ -118,7 +118,7 @@ export default function Profile() {
                         </Link>
 
                         <Link href="/settings">
-                            <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all mt-6">
+                            <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all">
                                 <CardContent className="p-4">
                                     <div className="flex items-center justify-between text-white">
                                         <div className="flex items-center space-x-3">
