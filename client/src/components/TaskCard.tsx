@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Play, Pause, Trash2, MoreVertical } from "lucide-react";
+import { Play, Pause, Trash2, MoreVertical, Eye } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Task } from "@shared/schema";
+import TaskConfigModal from "./TaskConfigModal";
 
 interface TaskCardProps {
     task: Task;
@@ -32,6 +33,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     const [elapsedSeconds, setElapsedSeconds] = useState(initialElapsedSeconds);
     const [isTimerRunning, setIsTimerRunning] = useState(initialTimerState === 'in-progress');
     const [showDropdown, setShowDropdown] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Timer update mutation
@@ -190,7 +192,29 @@ export default function TaskCard({ task }: TaskCardProps) {
         return Math.min(100, (task.currentStreak * 20) % 100);
     };
 
-    const IconComponent = TASK_ICONS[task.icon as keyof typeof TASK_ICONS] || TASK_ICONS.check;
+    // Handle both icon keys and emoji icons
+    const getIconDisplay = (iconName: string): string => {
+        const iconMap: { [key: string]: string } = {
+            // Basic icons
+            'check': '✓', 'heart': '♥', 'star': '★', 'target': '●', 'zap': '⚡', 'book': '📚',
+            'dumbbell': '🏋️', 'apple': '🍎', 'moon': '🌙', 'sun': '☀️', 'coffee': '☕', 'music': '🎵',
+            // Exercise & Fitness
+            'running': '🏃', 'swimming': '🏊', 'climbing': '🧗', 'stairs': '🪜', 'trekking': '🥾', 
+            'walk': '🚶', 'bike': '🚴', 'yoga': '🧘', 'stretch': '🤸', 'pushup': '💪', 'pullup': '🏋️‍♂️',
+            // Learning & Productivity
+            'coding': '💻', 'learning': '🎓', 'writing': '✍️', 'painting': '🎨', 'study': '📖',
+            'guitar': '🎸', 'piano': '🎹', 'journal': '📝',
+            // Health & Wellness
+            'meditation': '🧘‍♀️', 'water': '💧', 'sleep': '😴', 'pill': '💊', 'brush': '🪥', 
+            'shower': '🚿', 'floss': '🦷', 'breathe': '💨', 'pray': '🙏',
+            // Social & Communication
+            'call': '📞', 'email': '📧', 'dance': '💃', 'sing': '🎤',
+            // Daily Activities
+            'clean': '🧹', 'cook': '👨‍🍳', 'garden': '🌱', 'photo': '📸'
+        };
+        return iconMap[iconName] || iconName || '✓';
+    };
+    
     const colorClasses = TASK_COLORS[task.color as keyof typeof TASK_COLORS] || TASK_COLORS.primary;
     
     // Apply grey overlay for paused/not started tasks
@@ -213,7 +237,9 @@ export default function TaskCard({ task }: TaskCardProps) {
                     strokeWidth={6}
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <IconComponent className="w-8 h-8 text-white" />
+                    <span className="text-2xl text-white leading-none">
+                        {getIconDisplay(task.icon)}
+                    </span>
                 </div>
                 {task.currentStreak > 0 && (
                     <div className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
@@ -285,6 +311,17 @@ export default function TaskCard({ task }: TaskCardProps) {
                                 </>
                             )}
                         </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowViewModal(true);
+                                setShowDropdown(false);
+                            }}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            <Eye className="w-4 h-4" />
+                            View Habit
+                        </button>
                         <hr className="my-1 border-gray-200 dark:border-gray-700" />
                         <button
                             onClick={(e) => {
@@ -300,6 +337,15 @@ export default function TaskCard({ task }: TaskCardProps) {
                     </div>
                 )}
             </div>
+
+            {/* View Habit Modal */}
+            <TaskConfigModal
+                isOpen={showViewModal}
+                onClose={() => setShowViewModal(false)}
+                task={task}
+                onSave={() => {}} // Read-only mode, no save needed
+                readOnly={true}
+            />
         </div>
     );
 }

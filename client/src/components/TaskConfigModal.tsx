@@ -11,9 +11,10 @@ interface TaskConfigModalProps {
     onClose: () => void;
     task: any;
     onSave: (taskConfig: any) => void;
+    readOnly?: boolean;
 }
 
-export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskConfigModalProps) {
+export default function TaskConfigModal({ isOpen, onClose, task, onSave, readOnly = false }: TaskConfigModalProps) {
     const [title, setTitle] = useState("");
     const [goal, setGoal] = useState("");
     const [schedule, setSchedule] = useState("daily");
@@ -68,15 +69,30 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
     useEffect(() => {
         if (task) {
-            setTitle(task.name);
-            setGoal(task.defaultGoal || "");
-            setGoalUnit(task.unit || "times");
+            // Load existing task data
+            setTitle(task.title || "");
+            setGoal(task.goal ? task.goal.toString() : "");
+            setGoalUnit(task.goalUnit || "times");
+            setSchedule(task.schedule || "daily");
+            setIsDayLongTask(task.isDayLongTask || false);
+            setSelectedDays(task.selectedDays ? task.selectedDays.split(',') : ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
+            setTaskType(task.type || "simple");
+            setSelectedColor(task.color || "primary");
+            setSelectedIcon(task.icon || "check");
+            setReminderEnabled(task.reminderEnabled || false);
+            setReminderTime(task.reminderTime || "09:00");
+            setIsPrivate(task.isPrivate || false);
+        } else {
+            // Reset for new task
+            setTitle("");
+            setGoal("");
+            setGoalUnit("times");
             setSchedule("daily");
             setIsDayLongTask(false);
             setSelectedDays(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
-            setTaskType(task.type || "simple");
-            setSelectedColor(task.color || "primary");
-            setSelectedIcon(task.iconName || "check");
+            setTaskType("simple");
+            setSelectedColor("primary");
+            setSelectedIcon("check");
             setReminderEnabled(false);
             setReminderTime("09:00");
             setIsPrivate(false);
@@ -133,7 +149,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl max-h-[90vh] flex flex-col overflow-hidden">
                 <DialogHeader className="flex flex-row items-center justify-center space-y-0 pb-4">
-                    <DialogTitle className="text-xl font-bold">Create Habit</DialogTitle>
+                    <DialogTitle className="text-xl font-bold">
+                        {readOnly ? "View Habit" : "Create Habit"}
+                    </DialogTitle>
                 </DialogHeader>
 
                 {/* Habit Icon and Title */}
@@ -157,9 +175,10 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                         <div className="text-sm opacity-80 mb-1">TITLE:</div>
                         <Input
                             value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={readOnly ? undefined : (e) => setTitle(e.target.value)}
                             className="bg-transparent border-none text-white font-semibold p-0 focus:ring-0"
                             placeholder="Habit title"
+                            readOnly={readOnly}
                         />
                         <div className="text-xs opacity-60 mt-1">{title.length} / 50</div>
                     </div>
@@ -308,14 +327,16 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                 </div>
 
                 {/* Fixed Save Button */}
-                <div className="flex-shrink-0 pt-4 border-t border-white border-opacity-20">
-                    <Button 
-                        className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-6 text-lg font-semibold"
-                        onClick={handleSave}
-                    >
-                        SAVE HABIT
-                    </Button>
-                </div>
+                {!readOnly && (
+                    <div className="flex-shrink-0 pt-4 border-t border-white border-opacity-20">
+                        <Button 
+                            className="w-full bg-black bg-opacity-30 text-white border-none hover:bg-opacity-40 py-6 text-lg font-semibold"
+                            onClick={handleSave}
+                        >
+                            SAVE HABIT
+                        </Button>
+                    </div>
+                )}
             </DialogContent>
             
             {/* Goal Dialog */}
