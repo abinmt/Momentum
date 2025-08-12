@@ -100,7 +100,7 @@ export default function Profile() {
                     </Card>
 
                     {/* Profile Options */}
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         <Link href="/settings">
                             <Card className="bg-white bg-opacity-20 backdrop-blur-sm border-none cursor-pointer hover:bg-opacity-30 transition-all">
                                 <CardContent className="p-4">
