@@ -109,13 +109,9 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl [&>button[aria-label='Close']]:hidden max-h-[90vh] flex flex-col overflow-hidden">
-                <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                    <div></div>
+            <DialogContent className="bg-gradient-primary text-white border-none max-w-md mx-auto md:max-w-2xl bottom-0 md:bottom-auto top-auto md:top-1/2 translate-y-0 md:-translate-y-1/2 rounded-t-3xl md:rounded-xl rounded-b-none md:rounded-b-xl max-h-[90vh] flex flex-col overflow-hidden">
+                <DialogHeader className="flex flex-row items-center justify-center space-y-0 pb-4">
                     <DialogTitle className="text-xl font-bold">Create Habit</DialogTitle>
-                    <Button variant="ghost" size="icon" onClick={onClose}>
-                        <X className="w-6 h-6 text-white" />
-                    </Button>
                 </DialogHeader>
 
                 {/* Habit Icon and Title */}
@@ -297,21 +293,6 @@ export default function TaskConfigModal({ isOpen, onClose, task, onSave }: TaskC
                             </div>
                             <ChevronRight className="w-4 h-4" />
                         </Button>
-                    </div>
-
-                    {/* Privacy Section */}
-                    <div className="border-t border-white border-opacity-20 pt-4">
-                        <div className="flex items-center justify-between py-2">
-                            <div className="flex items-center space-x-3">
-                                <Target className="w-5 h-5 text-white" />
-                                <span className="text-white">Private Habit</span>
-                            </div>
-                            <Switch
-                                checked={isPrivate}
-                                onCheckedChange={setIsPrivate}
-                                className="data-[state=checked]:bg-green-500"
-                            />
-                        </div>
                     </div>
                     </div>
                 </div>
