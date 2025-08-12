@@ -317,7 +317,7 @@ export default function Home() {
                             items={sortedTasks?.map(task => task.id) || []}
                             strategy={rectSortingStrategy}
                         >
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10">
                                 {sortedTasks?.map((task) => (
                                     <div key={task.id} className="transform scale-110">
                                         <TaskCard task={task} />
